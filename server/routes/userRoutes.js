@@ -3,10 +3,17 @@ const userController = require("../controllers/userController");
 
 const router = express.Router();
 
+router.post("/signup", userController.createUser);
+router.post("/login", userController.login);
+router.get("/logout", userController.logout);
+router.post("/forgotpassword", userController.forgotPassword);
+router.post("/resetpassword/:token", userController.resetPassword);
+
 router
-  .route("/")
-  .get(userController.getAllUsers)
-  .post(userController.createUser);
+  .route("/updatePassword")
+  .patch(userController.protect, userController.updatePassword);
+
+router.route("/").get(userController.getAllUsers);
 
 router
   .route("/:id")
