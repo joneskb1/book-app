@@ -53,10 +53,10 @@ const userSchema = new mongoose.Schema(
   }
 );
 
-userSchema.pre(/^find/, function (next) {
-  this.populate({ path: 'booksToRead readBooks', select: '-__v -_id' });
-  next();
-});
+// userSchema.pre(/^find/, function (next) {
+//   this.populate({ path: 'booksToRead readBooks', select: '-__v -_id' });
+//   next();
+// });
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) {

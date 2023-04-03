@@ -1,5 +1,8 @@
 const Book = require('../models/bookModel');
 const fetch = require('node-fetch');
+const User = require('../models/userModel');
+const sanitizeHtml = require('sanitize-html');
+
 const catchAsync = (fn) => (req, res, next) => fn(req, res, next).catch(next);
 
 exports.getAllBooks = catchAsync(async (req, res, next) => {
@@ -13,7 +16,7 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.createBook = catchAsync(async (req, res, next) => {
+exports.createCustomBook = catchAsync(async (req, res, next) => {
   // get title or isbn from user & create middleware to verify we do not have the book already in our DB
   // if book not in our DB, fetch data from google api
   const book = await Book.create(req.body);
@@ -92,15 +95,15 @@ exports.findBook = catchAsync(async (req, res, next) => {
     const info = el.volumeInfo;
 
     return {
-      title: info.title ? info.title : 'N/A',
+      title: info.title ?? 'N/A',
       author: info.authors ? info.authors[0] : 'N/A',
-      isbn13: info.industryIdentifiers
+      isbn: info.industryIdentifiers
         ? info.industryIdentifiers[0].identifier
         : 'N/A',
-      publishedDate: info.publishedDate ? info.publishedDate : 'N/A',
+      publishedDate: info.publishedDate ?? 'N/A',
       category: info.categories ? info.categories[0] : 'N/A',
-      pageCount: info.pageCount ? info.pageCount : 'N/A',
-      googleBookId: el.id ? el.id : 'N/A',
+      pageCount: info.pageCount ?? 'N/A',
+      googleBookId: el.id ?? 'N/A',
     };
   });
 
@@ -108,6 +111,71 @@ exports.findBook = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       data: books,
+    },
+  });
+});
+
+exports.createBook = catchAsync(async (req, res, next) => {
+  const googleBooksId = req.params.id;
+
+  // use googleID to verify we do not have the book already in our DB
+  // if book not in our DB, fetch data from google api
+  const book = await Book.findOne({ googleBooksId });
+  let newBook;
+
+  if (!book) {
+    const response = await fetch(
+      `https://www.googleapis.com/books/v1/volumes/${googleBooksId}`
+    );
+
+    const data = await response.json();
+    const info = data.volumeInfo;
+
+    const sanitizedDescription = info.description
+      ? sanitizeHtml(info.description, {
+          allowedAttributes: {},
+          allowedTags: [],
+        })
+      : 'N/A';
+
+    const bookDetails = {
+      title: info.title ?? 'N/A',
+      isbn: info.industryIdentifiers
+        ? info.industryIdentifiers[0].identifier
+        : 'N/A',
+      pageCount: info.pageCount ?? 'N/A',
+      avgGoogleBooksRating: info.averageRating ?? 'N/A',
+      googleBooksRatingsCount: info.ratingsCount ?? 'N/A',
+      publishedDate: info.publishedDate ?? 'N/A',
+      authors: info.authors ?? 'N/A',
+      categories: info.categories ?? 'N/A',
+      description: sanitizedDescription,
+      publisher: info.publisher ?? 'N/A',
+      imageLinks: {
+        smallThumbnail: info.imageLinks.smallThumbnail ?? 'N/A',
+        thumbnail: info.imageLinks.thumbnail ?? 'N/A',
+      },
+      googleBooksID: data.id ?? 'N/A',
+    };
+
+    newBook = await Book.create(bookDetails);
+  }
+
+  const update = {
+    books: {
+      _id: newBook.id,
+      hasRead: false,
+    },
+  };
+
+  const user = await User.findByIdAndUpdate(req.user.id, update);
+
+  await user.save({ validateBeforeSave: false });
+
+  res.status(201).json({
+    status: 'success',
+    data: {
+      data: newBook,
     },
   });
 });

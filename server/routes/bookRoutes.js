@@ -14,6 +14,7 @@ router
 router
   .route('/:id')
   .get(bookController.getBook)
+  .post(userController.protect, bookController.createBook)
   .patch(bookController.updateBook)
   .delete(bookController.deleteBook);
 

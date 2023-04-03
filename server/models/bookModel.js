@@ -5,14 +5,14 @@ const bookSchema = new mongoose.Schema({
     type: String,
     required: [true, 'a book must have a title'],
   },
-  isbn13: {
+  isbn: {
     type: Number,
     unique: true,
   },
   pageCount: {
     type: Number,
   },
-  googleBooksRating: {
+  avgGoogleBooksRating: {
     type: Number,
   },
   googleBooksRatingsCount: {
@@ -37,6 +37,9 @@ const bookSchema = new mongoose.Schema({
   imageLinks: {
     smallThumbnail: String,
     thumbnail: String,
+  },
+  googleBooksID: {
+    type: String,
   },
 });
 
