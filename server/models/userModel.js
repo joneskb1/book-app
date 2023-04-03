@@ -1,49 +1,49 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcryptjs");
-const crypto = require("crypto");
+const mongoose = require('mongoose');
+const bcrypt = require('bcryptjs');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: [true, "User must have a name"],
+      required: [true, 'User must have a name'],
     },
     email: {
       type: String,
-      required: [true, "User must have an email"],
+      required: [true, 'User must have an email'],
       unique: true,
       lowercase: true,
     },
     password: {
       type: String,
-      required: [true, "User must enter a password"],
+      required: [true, 'User must enter a password'],
       minLength: 8,
       select: false,
     },
     passwordConfirm: {
       type: String,
-      required: [true, "passwords must match"],
+      required: [true, 'passwords must match'],
       validate: {
         // only works on Create/SAVE not update!
         validator: function (el) {
           return this.password === el;
         },
-        message: "Passwords are not the same!",
+        message: 'Passwords are not the same!',
       },
     },
     passwordChangedAt: Date,
     passwordResetToken: String,
     passwordResetExpires: Date,
-    booksToRead: [
+    books: [
       {
         type: mongoose.Schema.ObjectId,
-        ref: "Book",
+        ref: 'Book',
       },
-    ],
-    readBooks: [
       {
-        type: mongoose.Schema.ObjectId,
-        ref: "Book",
+        hasRead: {
+          type: Boolean,
+          default: false,
+        },
       },
     ],
   },
@@ -54,12 +54,12 @@ const userSchema = new mongoose.Schema(
 );
 
 userSchema.pre(/^find/, function (next) {
-  this.populate({ path: "booksToRead readBooks", select: "-__v -_id" });
+  this.populate({ path: 'booksToRead readBooks', select: '-__v -_id' });
   next();
 });
 
-userSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) {
+userSchema.pre('save', async function (next) {
+  if (!this.isModified('password')) {
     return next();
   }
 
@@ -68,8 +68,8 @@ userSchema.pre("save", async function (next) {
   next();
 });
 
-userSchema.pre("save", function (next) {
-  if (!this.isModified("password") || this.isNew) {
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) {
     return next();
   }
 
@@ -98,13 +98,13 @@ userSchema.methods.changedPasswordAfter = function (jwtTimeStamp) {
 
 userSchema.methods.createPasswordResetToken = function () {
   // create token
-  const resetPasswordToken = crypto.randomBytes(32).toString("hex");
+  const resetPasswordToken = crypto.randomBytes(32).toString('hex');
 
   // encrypting token for DB
   this.passwordResetToken = crypto
-    .createHash("sha256")
+    .createHash('sha256')
     .update(resetPasswordToken)
-    .digest("hex");
+    .digest('hex');
 
   // set expiration
   this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
@@ -112,6 +112,6 @@ userSchema.methods.createPasswordResetToken = function () {
   return resetPasswordToken;
 };
 
-const User = mongoose.model("User", userSchema);
+const User = mongoose.model('User', userSchema);
 
 module.exports = User;
