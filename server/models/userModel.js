@@ -36,10 +36,10 @@ const userSchema = new mongoose.Schema(
     passwordResetExpires: Date,
     books: [
       {
-        type: mongoose.Schema.ObjectId,
-        ref: 'Book',
-      },
-      {
+        id: {
+          type: mongoose.Schema.ObjectId,
+          ref: 'Book',
+        },
         hasRead: {
           type: Boolean,
           default: false,

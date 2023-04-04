@@ -116,13 +116,14 @@ exports.findBook = catchAsync(async (req, res, next) => {
 });
 
 exports.createBook = catchAsync(async (req, res, next) => {
+  let user;
+  let newBook;
   const googleBooksId = req.params.id;
 
-  // use googleID to verify we do not have the book already in our DB
-  // if book not in our DB, fetch data from google api
+  // is book in book nook db
   const book = await Book.findOne({ googleBooksId });
-  let newBook;
 
+  // create a book if it doesn't exist
   if (!book) {
     const response = await fetch(
       `https://www.googleapis.com/books/v1/volumes/${googleBooksId}`
@@ -155,27 +156,44 @@ exports.createBook = catchAsync(async (req, res, next) => {
         smallThumbnail: info.imageLinks.smallThumbnail ?? 'N/A',
         thumbnail: info.imageLinks.thumbnail ?? 'N/A',
       },
-      googleBooksID: data.id ?? 'N/A',
+      googleBooksId: data.id ?? 'N/A',
     };
 
     newBook = await Book.create(bookDetails);
   }
 
+  // check if user already has the book in their list
+  if (book) {
+    user = await User.find({
+      books: {
+        $elemMatch: { _id: book._id },
+      },
+    });
+
+    if (user) {
+      return res.status(409).json({
+        message: 'conflict: you already have this book in your book list!',
+      });
+    }
+  }
+
+  // update the user with the book
   const update = {
-    books: {
-      _id: newBook.id,
-      hasRead: false,
+    $push: {
+      books: {
+        _id: newBook ? newBook.id : book.id,
+        hasRead: false,
+      },
     },
   };
 
-  const user = await User.findByIdAndUpdate(req.user.id, update);
-
-  await user.save({ validateBeforeSave: false });
+  user = await User.findByIdAndUpdate(req.user.id, update, { new: true });
 
   res.status(201).json({
     status: 'success',
     data: {
-      data: newBook,
+      data: newBook ? newBook : book,
+      user,
     },
   });
 });

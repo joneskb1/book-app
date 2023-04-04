@@ -7,7 +7,6 @@ const bookSchema = new mongoose.Schema({
   },
   isbn: {
     type: Number,
-    unique: true,
   },
   pageCount: {
     type: Number,
@@ -38,8 +37,9 @@ const bookSchema = new mongoose.Schema({
     smallThumbnail: String,
     thumbnail: String,
   },
-  googleBooksID: {
+  googleBooksId: {
     type: String,
+    unique: true,
   },
 });
 
