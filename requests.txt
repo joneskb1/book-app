@@ -1,0 +1,7 @@
+get book by title from 0 to 30: https://www.googleapis.com/books/v1/volumes?q=intitle:harry+potter&langRestrict=en&startIndex=0&maxResults=30&key=AIzaSyAxAcySjBTXODsfv8ID_lR9ZvS8r7G0wPs
+
+get book by isbn from 0 to 30: https://www.googleapis.com/books/v1/volumes?q=isbn:0151334811&langRestrict=en&startIndex=0&maxResults=30&key=AIzaSyAxAcySjBTXODsfv8ID_lR9ZvS8r7G0wPs
+
+get book by author: https://www.googleapis.com/books/v1/volumes?q=inauthor:J+K+Rawling&langRestrict=en&startIndex=0&maxResults=30&key=AIzaSyAxAcySjBTXODsfv8ID_lR9ZvS8r7G0wPs
+
+get book by googleID: https://www.googleapis.com/books/v1/volumes/WG_yDwAAQBAJ
