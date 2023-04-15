@@ -5,3 +5,5 @@ get book by isbn from 0 to 30: https://www.googleapis.com/books/v1/volumes?q=isb
 get book by author: https://www.googleapis.com/books/v1/volumes?q=inauthor:J+K+Rawling&langRestrict=en&startIndex=0&maxResults=30&key=AIzaSyAxAcySjBTXODsfv8ID_lR9ZvS8r7G0wPs
 
 get book by googleID: https://www.googleapis.com/books/v1/volumes/WG_yDwAAQBAJ
+
+get user books {{URL}}api/v1/users/642c62f58444e5fe67b34dfe?filter=books&hasRead=true&sort=title

@@ -6,15 +6,12 @@ const router = express.Router();
 
 router.route("/findbook/:searchBy/:search").get(bookController.findBook);
 
-router
-  .route("/")
-  .get(bookController.getAllBooks)
-  // old
-  .post(bookController.createCustomBook);
+router.route("/").get(bookController.getAllBooks);
 
 router
   .route("/:id")
   .get(bookController.getBook)
+  //createBook uses GoogleId others just use the bookID from mongo
   .post(userController.protect, bookController.createBook)
   .patch(bookController.updateBook)
   .delete(bookController.deleteBook);

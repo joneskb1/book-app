@@ -88,14 +88,53 @@ exports.logout = (req, res) => {
 };
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
+  const { filter, hasRead, sort } = req.query;
+
+  const user = await User.findById(req.params.id).select(filter);
+
+  let books = user.books;
+
+  if (hasRead === "true") {
+    books = books.filter((el) => el.hasRead === true);
+  } else if (hasRead === "false") {
+    books = books.filter((el) => el.hasRead === false);
+  }
+
+  if (sort === "title") {
+    books = books.sort((a, b) => {
+      if (a._id.title < b._id.title) {
+        return -1;
+      }
+      if (a._id.title > b._id.title) {
+        return 1;
+      }
+      return 0;
+    });
+  } else if (sort === "author") {
+    books = books.sort((a, b) => {
+      const authorNameA = a._id.authors[0].split(" ");
+      const lastA = authorNameA[authorNameA.length - 1];
+
+      const authorNameB = b._id.authors[0].split(" ");
+      const lastB = authorNameB[authorNameB.length - 1];
+
+      if (lastA < lastB) {
+        return -1;
+      }
+      if (lastA > lastB) {
+        return 1;
+      }
+      return 0;
+    });
+  }
 
   if (!user) return next(new Error("user id not found, can not get user"));
 
   res.status(200).json({
     status: "success",
     data: {
-      data: user,
+      books,
+      user,
     },
   });
 });

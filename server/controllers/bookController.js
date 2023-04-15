@@ -6,28 +6,12 @@ const sanitizeHtml = require("sanitize-html");
 const catchAsync = (fn) => (req, res, next) => fn(req, res, next).catch(next);
 
 exports.getAllBooks = catchAsync(async (req, res, next) => {
-  const books = await Book.find(req.query);
+  const books = await Book.find(req.query).sort({ title: 1 });
 
   res.status(200).json({
     status: "success",
     data: {
       data: books,
-    },
-  });
-});
-
-exports.createCustomBook = catchAsync(async (req, res, next) => {
-  const book = await Book.create(req.body);
-
-  if (req.params.id) {
-    req.body.book = book;
-    return next();
-  }
-
-  res.status(201).json({
-    status: "success",
-    data: {
-      data: book,
     },
   });
 });
@@ -141,10 +125,10 @@ exports.createBook = catchAsync(async (req, res, next) => {
       title: info.title ?? "N/A",
       isbn: info.industryIdentifiers
         ? info.industryIdentifiers[0].identifier
-        : "N/A",
-      pageCount: info.pageCount ?? "N/A",
-      avgGoogleBooksRating: info.averageRating ?? "N/A",
-      googleBooksRatingsCount: info.ratingsCount ?? "N/A",
+        : 0,
+      pageCount: info.pageCount ?? 0,
+      avgGoogleBooksRating: info.averageRating ?? 0,
+      googleBooksRatingsCount: info.ratingsCount ?? 0,
       publishedDate: info.publishedDate ?? "N/A",
       authors: info.authors ?? "N/A",
       categories: info.categories ?? "N/A",

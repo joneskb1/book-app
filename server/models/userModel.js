@@ -56,7 +56,7 @@ const userSchema = new mongoose.Schema(
 userSchema.pre(/^find/, function (next) {
   this.populate({
     path: "books",
-    populate: { path: "_id", model: "Book", select: "-__v -_id" },
+    populate: { path: "_id", model: "Book" },
   });
   next();
 });

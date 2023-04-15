@@ -30,11 +30,3 @@ mongoose.connect(DB).then(() => {
 });
 
 app.listen(3002, () => console.log("server started"));
-
-//working on updaing the read property
-
-//errors
-// "Book validation failed: avgGoogleBooksRating:
-// Cast to Number failed for value \"N/A\" (type string) at path
-//  \"avgGoogleBooksRating\", googleBooksRatingsCount: Cast to Number
-//  failed for value \"N/A\" (type string) at path \"googleBooksRatingsCount\"",
