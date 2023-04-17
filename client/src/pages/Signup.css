@@ -1,0 +1,60 @@
+.signup {
+  background: url("../assets/login-2011w.jpg") no-repeat;
+  background-size: cover;
+  height: calc(100vh - 97px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.signup .form {
+  background-color: var(--secondary);
+  border-radius: 5px;
+  width: 575px;
+  height: 550px;
+  display: flex;
+  flex-direction: column;
+  padding: 3rem;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+}
+
+.signup .close-x {
+  position: absolute;
+  top: 5%;
+  left: 93%;
+  height: 25px;
+  width: 25px;
+}
+
+.signup .label {
+  color: white;
+  margin-right: auto;
+  padding-left: 2.5rem;
+  padding-bottom: 0.5rem;
+  padding-top: 1rem;
+}
+
+.signup .input {
+  border-radius: 5px;
+  height: 50px;
+  width: 400px;
+  border: none;
+}
+
+.signup .btn {
+  border: none;
+  width: 146px;
+  height: 46px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  background-color: var(--primary);
+  text-decoration: none;
+  color: var(--white);
+  font-size: 16px;
+  margin-top: 2rem;
+  cursor: pointer;
+}

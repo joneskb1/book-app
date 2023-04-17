@@ -1,5 +1,5 @@
 .home {
-  background-image: url('../assets/home-background-2011w.jpg');
+  background-image: url("../assets/home-background-2011w.jpg");
   background-size: cover;
   background-repeat: no-repeat;
   height: calc(100vh - 97px);
@@ -15,9 +15,6 @@
   align-items: center;
   border-radius: 5px;
   background-color: var(--primary);
-}
-
-.home .cta-btn a {
   text-decoration: none;
   color: var(--white);
   font-size: 16px;
@@ -32,4 +29,49 @@
   position: absolute;
   top: 25%;
   left: 60%;
+}
+
+.features {
+  background-image: url("../assets/feature-2013w.jpg");
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100vh;
+  position: relative;
+}
+
+.features .text-container {
+  width: 400px;
+  height: 350px;
+  background-color: var(--secondary);
+  position: absolute;
+  top: 15%;
+  left: 60%;
+  color: var(--white);
+  padding: 3rem;
+  border-radius: 5px;
+}
+
+.features .text-container .heading {
+  text-align: center;
+  font-weight: normal;
+  font-family: "Baskerville Old Face";
+}
+
+.features .text-container .list-item {
+  padding: 1rem 0;
+}
+
+.features .cta-btn {
+  border: none;
+  width: 146px;
+  height: 46px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  background-color: var(--primary);
+  text-decoration: none;
+  color: var(--white);
+  font-size: 16px;
+  margin: 1rem auto;
 }

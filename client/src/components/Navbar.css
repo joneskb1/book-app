@@ -25,9 +25,16 @@
 }
 
 .navbar .logo-title {
-  font-family: 'Baskerville Old Face';
+  font-family: "Baskerville Old Face";
   letter-spacing: 1.5px;
   font-size: 36px;
   font-weight: 300;
   margin-left: 1rem;
+}
+
+.navbar .logo-container a {
+  text-decoration: none;
+  color: white;
+  display: flex;
+  align-items: center;
 }
