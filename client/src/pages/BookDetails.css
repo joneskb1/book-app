@@ -1,0 +1,76 @@
+.book-details {
+  background-image: url('../assets/account-2012w.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: calc(100vh - 97px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.book-details .container {
+  position: relative;
+  margin-top: 10%;
+  margin-bottom: 10%;
+  padding: 2rem;
+  background-color: var(--secondary);
+  border-radius: 5px;
+  width: 780px;
+  min-height: 650px;
+  color: var(--black);
+}
+
+.book-details .close-x {
+  position: absolute;
+  top: 5%;
+  left: 93%;
+  height: 25px;
+  width: 25px;
+}
+
+.book-details .details-header {
+  color: var(--white);
+  text-align: center;
+  font-family: 'Baskerville Old Face';
+  font-weight: normal;
+  margin-bottom: 1rem;
+}
+
+.book-details .details-title {
+  margin-bottom: 1rem;
+}
+
+.book-details .book-detail-p {
+  margin-bottom: 1rem;
+}
+
+.book-details .book-info {
+  background: var(--white);
+  position: relative;
+  min-height: 550px;
+  margin-top: 1.2rem;
+  padding: 2.5rem;
+  border-radius: 5px;
+}
+
+.book-details .book-image {
+  position: absolute;
+  bottom: 7%;
+  left: 65%;
+}
+
+.book-details .btn {
+  border: none;
+  width: 125px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  background-color: var(--primary);
+  text-decoration: none;
+  color: var(--white);
+  font-size: 16px;
+  /* margin: 0 auto; */
+  cursor: pointer;
+}

@@ -1,0 +1,31 @@
+.add-book {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 97px);
+}
+
+.add-book .container {
+  position: relative;
+  width: 1172px;
+  height: 750px;
+  background: var(--secondary);
+  border-radius: 5px;
+  padding: 2rem;
+}
+
+.add-book .header {
+  font-size: 32px;
+  font-weight: normal;
+  font-family: 'Baskerville Old Face';
+  text-align: center;
+  color: var(--white);
+}
+
+.add-book .close-x {
+  position: absolute;
+  top: 5%;
+  left: 93%;
+  height: 25px;
+  width: 25px;
+}
