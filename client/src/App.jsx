@@ -6,6 +6,7 @@ import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import Account from "./pages/Account";
+import Booklist from "./pages/Booklist";
 
 function App() {
   return (
@@ -24,6 +25,9 @@ function App() {
           </Routes>
           <Routes>
             <Route path="/account" element={<Account />} />
+          </Routes>
+          <Routes>
+            <Route path="/booklist" element={<Booklist />} />
           </Routes>
         </main>
       </BrowserRouter>

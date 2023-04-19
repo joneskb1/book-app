@@ -19,7 +19,7 @@ export default function Account() {
       <div className="account">
         <div className="container">
           <h2 className="title">Account Info</h2>
-          <Link to="/">
+          <Link to="/booklist">
             <img src={closeX} alt="x close btn" className="close-x" />
           </Link>
           <form className="form-info" onSubmit={handleFormSubmit}>

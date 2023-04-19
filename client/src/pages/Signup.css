@@ -1,7 +1,7 @@
 .signup {
   background: url("../assets/login-2011w.jpg") no-repeat;
   background-size: cover;
-  height: calc(100vh - 97px);
+  min-height: calc(100vh - 97px);
   display: flex;
   align-items: center;
   justify-content: center;
