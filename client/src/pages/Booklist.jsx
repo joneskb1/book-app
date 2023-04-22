@@ -14,8 +14,8 @@ export default function BookList() {
             <button className='read-btn'>Read</button>
             <button className='unread-btn'>Unread</button>
             <p className='sort-label'>Sort:</p>
-            <button className='title-btn'>Title</button>
-            <button className='author-btn'>Author</button>
+            <button className=' title-btn'>Title</button>
+            <button className=' author-btn'>Author</button>
           </div>
           <div className='detail-container'>
             <p className='details'>Click book for details</p>
@@ -28,7 +28,7 @@ export default function BookList() {
               <img src={greenCheck} alt='green check' />
             </div>
           </Link>
-          <Link className='btn' to='/addbook'>
+          <Link className='btn btn-util' to='/addbook'>
             Add Book
           </Link>
         </div>

@@ -25,6 +25,7 @@ export default function Login() {
     <>
       <div className='login'>
         <form className='form' onSubmit={handleFormSubmit}>
+          <h2 className='title'>Login</h2>
           <Link to='/'>
             <img
               src={closeX}

@@ -14,8 +14,6 @@ export default function BookDetailsPreview({ props }) {
     googleBooksId,
   } = props;
 
-  // i'm on a branch, help
-
   console.log(title, title.length);
   return (
     <Link to='/bookdetails' className='book-detail-preview link-util'>

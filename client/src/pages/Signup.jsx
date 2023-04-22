@@ -28,6 +28,8 @@ export default function Signup() {
     <>
       <div className='signup'>
         <form className='form' onSubmit={handleFormSubmit}>
+          <h2 className='title'>Sign up</h2>
+
           <Link to='/'>
             <img
               src={closeX}

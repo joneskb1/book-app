@@ -1,5 +1,5 @@
 .signup {
-  background: url("../assets/login-2011w.jpg") no-repeat;
+  background: url('../assets/login-2011w.jpg') no-repeat;
   background-size: cover;
   min-height: calc(100vh - 97px);
   display: flex;
@@ -7,11 +7,18 @@
   justify-content: center;
 }
 
+.signup .title {
+  font-size: 32px;
+  font-weight: normal;
+  font-family: 'Baskerville Old Face';
+  color: var(--white);
+  letter-spacing: 2px;
+}
+
 .signup .form {
   background-color: var(--secondary);
   border-radius: 5px;
   width: 575px;
-  height: 550px;
   display: flex;
   flex-direction: column;
   padding: 3rem;
@@ -38,7 +45,7 @@
 
 .signup .input {
   border-radius: 5px;
-  height: 50px;
+  height: 40px;
   width: 400px;
   border: none;
 }
@@ -46,7 +53,7 @@
 .signup .btn {
   border: none;
   width: 146px;
-  height: 46px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
