@@ -3,13 +3,30 @@ import greenCheck from '../assets/green-check.svg';
 import unreadX from '../assets/unread-x.svg';
 import closeX from '../assets/close-x.svg';
 import noImage from '../assets/no-image.svg';
+import { Link, useNavigate } from 'react-router-dom';
 
 export default function BookDetails() {
+  const navigate = useNavigate();
+
+  const handleKeyDown = (e) => {
+    if (e.key === 'Enter') {
+      navigate('/booklist');
+    }
+  };
+
   return (
     <>
       <div className='book-details'>
         <div className='container'>
-          <img src={closeX} alt='close x' className='close-x' />
+          <Link to='/booklist'>
+            <img
+              src={closeX}
+              tabIndex='0'
+              alt='close x'
+              className='close-x'
+              onKeyDown={handleKeyDown}
+            />
+          </Link>
           <h2 className='details-header'>Book Details</h2>
           <div className='book-info'>
             <h3 className='details-title'>Title: TITLE HERE</h3>

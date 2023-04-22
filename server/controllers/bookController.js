@@ -57,32 +57,11 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
 });
 
 exports.findBook = catchAsync(async (req, res, next) => {
-  // let { searchBy, search } = req.params;
-  let { search } = req.params;
-  let searchBy;
+  let { searchBy, term } = req.params;
 
-  // if (searchBy === "title") {
-  //   searchBy = "intitle";
-  // } else if (searchBy === "author") {
-  //   searchBy = "inauthor";
-  // } else if (searchBy === "isbn") {
-  //   searchBy = "isbn";
-  // }
+  const url = `https://www.googleapis.com/books/v1/volumes?q=${searchBy}:${term}&langRestrict=en&startIndex=0&maxResults=40&key=AIzaSyAxAcySjBTXODsfv8ID_lR9ZvS8r7G0wPs`;
 
-  const regex =
-    /^(?:ISBN(?:-1[03])?:? )?(?=[0-9X]{10}$|(?=(?:[0-9]+[- ]){3})[- 0-9X]{13}$|97[89][0-9]{10}$|(?=(?:[0-9]+[- ]){4})[- 0-9]{17}$)(?:97[89][- ]?)?[0-9]{1,5}[- ]?[0-9]+[- ]?[0-9]+[- ]?[0-9X]$/;
-
-  const isIsbn = regex.test(search);
-
-  if (!isIsbn) {
-    searchBy = 'intitle';
-  } else if (isIsbn) {
-    searchBy = 'isbn';
-  }
-
-  const response = await fetch(
-    `https://www.googleapis.com/books/v1/volumes?q=${searchBy}:${search}&langRestrict=en&startIndex=0&maxResults=30&key=AIzaSyAxAcySjBTXODsfv8ID_lR9ZvS8r7G0wPs`
-  );
+  const response = await fetch(url);
 
   const data = await response.json();
 

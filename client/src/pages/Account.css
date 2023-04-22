@@ -1,5 +1,5 @@
 .account {
-  background-image: url("../assets/account-2012w.jpg");
+  background-image: url('../assets/account-2012w.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   min-height: calc(100vh - 97px);
@@ -10,8 +10,8 @@
 
 .account .container {
   position: relative;
-  margin-top: 10%;
-  margin-bottom: 10%;
+  margin-top: 5%;
+  margin-bottom: 5%;
   padding: 2rem;
   background-color: var(--secondary);
   border-radius: 5px;
@@ -26,7 +26,7 @@
 
 .account .title {
   text-align: center;
-  font-family: "Baskerville Old Face";
+  font-family: 'Baskerville Old Face';
   font-weight: normal;
 }
 

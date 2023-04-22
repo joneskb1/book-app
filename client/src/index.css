@@ -18,3 +18,18 @@
 body {
   position: relative;
 }
+
+.btn-util {
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background: none;
+}
+
+.link-util {
+  text-decoration: none;
+}
+
+.li-util {
+  list-style-type: none;
+}

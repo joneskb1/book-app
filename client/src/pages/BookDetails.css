@@ -10,8 +10,8 @@
 
 .book-details .container {
   position: relative;
-  margin-top: 10%;
-  margin-bottom: 10%;
+  margin-top: 5%;
+  margin-bottom: 5%;
   padding: 2rem;
   background-color: var(--secondary);
   border-radius: 5px;
