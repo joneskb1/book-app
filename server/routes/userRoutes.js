@@ -8,6 +8,7 @@ router.post('/login', userController.login);
 router.get('/logout', userController.logout);
 router.post('/forgotpassword', userController.forgotPassword);
 router.post('/resetpassword/:token', userController.resetPassword);
+router.get('/check-login', userController.isLoggedIn);
 
 router.use(userController.protect);
 
@@ -15,7 +16,6 @@ router.route('/updatePassword').patch(userController.updatePassword);
 
 // router.route('/').get(userController.getAllUsers);
 
-// took out id param
 router
   .route('/')
   .get(userController.getUser)

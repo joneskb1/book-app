@@ -204,6 +204,40 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.isLoggedIn = async (req, res, next) => {
+  if (req.cookies.jwt) {
+    try {
+      // verify the token.
+      const decodedPayload = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET
+      );
+
+      // check if the user still exists
+      const currentUser = await User.findById(decodedPayload.id);
+
+      if (!currentUser) {
+        return next(new Error('no user'));
+      }
+
+      // make sure pw wasn't changed after token was issued.
+      if (currentUser.changedPasswordAfter(decodedPayload.iat)) {
+        return next(new Error('password recently changed. log in again.'));
+      }
+
+      // if it makes it here, there is a logged in user
+      res.status(200).json({
+        status: 'success',
+        message: 'user is logged in',
+        currentUser,
+      });
+    } catch (err) {
+      // console.log(err);
+      return next(new Error('unable to verify token'));
+    }
+  }
+};
+
 exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password');
 

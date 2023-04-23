@@ -18,23 +18,11 @@ function App() {
         <main>
           <Routes>
             <Route path='/' element={<Home />} />
-          </Routes>
-          <Routes>
             <Route path='/login' element={<Login />} />
-          </Routes>
-          <Routes>
             <Route path='/signup' element={<Signup />} />
-          </Routes>
-          <Routes>
             <Route path='/account' element={<Account />} />
-          </Routes>
-          <Routes>
             <Route path='/booklist' element={<BookList />} />
-          </Routes>
-          <Routes>
             <Route path='/bookdetails' element={<BookDetails />} />
-          </Routes>
-          <Routes>
             <Route path='/addbook' element={<AddBook />} />
           </Routes>
         </main>

@@ -1,8 +1,8 @@
-import './Signup.css';
+import { useState, useContext, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import './Signup.css';
 import closeX from '../assets/close-x.svg';
-import { useState } from 'react';
-import { set } from 'mongoose';
+import { AuthContext } from '../context/AuthContext';
 
 // setup form submit and forgot password
 
@@ -11,8 +11,14 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-
+  const { toggleLoggedIn, isLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/booklist');
+    }
+  }, [isLoggedIn]);
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
@@ -23,24 +29,33 @@ export default function Signup() {
   async function handleFormSubmit(e) {
     e.preventDefault();
 
-    // const url = `http://127.0.0.1:3002/api/v1/users/signup`;
     const url = `/api/v1/users/signup`;
 
-    const res = await fetch(url, {
-      method: 'POST',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        name,
-        email,
-        password,
-        passwordConfirm,
-      }),
-    });
+    try {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          password,
+          passwordConfirm,
+        }),
+      });
 
-    const data = await res.json();
-    console.log(data);
+      const data = await res.json();
+
+      if (data.status === 'success') {
+        toggleLoggedIn();
+        navigate('/booklist');
+      } else {
+        // show error
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }
 
   return (

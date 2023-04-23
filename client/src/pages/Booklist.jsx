@@ -2,8 +2,13 @@ import './BookList.css';
 import greenCheck from '../assets/green-check.svg';
 import unreadX from '../assets/unread-x.svg';
 import { Link } from 'react-router-dom';
+import { AuthContext } from '../context/AuthContext';
+import { useContext } from 'react';
 
 export default function BookList() {
+  const { isLoggedIn } = useContext(AuthContext);
+  console.log('BOOKLIST LOG', isLoggedIn);
+
   return (
     <>
       <div className='booklist'>

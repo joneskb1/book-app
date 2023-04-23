@@ -17,7 +17,8 @@
   list-style-type: none;
 }
 
-.navbar .links {
+.navbar .links,
+.navbar .btn-logout {
   color: white;
   text-decoration: none;
   font-size: 24px;
@@ -25,7 +26,7 @@
 }
 
 .navbar .logo-title {
-  font-family: "Baskerville Old Face";
+  font-family: 'Baskerville Old Face';
   letter-spacing: 1.5px;
   font-size: 36px;
   font-weight: 300;
