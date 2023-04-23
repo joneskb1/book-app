@@ -18,8 +18,23 @@ export default function Account() {
     }
   };
 
-  function handleFormSubmit(e) {
+  async function handleFormSubmit(e) {
     e.preventDefault();
+    const res = await fetch('/api/v1/users/', {
+      method: 'PATCH',
+      headers: {
+        'Content-type': 'application/json',
+      },
+      body: JSON.stringify({
+        name,
+        email,
+      }),
+    });
+
+    const data = await res.json();
+
+    console.log(data);
+    // handle errors
   }
 
   return (

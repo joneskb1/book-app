@@ -63,13 +63,12 @@ export default function AddBook() {
     // may need to account for double spaces if google api doesn't
     const term = searchTerm.replaceAll(' ', '+');
 
-    const res = await fetch(
-      `http://127.0.0.1:3002/api/v1/books/findbook/${searchBy}/${term}`
-    );
+    const res = await fetch(`/api/v1/books/findbook/${searchBy}/${term}`);
 
     const data = await res.json();
     setBooks(data.data.data);
     setCurrentPage(1);
+    // add try catch
   }
 
   const handleRadioChange = (event) => {

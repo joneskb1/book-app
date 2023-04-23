@@ -1,8 +1,8 @@
-const User = require("../models/userModel");
-const jwt = require("jsonwebtoken");
-const { promisify } = require("util");
-const { sendMail } = require("../utils/email");
-const crypto = require("crypto");
+const User = require('../models/userModel');
+const jwt = require('jsonwebtoken');
+const { promisify } = require('util');
+const { sendMail } = require('../utils/email');
+const crypto = require('crypto');
 
 const catchAsync = (fn) => {
   return (req, res, next) => {
@@ -33,12 +33,12 @@ const createSendToken = (user, statusCode, req, res) => {
     cookieOptions.secure = true;
   }
 
-  res.cookie("jwt", token, cookieOptions);
+  res.cookie('jwt', token, cookieOptions);
 
   user.password = undefined;
 
   res.status(statusCode).json({
-    status: "success",
+    status: 'success',
     token,
     data: {
       user,
@@ -50,7 +50,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       data: users,
     },
@@ -58,6 +58,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.createUser = catchAsync(async (req, res, next) => {
+  console.log(req.body);
   const newUser = await User.create(req.body);
   createSendToken(newUser, 201, req, res);
 });
@@ -66,25 +67,25 @@ exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return next(new Error("Must provide email and password"));
+    return next(new Error('Must provide email and password'));
   }
 
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email }).select('+password');
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new Error("Email or password is incorrect"));
+    return next(new Error('Email or password is incorrect'));
   }
 
   createSendToken(user, 200, req, res);
 });
 
 exports.logout = (req, res) => {
-  res.cookie("jwt", "loggedout", {
+  res.cookie('jwt', 'loggedout', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
 
-  res.status(200).json({ status: "success" });
+  res.status(200).json({ status: 'success' });
 };
 
 exports.getUser = catchAsync(async (req, res, next) => {
@@ -94,13 +95,13 @@ exports.getUser = catchAsync(async (req, res, next) => {
 
   let books = user.books;
 
-  if (hasRead === "true") {
+  if (hasRead === 'true') {
     books = books.filter((el) => el.hasRead === true);
-  } else if (hasRead === "false") {
+  } else if (hasRead === 'false') {
     books = books.filter((el) => el.hasRead === false);
   }
 
-  if (sort === "title") {
+  if (sort === 'title') {
     books = books.sort((a, b) => {
       if (a._id.title < b._id.title) {
         return -1;
@@ -110,12 +111,12 @@ exports.getUser = catchAsync(async (req, res, next) => {
       }
       return 0;
     });
-  } else if (sort === "author") {
+  } else if (sort === 'author') {
     books = books.sort((a, b) => {
-      const authorNameA = a._id.authors[0].split(" ");
+      const authorNameA = a._id.authors[0].split(' ');
       const lastA = authorNameA[authorNameA.length - 1];
 
-      const authorNameB = b._id.authors[0].split(" ");
+      const authorNameB = b._id.authors[0].split(' ');
       const lastB = authorNameB[authorNameB.length - 1];
 
       if (lastA < lastB) {
@@ -128,10 +129,10 @@ exports.getUser = catchAsync(async (req, res, next) => {
     });
   }
 
-  if (!user) return next(new Error("user id not found, can not get user"));
+  if (!user) return next(new Error('user id not found, can not get user'));
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       books,
       user,
@@ -140,15 +141,15 @@ exports.getUser = catchAsync(async (req, res, next) => {
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+  const user = await User.findByIdAndUpdate(req.user.id, req.body, {
     new: true,
     runValidators: true,
   });
 
-  if (!user) return next(new Error("user id not found, can not update user"));
+  if (!user) return next(new Error('user id not found, can not update user'));
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       data: user,
     },
@@ -158,10 +159,10 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 exports.deleteUser = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndDelete(req.params.id);
 
-  if (!user) return next(new Error("user id not found, can not delete user"));
+  if (!user) return next(new Error('user id not found, can not delete user'));
 
   res.status(204).json({
-    status: "success",
+    status: 'success',
     data: null,
   });
 });
@@ -172,15 +173,17 @@ exports.protect = catchAsync(async (req, res, next) => {
   // if token is not in cookie
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
+    req.headers.authorization.startsWith('Bearer')
   ) {
-    token = req.headers.authorization.split(" ")[1];
+    token = req.headers.authorization.split(' ')[1];
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
 
+  console.log(req.cookies);
+
   if (!token) {
-    return next(new Error("no token"));
+    return next(new Error('no token'));
   }
 
   // extract payload from jwt
@@ -188,12 +191,12 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   const user = await User.findById(jwtPayload.id);
   if (!user) {
-    return next(new Error("user not found with that token"));
+    return next(new Error('user not found with that token'));
   }
 
   //check if user changed password after token was issued
   if (user.changedPasswordAfter(jwtPayload.iat)) {
-    return next(new Error("user recently changed password"));
+    return next(new Error('user recently changed password'));
   }
 
   // add user to req for other functions to use
@@ -202,14 +205,14 @@ exports.protect = catchAsync(async (req, res, next) => {
 });
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.user.id).select("+password");
+  const user = await User.findById(req.user.id).select('+password');
 
   if (!user) {
-    return next(new Error("user not found"));
+    return next(new Error('user not found'));
   }
 
   if (!(await user.correctPassword(req.body.currentPassword, user.password))) {
-    return next(new Error("wrong password"));
+    return next(new Error('wrong password'));
   }
 
   user.password = req.body.password;
@@ -224,7 +227,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
-    return next(new Error("no user found with provided email"));
+    return next(new Error('no user found with provided email'));
   }
 
   const resetPasswordToken = user.createPasswordResetToken();
@@ -234,22 +237,22 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   // send email with non hashed reset token
   const resetUrl = `${req.protocol}://${req.get(
-    "host"
+    'host'
   )}/api/v1/users/resetPassword/${resetPasswordToken}`;
 
   await sendMail(user.email, resetUrl);
 
   res.status(200).json({
-    status: "success",
-    message: "token sent to email",
+    status: 'success',
+    message: 'token sent to email',
   });
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
   const hashedToken = crypto
-    .createHash("sha256")
+    .createHash('sha256')
     .update(req.params.token)
-    .digest("hex");
+    .digest('hex');
 
   const user = await User.findOne({
     passwordResetToken: hashedToken,
@@ -260,7 +263,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   // set new password if token isn't expired & user exists
   if (!user) {
-    return next(new Error("token invalid or expired"));
+    return next(new Error('token invalid or expired'));
   }
 
   user.password = req.body.password;
@@ -287,7 +290,7 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
   );
 
   res.status(204).json({
-    status: "success",
+    status: 'success',
     data: null,
   });
 });
@@ -296,10 +299,10 @@ exports.markRead = catchAsync(async (req, res, next) => {
   const bookId = req.params.id;
 
   const user = await User.findOneAndUpdate(
-    { _id: req.user.id, "books._id": bookId },
+    { _id: req.user.id, 'books._id': bookId },
     {
       $set: {
-        "books.$.hasRead": true,
+        'books.$.hasRead': true,
       },
     },
     {
@@ -308,7 +311,7 @@ exports.markRead = catchAsync(async (req, res, next) => {
   );
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       data: user,
     },
@@ -319,10 +322,10 @@ exports.markUnread = catchAsync(async (req, res, next) => {
   const bookId = req.params.id;
 
   const user = await User.findOneAndUpdate(
-    { _id: req.user.id, "books._id": bookId },
+    { _id: req.user.id, 'books._id': bookId },
     {
       $set: {
-        "books.$.hasRead": false,
+        'books.$.hasRead': false,
       },
     },
     {
@@ -331,7 +334,7 @@ exports.markUnread = catchAsync(async (req, res, next) => {
   );
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       data: user,
     },
