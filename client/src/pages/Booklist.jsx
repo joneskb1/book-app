@@ -3,11 +3,53 @@ import greenCheck from '../assets/green-check.svg';
 import unreadX from '../assets/unread-x.svg';
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 export default function BookList() {
+  const [bookList, setBookList] = useState(null);
+  const [error, setError] = useState(null);
+  const [filterBy, setFilterBy] = useState(null);
+  const [sortBy, setSortBy] = useState(null);
+
   const { isLoggedIn } = useContext(AuthContext);
-  console.log('BOOKLIST LOG', isLoggedIn);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const url = `/api/v1/users/books`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.status === 'success') {
+          setBookList(data.data.books);
+          setError(null);
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchBooks();
+  }, []);
+
+  useEffect(() => {
+    const fetchBooks = async () => {
+      try {
+        const url = `/api/v1/users/books?filterBy=${filterBy}&sort=${sortBy}`;
+        const res = await fetch(url);
+        const data = await res.json();
+
+        if (data.status === 'success') {
+          setBookList(data.data.books);
+          setError(null);
+        }
+      } catch (err) {
+        setError(err.message);
+      }
+    };
+
+    fetchBooks();
+  }, [filterBy, sortBy]);
 
   return (
     <>
@@ -16,23 +58,62 @@ export default function BookList() {
           <h2 className='title'>Book List</h2>
           <div className='filter-sort-container'>
             <p className='filter-label'>Filter:</p>
-            <button className='read-btn'>Read</button>
-            <button className='unread-btn'>Unread</button>
+            <button
+              className={`read-btn ${filterBy === 'read' ? 'active' : ''}`}
+              onClick={() =>
+                filterBy === 'read' ? setFilterBy(null) : setFilterBy('read')
+              }
+            >
+              Read
+            </button>
+            <button
+              className={`unread-btn ${filterBy === 'unread' ? 'active' : ''}`}
+              onClick={() =>
+                filterBy === 'unread'
+                  ? setFilterBy(null)
+                  : setFilterBy('unread')
+              }
+            >
+              Unread
+            </button>
             <p className='sort-label'>Sort:</p>
-            <button className=' title-btn'>Title</button>
-            <button className=' author-btn'>Author</button>
+            <button
+              className={`title-btn ${sortBy === 'title' ? 'active' : ''}`}
+              onClick={() =>
+                sortBy === 'title' ? setSortBy(null) : setSortBy('title')
+              }
+            >
+              Title
+            </button>
+            <button
+              className={`author-btn ${sortBy === 'author' ? 'active' : ''}`}
+              onClick={() =>
+                sortBy === 'author' ? setSortBy(null) : setSortBy('author')
+              }
+            >
+              Author
+            </button>
           </div>
           <div className='detail-container'>
             <p className='details'>Click book for details</p>
             <p className='read-status'>Read Status</p>
           </div>
-          {/* map data here */}
-          <Link className='book-link' to='/bookdetails'>
-            <div className='book'>
-              <p>1984, George Orwell</p>
-              <img src={greenCheck} alt='green check' />
-            </div>
-          </Link>
+          {bookList &&
+            bookList.map((book, index) => {
+              return (
+                <Link className='book-link' to='/bookdetails' key={index}>
+                  <div className='book'>
+                    <p>
+                      {book._id.title}, by {book._id.authors[0]}
+                    </p>
+                    <img
+                      src={book.hasRead ? greenCheck : unreadX}
+                      alt={book.hasRead ? 'read check' : 'unread check'}
+                    />
+                  </div>
+                </Link>
+              );
+            })}
           <Link className='btn btn-util' to='/addbook'>
             Add Book
           </Link>

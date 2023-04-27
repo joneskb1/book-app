@@ -7,7 +7,6 @@ import { AuthContext } from '../context/AuthContext';
 export default function Navbar() {
   const { isLoggedIn, toggleLoggedIn } = useContext(AuthContext);
   const navigation = useNavigate();
-  console.log('NAVBAR LOG', isLoggedIn);
 
   const handleLogout = async () => {
     if (isLoggedIn) {
@@ -31,14 +30,30 @@ export default function Navbar() {
           <ul>
             <li>
               {!isLoggedIn && (
-                <Link className='links' to={`${'/login'}`}>
-                  Login
-                </Link>
+                <>
+                  <Link className='links' to={`${'/login'}`}>
+                    Login
+                  </Link>
+                </>
               )}
               {isLoggedIn && (
-                <button className='btn-util btn-logout' onClick={handleLogout}>
-                  Logout
-                </button>
+                <>
+                  <Link className='links' to='/booklist'>
+                    My Book List
+                  </Link>
+                  <Link className='links' to='/addbook'>
+                    Add Book
+                  </Link>
+                  <Link className='links' to='/account'>
+                    Account
+                  </Link>
+                  <button
+                    className='btn-util btn-logout'
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </>
               )}
             </li>
 

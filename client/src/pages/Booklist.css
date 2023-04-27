@@ -27,6 +27,7 @@
   font-family: 'Baskerville Old Face';
   font-weight: normal;
   margin: 1rem;
+  font-size: 32px;
 }
 
 .booklist .filter-sort-container {
@@ -52,6 +53,7 @@
 
 .booklist .book-link {
   text-decoration: none;
+  margin: 0.5rem auto;
 }
 
 .booklist .book {
@@ -90,4 +92,9 @@
   opacity: 0.7;
   font-weight: lighter;
   letter-spacing: 1px;
+}
+
+.booklist .active {
+  background: var(--primary);
+  color: white;
 }

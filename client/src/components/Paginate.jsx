@@ -5,7 +5,6 @@ export default function Paginate(props) {
   const { itemsPerPage, totalItems, handlePageChange, currentPage } = props;
   const pages = [];
   const totalNumPages = Math.ceil(totalItems / itemsPerPage);
-  // totalNumPages.forEach((pageNum) => pages.push(pageNum));
 
   for (let i = 1; i <= totalNumPages; i++) {
     pages.push(i);

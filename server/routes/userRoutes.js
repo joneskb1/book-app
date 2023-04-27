@@ -22,6 +22,8 @@ router
   .patch(userController.updateUser)
   .delete(userController.deleteUser);
 
+router.route('/books').get(userController.getUserBooks);
+
 // book ID (not google)
 router.route('/delete/:id').delete(userController.deleteBook);
 router.route('/markread/:id').patch(userController.markRead);

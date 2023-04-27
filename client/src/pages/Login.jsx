@@ -9,9 +9,9 @@ import { AuthContext } from '../context/AuthContext';
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
-  const navigate = useNavigate();
   const { toggleLoggedIn, isLoggedIn } = useContext(AuthContext);
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     if (isLoggedIn) {
@@ -27,9 +27,9 @@ export default function Login() {
 
   async function handleFormSubmit(e) {
     e.preventDefault();
-    const url = `/api/v1/users/login`;
 
     try {
+      const url = `/api/v1/users/login`;
       const res = await fetch(url, {
         method: 'POST',
         headers: {
@@ -46,11 +46,12 @@ export default function Login() {
       if (data.status === 'success') {
         toggleLoggedIn();
         navigate('/booklist');
+        setError(null);
       } else {
-        // show error
+        setError(data.message);
       }
     } catch (err) {
-      console.log(err);
+      setError(err.message);
     }
   }
 
@@ -90,6 +91,7 @@ export default function Login() {
             value={password}
             onChange={(e) => setPassword(e.target.value)}
           />
+          {error && <p className='error'>{error}</p>}
           <Link className='forgot-password'>Forgot Password?</Link>
           <button className='btn'>Login</button>
         </form>

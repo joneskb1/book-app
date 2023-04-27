@@ -14,7 +14,6 @@ export default function BookDetailsPreview({ props }) {
     googleBooksId,
   } = props;
 
-  console.log(title, title.length);
   return (
     <Link to='/bookdetails' className='book-detail-preview link-util'>
       <div className='book'>

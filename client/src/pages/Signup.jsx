@@ -4,13 +4,12 @@ import './Signup.css';
 import closeX from '../assets/close-x.svg';
 import { AuthContext } from '../context/AuthContext';
 
-// setup form submit and forgot password
-
 export default function Signup() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [error, setError] = useState(null);
   const { toggleLoggedIn, isLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
@@ -29,9 +28,18 @@ export default function Signup() {
   async function handleFormSubmit(e) {
     e.preventDefault();
 
-    const url = `/api/v1/users/signup`;
-
     try {
+      if (!name || !email || !password || !passwordConfirm) {
+        throw new Error(
+          'Must enter name, email, password, and password confirm'
+        );
+      }
+
+      if (password.length < 8 || passwordConfirm.length < 8) {
+        throw new Error('Password must be at least 8 characters');
+      }
+
+      const url = `/api/v1/users/signup`;
       const res = await fetch(url, {
         method: 'POST',
         headers: {
@@ -47,14 +55,28 @@ export default function Signup() {
 
       const data = await res.json();
 
+      if (
+        data?.message ===
+        'User validation failed: passwordConfirm: Passwords are not the same!'
+      ) {
+        throw new Error('Passwords do not match. Please try again.');
+      }
+
+      if (data?.message?.startsWith('E11000')) {
+        throw new Error(
+          'Error, something went wrong. This user may already exist. Try logging in instead. '
+        );
+      }
+
       if (data.status === 'success') {
         toggleLoggedIn();
         navigate('/booklist');
+        setError(null);
       } else {
-        // show error
+        throw new Error('Error something went wrong. Please try again.');
       }
     } catch (err) {
-      console.log(err);
+      setError(err.message);
     }
   }
 
@@ -117,6 +139,7 @@ export default function Signup() {
             value={passwordConfirm}
             onChange={(e) => setPasswordConfirm(e.target.value)}
           />
+          {error && <p className='error'>{error}</p>}
           <button className='btn'>Sign up</button>
         </form>
       </div>

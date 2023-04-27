@@ -58,7 +58,6 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.createUser = catchAsync(async (req, res, next) => {
-  console.log(req.body);
   const newUser = await User.create(req.body);
   createSendToken(newUser, 201, req, res);
 });
@@ -89,15 +88,29 @@ exports.logout = (req, res) => {
 };
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const { filter, hasRead, sort } = req.query;
+  const user = await User.findById(req.user.id);
 
-  const user = await User.findById(req.params.id).select(filter);
+  if (!user) return next(new Error('user id not found, can not get user'));
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user,
+    },
+  });
+});
+
+exports.getUserBooks = catchAsync(async (req, res, next) => {
+  const { filterBy, sort } = req.query;
+
+  const user = await User.findById(req.user.id);
+  if (!user) return next(new Error('user not found, can not get users books'));
 
   let books = user.books;
 
-  if (hasRead === 'true') {
+  if (filterBy === 'read') {
     books = books.filter((el) => el.hasRead === true);
-  } else if (hasRead === 'false') {
+  } else if (filterBy === 'unread') {
     books = books.filter((el) => el.hasRead === false);
   }
 
@@ -129,13 +142,10 @@ exports.getUser = catchAsync(async (req, res, next) => {
     });
   }
 
-  if (!user) return next(new Error('user id not found, can not get user'));
-
   res.status(200).json({
     status: 'success',
     data: {
       books,
-      user,
     },
   });
 });
