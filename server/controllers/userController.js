@@ -167,7 +167,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndDelete(req.params.id);
+  const user = await User.findByIdAndDelete(req.user.id);
 
   if (!user) return next(new Error('user id not found, can not delete user'));
 
@@ -189,8 +189,6 @@ exports.protect = catchAsync(async (req, res, next) => {
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
-
-  console.log(req.cookies);
 
   if (!token) {
     return next(new Error('no token'));
@@ -333,9 +331,12 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
     { new: true }
   );
 
+  if (!user) {
+    return next(new Error('unable to delete book'));
+  }
+
   res.status(204).json({
     status: 'success',
-    data: null,
   });
 });
 

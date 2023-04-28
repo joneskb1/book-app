@@ -65,19 +65,43 @@ exports.findBook = catchAsync(async (req, res, next) => {
 
   const data = await response.json();
 
+  if (!data) {
+    return next(new Error('book not found'));
+  }
+
   const books = data.items.map((el) => {
     const info = el.volumeInfo;
 
+    const sanitizedDescription = info.description
+      ? sanitizeHtml(info.description, {
+          allowedAttributes: {},
+          allowedTags: [],
+        })
+      : 'N/A';
+
+    console.log(el);
+
     return {
       title: info.title ?? 'N/A',
-      author: info.authors ? info.authors[0] : 'N/A',
+
+      authors: info.authors ? info.authors : 'N/A',
+
       isbn: info.industryIdentifiers
         ? info.industryIdentifiers[0].identifier
         : 'N/A',
       publishedDate: info.publishedDate ?? 'N/A',
-      category: info.categories ? info.categories[0] : 'N/A',
+      categories: info.categories ? info.categories : 'N/A',
+
       pageCount: info.pageCount ?? 'N/A',
       googleBookId: el.id ?? 'N/A',
+      avgGoogleBooksRating: info.averageRating ?? 0,
+      googleBooksRatingsCount: info.ratingsCount ?? 0,
+      description: sanitizedDescription,
+      publisher: info.publisher ?? 'N/A',
+      imageLinks: {
+        smallThumbnail: info.imageLinks?.smallThumbnail ?? 'N/A',
+        thumbnail: info.imageLinks?.thumbnail ?? 'N/A',
+      },
     };
   });
 
@@ -127,8 +151,8 @@ exports.createBook = catchAsync(async (req, res, next) => {
       description: sanitizedDescription,
       publisher: info.publisher ?? 'N/A',
       imageLinks: {
-        smallThumbnail: info.imageLinks.smallThumbnail ?? 'N/A',
-        thumbnail: info.imageLinks.thumbnail ?? 'N/A',
+        smallThumbnail: info.imageLinks?.smallThumbnail ?? 'N/A',
+        thumbnail: info.imageLinks?.thumbnail ?? 'N/A',
       },
       googleBooksId: data.id ?? 'N/A',
     };
