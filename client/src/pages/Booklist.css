@@ -9,6 +9,7 @@
 }
 
 .booklist .container {
+  position: relative;
   margin-top: 5%;
   margin-bottom: 5%;
   padding: 2rem;
@@ -81,4 +82,15 @@
 .booklist .active {
   background: var(--primary);
   color: white;
+}
+
+.booklist .arrow-wrap {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.booklist .arrow-wrap .active {
+  background: none;
 }

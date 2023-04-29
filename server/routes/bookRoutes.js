@@ -4,7 +4,9 @@ const userController = require('../controllers/userController');
 
 const router = express.Router();
 
-router.route('/findbook/:searchBy/:term').get(bookController.findBook);
+router
+  .route('/findbook/:searchBy/:term')
+  .get(userController.protect, bookController.findBook);
 
 router.route('/').get(bookController.getAllBooks);
 

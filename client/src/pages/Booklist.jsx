@@ -2,8 +2,8 @@ import './BookList.css';
 import greenCheck from '../assets/green-check.svg';
 import unreadX from '../assets/unread-x.svg';
 import { Link } from 'react-router-dom';
-import { AuthContext } from '../context/AuthContext';
-import { useContext, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
+import Paginate from '../components/Paginate';
 
 export default function BookList() {
   const [bookList, setBookList] = useState(null);
@@ -11,7 +11,17 @@ export default function BookList() {
   const [filterBy, setFilterBy] = useState(null);
   const [sortBy, setSortBy] = useState(null);
 
-  const { isLoggedIn } = useContext(AuthContext);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [booksPerPage] = useState(5);
+  const [currentBooks, setCurrentBooks] = useState();
+
+  useEffect(() => {
+    if (bookList) {
+      const indexOfLastBook = currentPage * booksPerPage;
+      const indexOfFirstBook = indexOfLastBook - booksPerPage;
+      setCurrentBooks(bookList.slice(indexOfFirstBook, indexOfLastBook));
+    }
+  }, [currentPage, bookList]);
 
   useEffect(() => {
     const fetchBooks = async () => {
@@ -56,6 +66,7 @@ export default function BookList() {
       <div className='booklist'>
         <div className='container'>
           <h2 className='title'>Book List</h2>
+          {error && <p>{error}</p>}
           <div className='filter-sort-container'>
             <p className='filter-label'>Filter:</p>
             <button
@@ -98,8 +109,8 @@ export default function BookList() {
             <p className='details'>Click book for details</p>
             <p className='read-status'>Read Status</p>
           </div>
-          {bookList &&
-            bookList.map((book, index) => {
+          {currentBooks &&
+            currentBooks.map((book, index) => {
               return (
                 <Link
                   className='book-link'
@@ -119,6 +130,17 @@ export default function BookList() {
                 </Link>
               );
             })}
+          {currentBooks && (
+            <Paginate
+              itemsPerPage={booksPerPage}
+              totalItems={bookList?.length > 0 ? bookList.length : 0}
+              currentPage={currentPage}
+              currentBooks={currentBooks}
+              books={bookList}
+              booksPerPage={booksPerPage}
+              setCurrentPage={setCurrentPage}
+            />
+          )}
         </div>
       </div>
     </>

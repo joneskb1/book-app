@@ -69,6 +69,10 @@ exports.findBook = catchAsync(async (req, res, next) => {
     return next(new Error('book not found'));
   }
 
+  //grab all the user's google book Ids
+  const user = await User.findById(req.user.id);
+  const usersGoogleBookIds = user.books.map((book) => book._id.googleBooksId);
+
   const books = data.items.map((el) => {
     const info = el.volumeInfo;
 
@@ -78,9 +82,6 @@ exports.findBook = catchAsync(async (req, res, next) => {
           allowedTags: [],
         })
       : 'N/A';
-
-    console.log(el);
-
     return {
       title: info.title ?? 'N/A',
 
@@ -102,6 +103,7 @@ exports.findBook = catchAsync(async (req, res, next) => {
         smallThumbnail: info.imageLinks?.smallThumbnail ?? 'N/A',
         thumbnail: info.imageLinks?.thumbnail ?? 'N/A',
       },
+      inUsersBooks: usersGoogleBookIds.includes(el.id),
     };
   });
 
@@ -109,6 +111,7 @@ exports.findBook = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       data: books,
+      usersGoogleBookIds,
     },
   });
 });
@@ -167,11 +170,10 @@ exports.createBook = catchAsync(async (req, res, next) => {
         $elemMatch: { _id: book._id },
       },
     });
+
     //if user doesn't have the book the user will be []
     if (user.length !== 0) {
-      return res.status(409).json({
-        message: 'conflict: you already have this book in your book list!',
-      });
+      return next(new Error('book is already in your book list'));
     }
   }
 

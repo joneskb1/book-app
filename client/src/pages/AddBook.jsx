@@ -1,50 +1,51 @@
 import './AddBook.css';
-import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import searchIcon from '../assets/search.svg';
-import arrowLeft from '../assets/arrow-left.svg';
-import arrowRight from '../assets/arrow-right.svg';
 import BookDetailsPreview from '../components/BookDetailsPreview';
 import Paginate from '../components/Paginate';
+import { useNavigate } from 'react-router-dom';
 
 export default function AddBook() {
   const [searchTerm, setSearchTerm] = useState('');
   const [searchBy, setSearchBy] = useState('intitle');
   const [books, setBooks] = useState();
+  const [error, setError] = useState(null);
   const [currentBooks, setCurrentBooks] = useState();
   const [currentPage, setCurrentPage] = useState(1);
-  const booksPerPage = 5;
-  const indexOfLastBook = currentPage * booksPerPage;
-  const indexOfFirstBook = indexOfLastBook - booksPerPage;
+  const [booksPerPage] = useState(5);
+  // const [forceUpdate, setForceUpdate] = useState(false);
+
+  // const navigate = useNavigate();
 
   useEffect(() => {
     if (books) {
+      const indexOfLastBook = currentPage * booksPerPage;
+      const indexOfFirstBook = indexOfLastBook - booksPerPage;
       setCurrentBooks(books.slice(indexOfFirstBook, indexOfLastBook));
     }
   }, [currentPage, books]);
 
-  const handlePageChange = async (pageNum) => {
-    setCurrentPage(pageNum);
-  };
-
-  const handlePageChangeArrow = (e) => {
-    if (!currentBooks) return;
-
-    if (
-      e.currentTarget.className.includes('arrow-right') &&
-      currentPage < books.length / booksPerPage
-    ) {
-      return setCurrentPage((prevState) => prevState + 1);
-    }
-
-    if (e.currentTarget.className.includes('arrow-left') && currentPage > 1) {
-      return setCurrentPage((prevState) => prevState - 1);
-    }
-  };
-
-  function handleAddBookToDB(e) {
+  async function handleAddBookToDB(e) {
     e.preventDefault();
-    return;
+
+    try {
+      const id = e.target.dataset.id;
+
+      const res = await fetch(`/api/v1/books/${id}`, {
+        method: 'POST',
+      });
+
+      const data = await res.json();
+
+      if (data.status === 'success') {
+        setError(null);
+        // need to rerender or do something to show book was added to list
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
   async function handleFormSubmit(e) {
@@ -52,12 +53,9 @@ export default function AddBook() {
 
     // may need to account for double spaces if google api doesn't
     const term = searchTerm.replaceAll(' ', '+');
-
     const res = await fetch(`/api/v1/books/findbook/${searchBy}/${term}`);
-
     const data = await res.json();
     setBooks(data.data.data);
-    setCurrentPage(1);
     // add try catch
   }
 
@@ -70,6 +68,7 @@ export default function AddBook() {
       <div className='add-book'>
         <div className='container'>
           <div className='header'>Add Book</div>
+          {error && <p className='error'>{error}</p>}
 
           <form onSubmit={handleFormSubmit} className='search-form'>
             <div className='radio-btns-search-bar-wrap'>
@@ -144,35 +143,21 @@ export default function AddBook() {
               return (
                 <BookDetailsPreview
                   key={index}
-                  props={book}
+                  book={book}
                   handleAddBookToDB={handleAddBookToDB}
                 />
               );
             })}
-
           {currentBooks && (
-            <div className='arrow-wrap'>
-              <button
-                className='btn-util arrow-left'
-                onClick={handlePageChangeArrow}
-                aria-label='left arrow'
-              >
-                <img src={arrowLeft} className='arrow' />
-              </button>
-              <Paginate
-                itemsPerPage={booksPerPage}
-                totalItems={40}
-                handlePageChange={handlePageChange}
-                currentPage={currentPage}
-              />
-              <button
-                className='btn-util arrow-right'
-                onClick={handlePageChangeArrow}
-                aria-label='right arrow'
-              >
-                <img src={arrowRight} className='arrow' />
-              </button>
-            </div>
+            <Paginate
+              itemsPerPage={booksPerPage}
+              totalItems={books?.length > 0 ? books.length : 0}
+              currentPage={currentPage}
+              currentBooks={currentBooks}
+              books={books}
+              booksPerPage={booksPerPage}
+              setCurrentPage={setCurrentPage}
+            />
           )}
         </div>
       </div>

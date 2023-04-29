@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './BookDetailsPreview.css';
 
-export default function BookDetailsPreview({ props }) {
+export default function BookDetailsPreview(props) {
   const {
     title,
     authors,
@@ -10,15 +10,17 @@ export default function BookDetailsPreview({ props }) {
     publishedDate,
     categories,
     pageCount,
-    handleAddBookToDB,
     googleBookId,
-  } = props;
+    inUsersBooks,
+  } = props.book;
+
+  const { handleAddBookToDB } = props;
 
   return (
     <Link
       to='/bookdetails'
       className='book-detail-preview link-util'
-      state={{ book: props }}
+      state={{ book: props.book }}
     >
       <div className='book'>
         <div className='title-container'>
@@ -26,9 +28,19 @@ export default function BookDetailsPreview({ props }) {
           <p className='title'>
             {title.slice(0, 63)} {title.length >= 61 ? '...' : ''}
           </p>
-          <button onClick={handleAddBookToDB} className='search-btn'>
-            Add Book
-          </button>
+          {inUsersBooks === false && (
+            <button
+              onClick={handleAddBookToDB}
+              data-id={googleBookId}
+              className='search-btn'
+              type='button'
+            >
+              Add Book
+            </button>
+          )}
+          {inUsersBooks && (
+            <p className='book-in-list-msg'>This Book Is In Your List</p>
+          )}
         </div>
 
         <div className='search-book-details'>

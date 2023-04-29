@@ -1,9 +1,26 @@
-.paginate .li-paginate {
+.paginate-wrap {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 350px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.paginate-wrap .li-paginate {
   color: white;
   font-size: 18px;
   margin: 0 5px;
 }
 
-.paginate .li-paginate.active {
+.paginate-wrap .li-paginate.active {
   border-bottom: 1px solid var(--white);
+  background: none;
+}
+
+.paginate-wrap .arrow {
+  margin: 0 1rem 0;
+  cursor: pointer;
 }

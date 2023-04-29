@@ -4,14 +4,20 @@ import unreadX from '../assets/unread-x.svg';
 import closeX from '../assets/close-x.svg';
 import noImage from '../assets/no-image.svg';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
+import { useState } from 'react';
 
 export default function BookDetails() {
   const navigate = useNavigate();
+  const [error, setError] = useState(null);
   const location = useLocation();
   let { book } = location.state;
 
-  let hasRead = undefined;
+  //true or false, coming from Add Book component, using find book method in book controller
+  let inUsersList = book.inUsersBooks;
+  let hasRead;
+  // to test if data is coming from my book list component, if so books will have hasRead property
   if (book.hasRead !== undefined) {
+    inUsersList = true;
     hasRead = book.hasRead;
     book = book._id;
   }
@@ -37,16 +43,23 @@ export default function BookDetails() {
   }
 
   async function handleAddClick(e) {
-    const id = e.target.dataset.id;
+    try {
+      const id = e.target.dataset.id;
 
-    const res = await fetch(`/api/v1/books/${id}`, {
-      method: 'POST',
-    });
+      const res = await fetch(`/api/v1/books/${id}`, {
+        method: 'POST',
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    if (data.status === 'success') {
-      navigate('/addbook');
+      if (data.status === 'success') {
+        navigate('/addbook');
+        setError(null);
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError(err.message);
     }
   }
 
@@ -64,6 +77,7 @@ export default function BookDetails() {
             />
           </Link>
           <h2 className='details-header'>Book Details</h2>
+          {error && <p>{error}</p>}
           <div className='book-info'>
             {book && (
               <>
@@ -87,7 +101,7 @@ export default function BookDetails() {
                 <p className='book-detail-p'>
                   Date of Publication: {book.publishedDate}
                 </p>
-                {hasRead !== undefined && (
+                {inUsersList && (
                   <p className='book-detail-p'>
                     Read Status:{' '}
                     <img
@@ -105,7 +119,7 @@ export default function BookDetails() {
                   }
                   alt='cover of book'
                 />
-                {hasRead === undefined && (
+                {!inUsersList && (
                   <button
                     className='btn'
                     data-id={book.googleBookId}
@@ -114,7 +128,7 @@ export default function BookDetails() {
                     Add Book
                   </button>
                 )}
-                {hasRead !== undefined && (
+                {inUsersList && (
                   <button
                     className='btn'
                     data-id={book._id}

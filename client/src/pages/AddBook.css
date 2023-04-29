@@ -11,7 +11,7 @@
 .add-book .container {
   position: relative;
   width: 1172px;
-  height: 750px;
+  min-height: 750px;
   background: var(--secondary);
   border-radius: 5px;
   padding: 2rem;
@@ -30,9 +30,10 @@
 
 .add-book .search-form {
   display: flex;
-  justify-content: center;
+  width: 800px;
+  justify-content: space-between;
   align-items: center;
-  margin: 1rem 1rem 0.7rem;
+  margin: 1rem 0 0.7rem;
 }
 
 .add-book .visually-hidden {
@@ -50,7 +51,7 @@
 .add-book .input {
   border-radius: 5px;
   height: 45px;
-  width: 650px;
+  width: 745px;
   padding: 1rem;
   border: none;
   font-size: 18px;
@@ -104,15 +105,13 @@
   background-color: var(--primary);
   text-decoration: none;
   cursor: pointer;
-  margin-left: 1rem;
+  /* margin-left: 1rem; */
   align-self: flex-end;
 }
 
 .add-book .user-instructions {
-  /* margin-left: 18%;
-  margin-bottom: 5px; */
   align-self: flex-start;
-  margin-left: 18%;
+  margin-left: 14%;
   opacity: 0.8;
   font-weight: lighter;
   color: var(--white);
