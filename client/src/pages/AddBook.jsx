@@ -1,8 +1,6 @@
 import './AddBook.css';
-import { Link, useNavigate } from 'react-router-dom';
-import useSWR from 'swr';
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import closeX from '../assets/close-x.svg';
 import searchIcon from '../assets/search.svg';
 import arrowLeft from '../assets/arrow-left.svg';
 import arrowRight from '../assets/arrow-right.svg';
@@ -44,14 +42,6 @@ export default function AddBook() {
     }
   };
 
-  const navigate = useNavigate();
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      navigate('/booklist');
-    }
-  };
-
   function handleAddBookToDB(e) {
     e.preventDefault();
     return;
@@ -80,15 +70,7 @@ export default function AddBook() {
       <div className='add-book'>
         <div className='container'>
           <div className='header'>Add Book</div>
-          <Link to='/booklist'>
-            <img
-              src={closeX}
-              tabIndex='0'
-              alt='close x'
-              className='close-x'
-              onKeyDown={handleKeyDown}
-            />
-          </Link>
+
           <form onSubmit={handleFormSubmit} className='search-form'>
             <div className='radio-btns-search-bar-wrap'>
               <fieldset className='fieldset'>

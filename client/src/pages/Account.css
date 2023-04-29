@@ -39,13 +39,6 @@
 .account .form-info {
   margin-bottom: 2rem;
 }
-.account .close-x {
-  position: absolute;
-  top: 5%;
-  left: 93%;
-  height: 25px;
-  width: 25px;
-}
 
 .account .label {
   color: white;

@@ -3,22 +3,58 @@ import greenCheck from '../assets/green-check.svg';
 import unreadX from '../assets/unread-x.svg';
 import closeX from '../assets/close-x.svg';
 import noImage from '../assets/no-image.svg';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 
 export default function BookDetails() {
   const navigate = useNavigate();
+  const location = useLocation();
+  let { book } = location.state;
+
+  let hasRead = undefined;
+  if (book.hasRead !== undefined) {
+    hasRead = book.hasRead;
+    book = book._id;
+  }
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      navigate('/booklist');
+      if (hasRead !== undefined) {
+        navigate('/booklist');
+      } else {
+        navigate('/addbook');
+      }
     }
   };
+
+  async function handleRemoveClick(e) {
+    const id = e.target.dataset.id;
+
+    const res = await fetch(`/api/v1/users/delete/${id}`, {
+      method: 'DELETE',
+    });
+
+    navigate('/booklist');
+  }
+
+  async function handleAddClick(e) {
+    const id = e.target.dataset.id;
+
+    const res = await fetch(`/api/v1/books/${id}`, {
+      method: 'POST',
+    });
+
+    const data = await res.json();
+
+    if (data.status === 'success') {
+      navigate('/addbook');
+    }
+  }
 
   return (
     <>
       <div className='book-details'>
         <div className='container'>
-          <Link to='/booklist'>
+          <Link to={hasRead !== undefined ? '/booklist' : '/addbook'}>
             <img
               src={closeX}
               tabIndex='0'
@@ -29,29 +65,66 @@ export default function BookDetails() {
           </Link>
           <h2 className='details-header'>Book Details</h2>
           <div className='book-info'>
-            <h3 className='details-title'>Title: TITLE HERE</h3>
-            <p className='book-detail-p'>
-              Google Book's Rating 4.5 (123 reviews)
-            </p>
-            <p className='book-detail-p'>Author: AUTHOR</p>
-            <p className='book-detail-p summary'>
-              Summary: Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-              Dicta excepturi odio harum aperiam, similique fuga? Consequuntur
-              cumque culpa aut architecto exercitationem assumenda qui
-              praesentium porro? In corrupti voluptas consectetur aliquid.
-              Lorem, ipsum dolor sit amet consectetur adipisicing elit. Dicta
-              excepturi odio harum aperiam, similique fuga? Consequuntur cumque
-            </p>
-            <p className='book-detail-p'>ISBN: 123456789</p>
-            <p className='book-detail-p'>Category: fiction</p>
-            <p className='book-detail-p'>Number of Pages: 456</p>
-            <p className='book-detail-p'>Publisher: Harmony</p>
-            <p className='book-detail-p'>Date of Publication: 1987</p>
-            <p className='book-detail-p'>
-              Read Status: <img src={greenCheck} alt='read status' />
-            </p>
-            <img className='book-image' src={noImage} alt='cover of book' />
-            <button className='btn'>Remove Book</button>
+            {book && (
+              <>
+                <h3 className='details-title'>Title: {book.title}</h3>
+                <p className='book-detail-p'>
+                  Google Book's Rating {book.avgGoogleBooksRating} (
+                  {book.googleBooksRatingsCount} reviews)
+                </p>
+                <p className='book-detail-p'>
+                  Author: {book.authors.join(', ')}
+                </p>
+                <p className='book-detail-p summary'>{book.description}</p>
+                <p className='book-detail-p'>ISBN: {book.isbn}</p>
+                <p className='book-detail-p'>
+                  Category: {book.categories.join(', ')}
+                </p>
+                <p className='book-detail-p'>
+                  Number of Pages: {book.pageCount}
+                </p>
+                <p className='book-detail-p'>Publisher: {book.publisher}</p>
+                <p className='book-detail-p'>
+                  Date of Publication: {book.publishedDate}
+                </p>
+                {hasRead !== undefined && (
+                  <p className='book-detail-p'>
+                    Read Status:{' '}
+                    <img
+                      src={hasRead ? greenCheck : unreadX}
+                      alt={hasRead ? 'read check' : 'unread check'}
+                    />
+                  </p>
+                )}
+                <img
+                  className='book-image'
+                  src={
+                    book.imageLinks?.thumbnail
+                      ? book.imageLinks?.thumbnail
+                      : noImage
+                  }
+                  alt='cover of book'
+                />
+                {hasRead === undefined && (
+                  <button
+                    className='btn'
+                    data-id={book.googleBookId}
+                    onClick={handleAddClick}
+                  >
+                    Add Book
+                  </button>
+                )}
+                {hasRead !== undefined && (
+                  <button
+                    className='btn'
+                    data-id={book._id}
+                    onClick={handleRemoveClick}
+                  >
+                    Remove Book
+                  </button>
+                )}
+              </>
+            )}
           </div>
         </div>
       </div>

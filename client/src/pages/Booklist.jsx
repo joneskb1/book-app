@@ -101,7 +101,12 @@ export default function BookList() {
           {bookList &&
             bookList.map((book, index) => {
               return (
-                <Link className='book-link' to='/bookdetails' key={index}>
+                <Link
+                  className='book-link'
+                  to={`/bookdetails`}
+                  state={{ book }}
+                  key={index}
+                >
                   <div className='book'>
                     <p>
                       {book._id.title}, by {book._id.authors[0]}
@@ -114,9 +119,6 @@ export default function BookList() {
                 </Link>
               );
             })}
-          <Link className='btn btn-util' to='/addbook'>
-            Add Book
-          </Link>
         </div>
       </div>
     </>

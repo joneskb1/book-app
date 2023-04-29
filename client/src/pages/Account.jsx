@@ -1,7 +1,6 @@
 import './Account.css';
-import closeX from '../assets/close-x.svg';
 import { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 export default function Account() {
   const [name, setName] = useState('');
@@ -9,14 +8,6 @@ export default function Account() {
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
-
-  const navigate = useNavigate();
-
-  const handleKeyDown = (e) => {
-    if (e.key === 'Enter') {
-      navigate('/booklist');
-    }
-  };
 
   async function handleFormSubmit(e) {
     e.preventDefault();
@@ -33,7 +24,6 @@ export default function Account() {
 
     const data = await res.json();
 
-    console.log(data);
     // handle errors
   }
 
@@ -42,15 +32,7 @@ export default function Account() {
       <div className='account'>
         <div className='container'>
           <h2 className='title'>Account Info</h2>
-          <Link to='/booklist'>
-            <img
-              src={closeX}
-              tabIndex='0'
-              alt='x close btn'
-              className='close-x'
-              onKeyDown={handleKeyDown}
-            />
-          </Link>
+
           <form className='form-info' onSubmit={handleFormSubmit}>
             <label className='label' htmlFor='name'>
               Name

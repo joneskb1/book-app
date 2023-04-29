@@ -28,14 +28,6 @@
   color: var(--white);
 }
 
-.add-book .close-x {
-  position: absolute;
-  top: 5%;
-  left: 93%;
-  height: 25px;
-  width: 25px;
-}
-
 .add-book .search-form {
   display: flex;
   justify-content: center;
