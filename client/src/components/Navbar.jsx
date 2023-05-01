@@ -13,6 +13,7 @@ export default function Navbar() {
       const res = await fetch('/api/v1/users/logout');
       const data = await res.json();
       toggleLoggedIn();
+      localStorage.clear();
       navigation('/');
     }
   };

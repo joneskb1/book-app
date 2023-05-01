@@ -4,6 +4,7 @@ import unreadX from '../assets/unread-x.svg';
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Paginate from '../components/Paginate';
+import BookDetailsPreview from '../components/BookDetailsPreview.jsx';
 
 export default function BookList() {
   const [bookList, setBookList] = useState(null);
@@ -112,23 +113,32 @@ export default function BookList() {
           {currentBooks &&
             currentBooks.map((book, index) => {
               return (
-                <Link
-                  className='book-link'
-                  to={`/bookdetails`}
-                  state={{ book }}
+                <BookDetailsPreview
+                  url='booklist'
+                  hasRead={book.hasRead}
+                  book={book._id}
                   key={index}
-                >
-                  <div className='book'>
-                    <p>
-                      {book._id.title}, by {book._id.authors[0]}
-                    </p>
-                    <img
-                      src={book.hasRead ? greenCheck : unreadX}
-                      alt={book.hasRead ? 'read check' : 'unread check'}
-                    />
-                  </div>
-                </Link>
+                />
               );
+
+              // return (
+              //   <Link
+              //     className='book-link'
+              //     to={`/bookdetails`}
+              //     state={{ book }}
+              //     key={index}
+              //   >
+              //     <div className='book'>
+              //       <p>
+              //         {book._id.title}, by {book._id.authors[0]}
+              //       </p>
+              //       <img
+              //         src={book.hasRead ? greenCheck : unreadX}
+              //         alt={book.hasRead ? 'read check' : 'unread check'}
+              //       />
+              //     </div>
+              //   </Link>
+              // );
             })}
           {currentBooks && (
             <Paginate

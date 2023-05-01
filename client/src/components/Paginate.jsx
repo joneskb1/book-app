@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import './Paginate.css';
 import arrowLeft from '../assets/arrow-left.svg';
 import arrowRight from '../assets/arrow-right.svg';
@@ -20,6 +20,10 @@ export default function Paginate(props) {
     pages.push(i);
   }
 
+  useEffect(() => {
+    localStorage.setItem('currentPage', currentPage);
+  }, [currentPage]);
+
   const handlePageChange = async (pageNum) => {
     setCurrentPage(pageNum);
   };
@@ -31,11 +35,11 @@ export default function Paginate(props) {
       e.currentTarget.className.includes('arrow-right') &&
       currentPage < books.length / booksPerPage
     ) {
-      return setCurrentPage((prevState) => prevState + 1);
+      setCurrentPage((prevState) => Number.parseInt(prevState, 10) + 1);
     }
 
     if (e.currentTarget.className.includes('arrow-left') && currentPage > 1) {
-      return setCurrentPage((prevState) => prevState - 1);
+      setCurrentPage((prevState) => Number.parseInt(prevState, 10) - 1);
     }
   };
 

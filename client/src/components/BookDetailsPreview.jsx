@@ -1,6 +1,9 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import './BookDetailsPreview.css';
+import { Audio } from 'react-loader-spinner';
+import greenCheck from '../assets/green-check.svg';
+import unreadX from '../assets/unread-x.svg';
 
 export default function BookDetailsPreview(props) {
   const {
@@ -10,17 +13,18 @@ export default function BookDetailsPreview(props) {
     publishedDate,
     categories,
     pageCount,
-    googleBookId,
+    googleBooksId,
     inUsersBooks,
   } = props.book;
 
-  const { handleAddBookToDB } = props;
+  const { handleAddBookToDB, hasRead, url, loading } = props;
+  const parentComponent = url === 'booklist' ? 'booklist' : 'addbook';
 
   return (
     <Link
       to='/bookdetails'
       className='book-detail-preview link-util'
-      state={{ book: props.book }}
+      state={{ book: props.book, url: url, hasRead: hasRead }}
     >
       <div className='book'>
         <div className='title-container'>
@@ -28,17 +32,36 @@ export default function BookDetailsPreview(props) {
           <p className='title'>
             {title.slice(0, 63)} {title.length >= 61 ? '...' : ''}
           </p>
-          {inUsersBooks === false && (
+          {parentComponent === 'booklist' && (
+            <>
+              <img
+                src={hasRead ? greenCheck : unreadX}
+                alt={hasRead ? 'read check' : 'unread check'}
+              />
+            </>
+          )}
+          {loading && (
+            <Audio
+              height='30'
+              width='30'
+              radius='5'
+              color='#087E8B'
+              ariaLabel='loading'
+              // wrapperStyle
+              // wrapperClass
+            />
+          )}
+          {!loading && inUsersBooks === false && (
             <button
               onClick={handleAddBookToDB}
-              data-id={googleBookId}
+              data-id={googleBooksId}
               className='search-btn'
               type='button'
             >
               Add Book
             </button>
           )}
-          {inUsersBooks && (
+          {!loading && inUsersBooks && (
             <p className='book-in-list-msg'>This Book Is In Your List</p>
           )}
         </div>

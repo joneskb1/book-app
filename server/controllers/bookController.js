@@ -68,13 +68,34 @@ exports.findBook = catchAsync(async (req, res, next) => {
   if (!data) {
     return next(new Error('book not found'));
   }
-
   //grab all the user's google book Ids
   const user = await User.findById(req.user.id);
   const usersGoogleBookIds = user.books.map((book) => book._id.googleBooksId);
+  const usersBookList = user.books.map((book) => [
+    book._id.googleBooksId,
+    book.hasRead,
+  ]);
 
   const books = data.items.map((el) => {
     const info = el.volumeInfo;
+
+    let hasRead = 'N/A';
+    let inUsersBooks = false;
+
+    // usersBookList.map((userBook) => {
+    //   if (userBook[0] === el.id) {
+    //     inUsersBooks = true;
+    //     hasRead = userBook[1];
+    //   }
+    // });
+
+    for (let i = 0; i < usersBookList.length; i++) {
+      if (usersBookList[i][0] === el.id) {
+        inUsersBooks = true;
+        hasRead = usersBookList[i][1];
+        break;
+      }
+    }
 
     const sanitizedDescription = info.description
       ? sanitizeHtml(info.description, {
@@ -94,7 +115,7 @@ exports.findBook = catchAsync(async (req, res, next) => {
       categories: info.categories ? info.categories : 'N/A',
 
       pageCount: info.pageCount ?? 'N/A',
-      googleBookId: el.id ?? 'N/A',
+      googleBooksId: el.id ?? 'N/A',
       avgGoogleBooksRating: info.averageRating ?? 0,
       googleBooksRatingsCount: info.ratingsCount ?? 0,
       description: sanitizedDescription,
@@ -103,7 +124,9 @@ exports.findBook = catchAsync(async (req, res, next) => {
         smallThumbnail: info.imageLinks?.smallThumbnail ?? 'N/A',
         thumbnail: info.imageLinks?.thumbnail ?? 'N/A',
       },
-      inUsersBooks: usersGoogleBookIds.includes(el.id),
+      // inUsersBooks: usersGoogleBookIds.includes(el.id),
+      inUsersBooks,
+      hasRead,
     };
   });
 
@@ -111,7 +134,6 @@ exports.findBook = catchAsync(async (req, res, next) => {
     status: 'success',
     data: {
       data: books,
-      usersGoogleBookIds,
     },
   });
 });

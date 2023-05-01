@@ -323,17 +323,30 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 exports.deleteBook = catchAsync(async (req, res, next) => {
   const bookId = req.params.id;
 
-  const user = await User.findByIdAndUpdate(
-    req.user.id,
-    {
-      $pull: { books: { _id: bookId } },
-    },
-    { new: true }
-  );
+  // const user = await User.findByIdAndUpdate(
+  //   req.user.id,
+  //   {
+  //     $pull: { books: { _id: bookId } },
+  //   },
+  //   { new: true }
+  // );
+
+  const user = await User.findById(req.user.id);
+  // const userBooks =
 
   if (!user) {
     return next(new Error('unable to delete book'));
   }
+
+  const bookIndex = user.books.findIndex(
+    (book) => book._id.googleBooksId === bookId
+  );
+  if (bookIndex === -1) {
+    return next(new Error('Book not found'));
+  }
+
+  user.books.splice(bookIndex, 1);
+  user.save({ validateBeforeSave: false });
 
   res.status(204).json({
     status: 'success',

@@ -10,23 +10,26 @@ export default function BookDetails() {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const location = useLocation();
-  let { book } = location.state;
+  // hasRead coming from Book list
+  let { book, url, hasRead } = location.state;
 
+  // should be able to access book.hasRead coming from add Book page. If not on user's book list it will be "N/A"
+
+  if (!hasRead) {
+    hasRead = book.hasRead;
+  }
   //true or false, coming from Add Book component, using find book method in book controller
   let inUsersList = book.inUsersBooks;
-  let hasRead;
-  // to test if data is coming from my book list component, if so books will have hasRead property
-  if (book.hasRead !== undefined) {
+
+  if (url === 'booklist') {
     inUsersList = true;
-    hasRead = book.hasRead;
-    book = book._id;
   }
 
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
-      if (hasRead !== undefined) {
+      if (url === 'booklist') {
         navigate('/booklist');
-      } else {
+      } else if (url === 'addbook') {
         navigate('/addbook');
       }
     }
@@ -39,7 +42,8 @@ export default function BookDetails() {
       method: 'DELETE',
     });
 
-    navigate('/booklist');
+    const page = hasRead !== undefined ? '/booklist' : '/addbook';
+    navigate(page);
   }
 
   async function handleAddClick(e) {
@@ -67,7 +71,7 @@ export default function BookDetails() {
     <>
       <div className='book-details'>
         <div className='container'>
-          <Link to={hasRead !== undefined ? '/booklist' : '/addbook'}>
+          <Link to={url === 'booklist' ? '/booklist' : '/addbook'}>
             <img
               src={closeX}
               tabIndex='0'
@@ -101,7 +105,7 @@ export default function BookDetails() {
                 <p className='book-detail-p'>
                   Date of Publication: {book.publishedDate}
                 </p>
-                {inUsersList && (
+                {inUsersList && (book.hasRead !== 'N/A' || hasRead) && (
                   <p className='book-detail-p'>
                     Read Status:{' '}
                     <img
@@ -122,7 +126,7 @@ export default function BookDetails() {
                 {!inUsersList && (
                   <button
                     className='btn'
-                    data-id={book.googleBookId}
+                    data-id={book.googleBooksId}
                     onClick={handleAddClick}
                   >
                     Add Book
@@ -131,7 +135,7 @@ export default function BookDetails() {
                 {inUsersList && (
                   <button
                     className='btn'
-                    data-id={book._id}
+                    data-id={book.googleBooksId}
                     onClick={handleRemoveClick}
                   >
                     Remove Book

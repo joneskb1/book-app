@@ -3,19 +3,45 @@ import { useState, useEffect } from 'react';
 import searchIcon from '../assets/search.svg';
 import BookDetailsPreview from '../components/BookDetailsPreview';
 import Paginate from '../components/Paginate';
-import { useNavigate } from 'react-router-dom';
 
 export default function AddBook() {
-  const [searchTerm, setSearchTerm] = useState('');
-  const [searchBy, setSearchBy] = useState('intitle');
+  const [searchTerm, setSearchTerm] = useState(() =>
+    localStorage.getItem('searchTerm') ? localStorage.getItem('searchTerm') : ''
+  );
+  const [searchBy, setSearchBy] = useState(() =>
+    localStorage.getItem('searchBy')
+      ? localStorage.getItem('searchBy')
+      : 'intitle'
+  );
   const [books, setBooks] = useState();
   const [error, setError] = useState(null);
   const [currentBooks, setCurrentBooks] = useState();
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(() =>
+    localStorage.getItem('currentPage')
+      ? localStorage.getItem('currentPage')
+      : 1
+  );
+  const [loading, setLoading] = useState();
   const [booksPerPage] = useState(5);
-  // const [forceUpdate, setForceUpdate] = useState(false);
 
-  // const navigate = useNavigate();
+  useEffect(() => {
+    async function searchWithPrevData() {
+      const lastCurrentPage = localStorage.getItem('currentPage');
+
+      if (searchTerm) {
+        await fetchFromGoogle();
+        setCurrentPage(lastCurrentPage);
+        // if (
+        //   lastCurrentPage >= books.length / booksPerPage &&
+        //   lastCurrentPage >= 1
+        // ) {
+        //   setCurrentPage(lastCurrentPage);
+        // }
+      }
+    }
+
+    searchWithPrevData();
+  }, []);
 
   useEffect(() => {
     if (books) {
@@ -28,9 +54,9 @@ export default function AddBook() {
   async function handleAddBookToDB(e) {
     e.preventDefault();
 
+    const id = e.target.dataset.id;
     try {
-      const id = e.target.dataset.id;
-
+      setLoading({ [id]: true });
       const res = await fetch(`/api/v1/books/${id}`, {
         method: 'POST',
       });
@@ -39,7 +65,29 @@ export default function AddBook() {
 
       if (data.status === 'success') {
         setError(null);
-        // need to rerender or do something to show book was added to list
+        await fetchFromGoogle();
+        setCurrentPage(currentPage);
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError(err.message);
+    } finally {
+      setLoading({ [id]: false });
+    }
+  }
+
+  async function fetchFromGoogle() {
+    localStorage.setItem('searchTerm', searchTerm);
+    localStorage.setItem('searchBy', searchBy);
+
+    try {
+      const term = searchTerm.replaceAll(' ', '+');
+      const res = await fetch(`/api/v1/books/findbook/${searchBy}/${term}`);
+      const data = await res.json();
+      if (data.status === 'success') {
+        setBooks(data.data.data);
+        setError(null);
       } else {
         setError(data.message);
       }
@@ -50,13 +98,14 @@ export default function AddBook() {
 
   async function handleFormSubmit(e) {
     e.preventDefault();
-
-    // may need to account for double spaces if google api doesn't
-    const term = searchTerm.replaceAll(' ', '+');
-    const res = await fetch(`/api/v1/books/findbook/${searchBy}/${term}`);
-    const data = await res.json();
-    setBooks(data.data.data);
-    // add try catch
+    if (!searchTerm) {
+      setBooks(null);
+      setCurrentBooks(null);
+      setCurrentPage(1);
+      localStorage.clear();
+      return;
+    }
+    await fetchFromGoogle();
   }
 
   const handleRadioChange = (event) => {
@@ -142,9 +191,11 @@ export default function AddBook() {
             currentBooks.map((book, index) => {
               return (
                 <BookDetailsPreview
+                  url='addbook'
                   key={index}
                   book={book}
                   handleAddBookToDB={handleAddBookToDB}
+                  loading={!!loading && !!loading[book.googleBooksId]}
                 />
               );
             })}
