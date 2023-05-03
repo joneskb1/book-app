@@ -41,7 +41,7 @@ export default function BookDetails() {
       method: 'DELETE',
     });
 
-    const page = hasRead !== undefined ? '/booklist' : '/addbook';
+    const page = url === 'booklist' ? '/booklist' : '/addbook';
     navigate(page);
   }
 

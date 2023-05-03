@@ -24,11 +24,9 @@ router
 
 router.route('/books').get(userController.getUserBooks);
 
-// book ID (not google)
-router.route('/markread/:id').patch(userController.markRead);
-router.route('/markunread/:id').patch(userController.markUnread);
-
 // google ID
 router.route('/delete/:id').delete(userController.deleteBook);
+router.route('/markread/:id').patch(userController.markRead);
+router.route('/markunread/:id').patch(userController.markUnread);
 
 module.exports = router;

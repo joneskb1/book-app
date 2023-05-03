@@ -9,8 +9,12 @@ import BookDetailsPreview from '../components/BookDetailsPreview.jsx';
 export default function BookList() {
   const [bookList, setBookList] = useState(null);
   const [error, setError] = useState(null);
-  const [filterBy, setFilterBy] = useState(null);
-  const [sortBy, setSortBy] = useState(null);
+  const [filterBy, setFilterBy] = useState(() =>
+    localStorage.getItem('filter') ? localStorage.getItem('filter') : null
+  );
+  const [sortBy, setSortBy] = useState(() =>
+    localStorage.getItem('sort') ? localStorage.getItem('sort') : null
+  );
 
   const [currentPage, setCurrentPage] = useState(() =>
     localStorage.getItem('bookListCurrentPage')
@@ -22,19 +26,19 @@ export default function BookList() {
   const [currentBooks, setCurrentBooks] = useState();
 
   useEffect(() => {
-    if (bookList) {
-      const indexOfLastBook = currentPage * booksPerPage;
-      const indexOfFirstBook = indexOfLastBook - booksPerPage;
-      setCurrentBooks(bookList.slice(indexOfFirstBook, indexOfLastBook));
-    }
-    // move setItems to here???
-    // booklist needed in dependency?
-  }, [currentPage, bookList]);
-
-  useEffect(() => {
     const fetchBooks = async () => {
       try {
-        const url = `/api/v1/users/books`;
+        let url;
+        if (filterBy || sortBy) {
+          url = `/api/v1/users/books?filterBy=${filterBy}&sort=${sortBy}`;
+          localStorage.setItem('filter', filterBy);
+          localStorage.setItem('sort', sortBy);
+        } else {
+          url = `/api/v1/users/books`;
+          localStorage.setItem('filter', null);
+          localStorage.setItem('sort', null);
+        }
+
         const res = await fetch(url);
         const data = await res.json();
 
@@ -51,31 +55,21 @@ export default function BookList() {
     };
 
     fetchBooks();
-  }, []);
+  }, [filterBy, sortBy]);
 
   useEffect(() => {
-    const fetchBooks = async () => {
-      try {
-        const url = `/api/v1/users/books?filterBy=${filterBy}&sort=${sortBy}`;
-        const res = await fetch(url);
-        const data = await res.json();
-
-        if (data.status === 'success') {
-          setBookList(data.data.books);
-          if (filterBy || sortBy) {
-            setCurrentPage(1);
-          }
-          setError(null);
-        } else {
-          setError(data.message);
+    if (bookList) {
+      const indexOfLastBook = currentPage * booksPerPage;
+      const indexOfFirstBook = indexOfLastBook - booksPerPage;
+      setCurrentBooks(bookList.slice(indexOfFirstBook, indexOfLastBook));
+      if (filterBy || sortBy) {
+        if (currentPage > Math.ceil(bookList.length / booksPerPage)) {
+          return setCurrentPage(1);
         }
-      } catch (err) {
-        setError(err.message);
+        setCurrentPage(currentPage);
       }
-    };
-
-    fetchBooks();
-  }, [filterBy, sortBy]);
+    }
+  }, [bookList, currentPage]);
 
   return (
     <>

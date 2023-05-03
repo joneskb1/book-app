@@ -332,7 +332,6 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
   // );
 
   const user = await User.findById(req.user.id);
-  // const userBooks =
 
   if (!user) {
     return next(new Error('unable to delete book'));
@@ -355,23 +354,38 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
 
 exports.markRead = catchAsync(async (req, res, next) => {
   const bookId = req.params.id;
+  const user = await User.findById(req.user.id);
 
-  const user = await User.findOneAndUpdate(
-    { _id: req.user.id, 'books._id': bookId },
-    {
-      $set: {
-        'books.$.hasRead': true,
-      },
-    },
-    {
-      new: true,
-    }
+  if (!user) {
+    return next(new Error('unable to edit book'));
+  }
+
+  const bookIndex = user.books.findIndex(
+    (book) => book._id.googleBooksId === bookId
   );
+  if (bookIndex === -1) {
+    return next(new Error('Book not found'));
+  }
+
+  user.books[bookIndex].hasRead = true;
+  user.save({ validateBeforeSave: false });
+
+  // const user = await User.findOneAndUpdate(
+  //   { _id: req.user.id, 'books._id': bookId },
+  //   {
+  //     $set: {
+  //       'books.$.hasRead': true,
+  //     },
+  //   },
+  //   {
+  //     new: true,
+  //   }
+  // );
 
   res.status(200).json({
     status: 'success',
     data: {
-      data: user,
+      data: user.books[bookIndex].hasRead,
     },
   });
 });
@@ -379,22 +393,38 @@ exports.markRead = catchAsync(async (req, res, next) => {
 exports.markUnread = catchAsync(async (req, res, next) => {
   const bookId = req.params.id;
 
-  const user = await User.findOneAndUpdate(
-    { _id: req.user.id, 'books._id': bookId },
-    {
-      $set: {
-        'books.$.hasRead': false,
-      },
-    },
-    {
-      new: true,
-    }
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    return next(new Error('unable to edit book'));
+  }
+
+  const bookIndex = user.books.findIndex(
+    (book) => book._id.googleBooksId === bookId
   );
+  if (bookIndex === -1) {
+    return next(new Error('Book not found'));
+  }
+
+  user.books[bookIndex].hasRead = false;
+  user.save({ validateBeforeSave: false });
+
+  // const user = await User.findOneAndUpdate(
+  //   { _id: req.user.id, 'books._id': bookId },
+  //   {
+  //     $set: {
+  //       'books.$.hasRead': false,
+  //     },
+  //   },
+  //   {
+  //     new: true,
+  //   }
+  // );
 
   res.status(200).json({
     status: 'success',
     data: {
-      data: user,
+      data: user.books[bookIndex].hasRead,
     },
   });
 });
