@@ -7,11 +7,11 @@ export default function Paginate(props) {
   const {
     itemsPerPage,
     totalItems,
-    currentPage,
     currentBooks,
     books,
-    booksPerPage,
+    currentPage,
     setCurrentPage,
+    parent,
   } = props;
   const pages = [];
   const totalNumPages = Math.ceil(totalItems / itemsPerPage);
@@ -21,6 +21,10 @@ export default function Paginate(props) {
   }
 
   useEffect(() => {
+    if (parent === 'usersBooks') {
+      return localStorage.setItem('bookListCurrentPage', currentPage);
+    }
+
     localStorage.setItem('currentPage', currentPage);
   }, [currentPage]);
 
@@ -33,7 +37,7 @@ export default function Paginate(props) {
 
     if (
       e.currentTarget.className.includes('arrow-right') &&
-      currentPage < books.length / booksPerPage
+      currentPage < books.length / itemsPerPage
     ) {
       setCurrentPage((prevState) => Number.parseInt(prevState, 10) + 1);
     }

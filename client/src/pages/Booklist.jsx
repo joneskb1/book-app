@@ -12,7 +12,12 @@ export default function BookList() {
   const [filterBy, setFilterBy] = useState(null);
   const [sortBy, setSortBy] = useState(null);
 
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(() =>
+    localStorage.getItem('bookListCurrentPage')
+      ? localStorage.getItem('bookListCurrentPage')
+      : 1
+  );
+
   const [booksPerPage] = useState(5);
   const [currentBooks, setCurrentBooks] = useState();
 
@@ -22,6 +27,8 @@ export default function BookList() {
       const indexOfFirstBook = indexOfLastBook - booksPerPage;
       setCurrentBooks(bookList.slice(indexOfFirstBook, indexOfLastBook));
     }
+    // move setItems to here???
+    // booklist needed in dependency?
   }, [currentPage, bookList]);
 
   useEffect(() => {
@@ -34,6 +41,9 @@ export default function BookList() {
         if (data.status === 'success') {
           setBookList(data.data.books);
           setError(null);
+        } else {
+          // maybe throw data.message into catch block
+          setError(data.message);
         }
       } catch (err) {
         setError(err.message);
@@ -52,7 +62,12 @@ export default function BookList() {
 
         if (data.status === 'success') {
           setBookList(data.data.books);
+          if (filterBy || sortBy) {
+            setCurrentPage(1);
+          }
           setError(null);
+        } else {
+          setError(data.message);
         }
       } catch (err) {
         setError(err.message);
@@ -120,25 +135,6 @@ export default function BookList() {
                   key={index}
                 />
               );
-
-              // return (
-              //   <Link
-              //     className='book-link'
-              //     to={`/bookdetails`}
-              //     state={{ book }}
-              //     key={index}
-              //   >
-              //     <div className='book'>
-              //       <p>
-              //         {book._id.title}, by {book._id.authors[0]}
-              //       </p>
-              //       <img
-              //         src={book.hasRead ? greenCheck : unreadX}
-              //         alt={book.hasRead ? 'read check' : 'unread check'}
-              //       />
-              //     </div>
-              //   </Link>
-              // );
             })}
           {currentBooks && (
             <Paginate
@@ -147,8 +143,8 @@ export default function BookList() {
               currentPage={currentPage}
               currentBooks={currentBooks}
               books={bookList}
-              booksPerPage={booksPerPage}
               setCurrentPage={setCurrentPage}
+              parent='usersBooks'
             />
           )}
         </div>

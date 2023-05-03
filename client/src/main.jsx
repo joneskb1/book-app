@@ -13,10 +13,7 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 );
 
 // TODO:
-// user updates: name, email, pw & forgot password email
-// add reading/study timer
 // interactive read/unread
+// user updates: name, email, pw & forgot password email
 // error handling
-// working on passing hasRead prop from findBook function to the book details page
-//  bookdetails error
-// save state on my book list page
+// add reading/study timer

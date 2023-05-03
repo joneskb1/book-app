@@ -31,12 +31,6 @@ export default function AddBook() {
       if (searchTerm) {
         await fetchFromGoogle();
         setCurrentPage(lastCurrentPage);
-        // if (
-        //   lastCurrentPage >= books.length / booksPerPage &&
-        //   lastCurrentPage >= 1
-        // ) {
-        //   setCurrentPage(lastCurrentPage);
-        // }
       }
     }
 
@@ -208,6 +202,7 @@ export default function AddBook() {
               books={books}
               booksPerPage={booksPerPage}
               setCurrentPage={setCurrentPage}
+              parent='googlesBooks'
             />
           )}
         </div>

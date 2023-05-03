@@ -10,11 +10,10 @@ export default function BookDetails() {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const location = useLocation();
-  // hasRead coming from Book list
+  // hasRead coming from Book list only.
   let { book, url, hasRead } = location.state;
 
   // should be able to access book.hasRead coming from add Book page. If not on user's book list it will be "N/A"
-
   if (!hasRead) {
     hasRead = book.hasRead;
   }
