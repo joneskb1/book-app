@@ -1,8 +1,8 @@
 import './BookDetails.css';
-import greenCheck from '../assets/green-check.svg';
-import unreadX from '../assets/unread-x.svg';
+
 import closeX from '../assets/close-x.svg';
 import noImage from '../assets/no-image.svg';
+import ReadStatus from '../components/ReadStatus.jsx';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState } from 'react';
 
@@ -107,9 +107,9 @@ export default function BookDetails() {
                 {inUsersList && (book.hasRead !== 'N/A' || hasRead) && (
                   <p className='book-detail-p'>
                     Read Status:{' '}
-                    <img
-                      src={hasRead ? greenCheck : unreadX}
-                      alt={hasRead ? 'read check' : 'unread check'}
+                    <ReadStatus
+                      initialHasRead={hasRead}
+                      googleBooksId={book.googleBooksId}
                     />
                   </p>
                 )}

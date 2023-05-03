@@ -1,18 +1,11 @@
-import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './BookDetailsPreview.css';
 import { Audio } from 'react-loader-spinner';
-import greenCheck from '../assets/green-check.svg';
-import unreadX from '../assets/unread-x.svg';
+
+import ReadStatus from './ReadStatus.jsx';
 
 export default function BookDetailsPreview(props) {
   const { handleAddBookToDB, hasRead, url, loading } = props;
-  const parentComponent = url === 'booklist' ? 'booklist' : 'addbook';
-
-  const [error, setError] = useState(null);
-  const [imgSrc, setImgSrc] = useState(() =>
-    props.hasRead ? greenCheck : unreadX
-  );
 
   const {
     title,
@@ -25,38 +18,7 @@ export default function BookDetailsPreview(props) {
     inUsersBooks,
   } = props.book;
 
-  async function handleReadClick(e) {
-    e.preventDefault();
-    try {
-      const hasReadStatus =
-        imgSrc === '/src/assets/unread-x.svg' ? 'read' : 'unread';
-      const image =
-        imgSrc === '/src/assets/unread-x.svg'
-          ? '/src/assets/green-check.svg'
-          : '/src/assets/unread-x.svg';
-
-      const url = `/api/v1/users/mark${hasReadStatus}/${googleBooksId}`;
-
-      const res = await fetch(url, {
-        method: 'PATCH',
-        headers: {
-          'Content-type': 'application/json',
-        },
-      });
-      const data = await res.json();
-
-      if (data.status === 'success') {
-        setError(null);
-        setImgSrc(image);
-      } else {
-        // maybe throw data.message into catch block
-        setError(data.message);
-      }
-    } catch (err) {
-      setError(err.message);
-    }
-  }
-
+  const parentComponent = url === 'booklist' ? 'booklist' : 'addbook';
   return (
     <Link
       to='/bookdetails'
@@ -70,9 +32,10 @@ export default function BookDetailsPreview(props) {
             {title.slice(0, 63)} {title.length >= 61 ? '...' : ''}
           </p>
           {parentComponent === 'booklist' && (
-            <>
-              <img onClick={handleReadClick} src={imgSrc} alt={'read status'} />
-            </>
+            <ReadStatus
+              initialHasRead={hasRead}
+              googleBooksId={googleBooksId}
+            />
           )}
           {loading && (
             <Audio

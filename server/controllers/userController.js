@@ -352,45 +352,7 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
   });
 });
 
-exports.markRead = catchAsync(async (req, res, next) => {
-  const bookId = req.params.id;
-  const user = await User.findById(req.user.id);
-
-  if (!user) {
-    return next(new Error('unable to edit book'));
-  }
-
-  const bookIndex = user.books.findIndex(
-    (book) => book._id.googleBooksId === bookId
-  );
-  if (bookIndex === -1) {
-    return next(new Error('Book not found'));
-  }
-
-  user.books[bookIndex].hasRead = true;
-  user.save({ validateBeforeSave: false });
-
-  // const user = await User.findOneAndUpdate(
-  //   { _id: req.user.id, 'books._id': bookId },
-  //   {
-  //     $set: {
-  //       'books.$.hasRead': true,
-  //     },
-  //   },
-  //   {
-  //     new: true,
-  //   }
-  // );
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      data: user.books[bookIndex].hasRead,
-    },
-  });
-});
-
-exports.markUnread = catchAsync(async (req, res, next) => {
+exports.toggleRead = catchAsync(async (req, res, next) => {
   const bookId = req.params.id;
 
   const user = await User.findById(req.user.id);
@@ -406,7 +368,7 @@ exports.markUnread = catchAsync(async (req, res, next) => {
     return next(new Error('Book not found'));
   }
 
-  user.books[bookIndex].hasRead = false;
+  user.books[bookIndex].hasRead = !user.books[bookIndex].hasRead;
   user.save({ validateBeforeSave: false });
 
   // const user = await User.findOneAndUpdate(

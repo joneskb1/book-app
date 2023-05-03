@@ -13,7 +13,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 );
 
 // TODO:
-// interactive read/unread on book details refactor!
 // user updates: name, email, pw & forgot password email
 // error handling
 // add reading/study timer
