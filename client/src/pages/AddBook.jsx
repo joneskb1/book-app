@@ -4,7 +4,7 @@ import searchIcon from '../assets/search.svg';
 import BookDetailsPreview from '../components/BookDetailsPreview';
 import Paginate from '../components/Paginate';
 
-export default function AddBook() {
+export default function AddBook({ findCurrentItems }) {
   const [searchTerm, setSearchTerm] = useState(() =>
     localStorage.getItem('searchTerm') ? localStorage.getItem('searchTerm') : ''
   );
@@ -18,7 +18,7 @@ export default function AddBook() {
   const [currentBooks, setCurrentBooks] = useState();
   const [currentPage, setCurrentPage] = useState(() =>
     localStorage.getItem('currentPage')
-      ? localStorage.getItem('currentPage')
+      ? Number.parseInt(localStorage.getItem('currentPage'), 10)
       : 1
   );
   const [loading, setLoading] = useState();
@@ -26,7 +26,9 @@ export default function AddBook() {
 
   useEffect(() => {
     async function searchWithPrevData() {
-      const lastCurrentPage = localStorage.getItem('currentPage');
+      const lastCurrentPage = Number.parseInt(
+        localStorage.getItem('currentPage')
+      );
 
       if (searchTerm) {
         await fetchFromGoogle();
@@ -39,11 +41,14 @@ export default function AddBook() {
 
   useEffect(() => {
     if (books) {
-      const indexOfLastBook = currentPage * booksPerPage;
-      const indexOfFirstBook = indexOfLastBook - booksPerPage;
-      setCurrentBooks(books.slice(indexOfFirstBook, indexOfLastBook));
+      const currentItems = findCurrentItems(currentPage, booksPerPage, books);
+      setCurrentBooks(currentItems);
     }
   }, [currentPage, books]);
+
+  useEffect(() => {
+    localStorage.setItem('currentPage', currentPage);
+  }, [currentPage]);
 
   async function handleAddBookToDB(e) {
     e.preventDefault();
@@ -196,13 +201,9 @@ export default function AddBook() {
           {currentBooks && (
             <Paginate
               itemsPerPage={booksPerPage}
-              totalItems={books?.length > 0 ? books.length : 0}
+              items={books}
               currentPage={currentPage}
-              currentBooks={currentBooks}
-              books={books}
-              booksPerPage={booksPerPage}
               setCurrentPage={setCurrentPage}
-              parent='googlesBooks'
             />
           )}
         </div>

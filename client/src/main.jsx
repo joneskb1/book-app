@@ -14,5 +14,8 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
 // TODO:
 // user updates: name, email, pw & forgot password email
+// isLogged in has an error. refresh going to home
 // error handling
 // add reading/study timer
+
+// context setting isLoggedIn to false?

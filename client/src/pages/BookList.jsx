@@ -6,7 +6,7 @@ import { useEffect, useState } from 'react';
 import Paginate from '../components/Paginate';
 import BookDetailsPreview from '../components/BookDetailsPreview.jsx';
 
-export default function BookList() {
+export default function BookList({ findCurrentItems }) {
   const [bookList, setBookList] = useState(null);
   const [error, setError] = useState(null);
   const [filterBy, setFilterBy] = useState(() =>
@@ -18,7 +18,7 @@ export default function BookList() {
 
   const [currentPage, setCurrentPage] = useState(() =>
     localStorage.getItem('bookListCurrentPage')
-      ? localStorage.getItem('bookListCurrentPage')
+      ? Number.parseInt(localStorage.getItem('bookListCurrentPage'))
       : 1
   );
 
@@ -59,9 +59,14 @@ export default function BookList() {
 
   useEffect(() => {
     if (bookList) {
-      const indexOfLastBook = currentPage * booksPerPage;
-      const indexOfFirstBook = indexOfLastBook - booksPerPage;
-      setCurrentBooks(bookList.slice(indexOfFirstBook, indexOfLastBook));
+      const currentItems = findCurrentItems(
+        currentPage,
+        booksPerPage,
+        bookList
+      );
+
+      setCurrentBooks(currentItems);
+
       if (filterBy || sortBy) {
         if (currentPage > Math.ceil(bookList.length / booksPerPage)) {
           return setCurrentPage(1);
@@ -70,6 +75,10 @@ export default function BookList() {
       }
     }
   }, [bookList, currentPage]);
+
+  useEffect(() => {
+    localStorage.setItem('bookListCurrentPage', currentPage);
+  }, [currentPage]);
 
   return (
     <>
@@ -133,12 +142,9 @@ export default function BookList() {
           {currentBooks && (
             <Paginate
               itemsPerPage={booksPerPage}
-              totalItems={bookList?.length > 0 ? bookList.length : 0}
+              items={bookList}
               currentPage={currentPage}
-              currentBooks={currentBooks}
-              books={bookList}
               setCurrentPage={setCurrentPage}
-              parent='usersBooks'
             />
           )}
         </div>

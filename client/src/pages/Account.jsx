@@ -1,30 +1,96 @@
 import './Account.css';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 export default function Account() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
-  const [passwordConfirm, setPasswordConfirm] = useState('');
+  const [newPasswordConfirm, setNewPasswordConfirm] = useState('');
+  const [error, setError] = useState(null);
+  const [successMsg, setSuccessMsg] = useState(null);
+
+  useEffect(() => {
+    async function getUser() {
+      try {
+        const res = await fetch('/api/v1/users/');
+
+        const data = await res.json();
+
+        if (data.status === 'success') {
+          setName(data.data.user.name);
+          setEmail(data.data.user.email);
+          setError(null);
+          setSuccessMsg('Data Updated!');
+        } else {
+          setError(data.message);
+          setSuccessMsg(null);
+        }
+      } catch (err) {
+        setError(err.message);
+        setSuccessMsg(null);
+      }
+    }
+
+    getUser();
+  }, []);
 
   async function handleFormSubmit(e) {
     e.preventDefault();
-    const res = await fetch('/api/v1/users/', {
-      method: 'PATCH',
-      headers: {
-        'Content-type': 'application/json',
-      },
-      body: JSON.stringify({
-        name,
-        email,
-      }),
-    });
+    try {
+      const res = await fetch('/api/v1/users/', {
+        method: 'PATCH',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          name,
+          email,
+        }),
+      });
 
-    const data = await res.json();
+      const data = await res.json();
 
-    // handle errors
+      if (data.status === 'success') {
+        setSuccessMsg('Data Updated!');
+        setError(null);
+      } else {
+        setError(data.message);
+        setSuccessMsg(null);
+      }
+    } catch (err) {
+      setError(err.message);
+      setSuccessMsg(null);
+    }
+  }
+
+  async function handlePasswordReset(e) {
+    e.preventDefault();
+    try {
+      const res = await fetch('/api/v1/users/updatePassword', {
+        method: 'PATCH',
+        headers: {
+          'Content-type': 'application/json',
+        },
+        body: JSON.stringify({
+          currentPassword,
+          newPassword,
+          newPasswordConfirm,
+        }),
+      });
+
+      const data = await res.json();
+
+      if (data.status === 'success') {
+        //show success
+        setError(null);
+      } else {
+        setError(data.message);
+      }
+    } catch (err) {
+      setError(err.message);
+    }
   }
 
   return (
@@ -32,7 +98,8 @@ export default function Account() {
       <div className='account'>
         <div className='container'>
           <h2 className='title'>Account Info</h2>
-
+          {error && <p className='error'>{error}</p>}
+          {successMsg && <p>{successMsg}</p>}
           <form className='form-info' onSubmit={handleFormSubmit}>
             <label className='label' htmlFor='name'>
               Name
@@ -58,39 +125,39 @@ export default function Account() {
             />
             <button className='btn'>Update</button>
           </form>
-          <form className='password-form'>
-            <label className='label' htmlFor='password'>
+          <form className='password-form' onSubmit={handlePasswordReset}>
+            <label className='label' htmlFor='currentPassword'>
               Current Password
             </label>
             <input
               className='input'
-              name='password'
+              name='currentPassword'
               type='password'
-              id='password'
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              id='currentPassword'
+              value={currentPassword}
+              onChange={(e) => setCurrentPassword(e.target.value)}
             />
-            <label className='label' htmlFor='new-password'>
+            <label className='label' htmlFor='newPassword'>
               New Password
             </label>
             <input
               className='input'
-              name='password'
+              name='newPassword'
               type='password'
-              id='new-password'
+              id='newPassword'
               value={newPassword}
               onChange={(e) => setNewPassword(e.target.value)}
             />
-            <label className='label' htmlFor='password-confirm'>
+            <label className='label' htmlFor='newPasswordConfirm'>
               New Password Confirm
             </label>
             <input
               className='input'
-              name='password-confirm'
+              name='newPasswordConfirm'
               type='password'
-              id='password-confirm'
-              value={passwordConfirm}
-              onChange={(e) => setPasswordConfirm(e.target.value)}
+              id='newPasswordConfirm'
+              value={newPasswordConfirm}
+              onChange={(e) => setNewPasswordConfirm(e.target.value)}
             />
             <button className='btn'>Reset Password</button>
           </form>

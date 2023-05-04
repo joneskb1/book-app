@@ -257,8 +257,8 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
     return next(new Error('wrong password'));
   }
 
-  user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
+  user.password = req.body.newPassword;
+  user.passwordConfirm = req.body.newPasswordConfirm;
 
   await user.save();
 

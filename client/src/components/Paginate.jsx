@@ -4,46 +4,28 @@ import arrowLeft from '../assets/arrow-left.svg';
 import arrowRight from '../assets/arrow-right.svg';
 
 export default function Paginate(props) {
-  const {
-    itemsPerPage,
-    totalItems,
-    currentBooks,
-    books,
-    currentPage,
-    setCurrentPage,
-    parent,
-  } = props;
+  const { itemsPerPage, items, currentPage, setCurrentPage } = props;
   const pages = [];
-  const totalNumPages = Math.ceil(totalItems / itemsPerPage);
+  const totalNumPages = Math.ceil(items.length / itemsPerPage);
 
   for (let i = 1; i <= totalNumPages; i++) {
     pages.push(i);
   }
-
-  useEffect(() => {
-    if (parent === 'usersBooks') {
-      return localStorage.setItem('bookListCurrentPage', currentPage);
-    }
-
-    localStorage.setItem('currentPage', currentPage);
-  }, [currentPage]);
 
   const handlePageChange = async (pageNum) => {
     setCurrentPage(pageNum);
   };
 
   const handlePageChangeArrow = (e) => {
-    if (!currentBooks) return;
-
     if (
       e.currentTarget.className.includes('arrow-right') &&
-      currentPage < books.length / itemsPerPage
+      currentPage < totalNumPages
     ) {
-      setCurrentPage((prevState) => Number.parseInt(prevState, 10) + 1);
+      setCurrentPage((prevState) => prevState + 1);
     }
 
     if (e.currentTarget.className.includes('arrow-left') && currentPage > 1) {
-      setCurrentPage((prevState) => Number.parseInt(prevState, 10) - 1);
+      setCurrentPage((prevState) => prevState - 1);
     }
   };
 
