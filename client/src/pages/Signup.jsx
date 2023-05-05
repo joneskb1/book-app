@@ -10,7 +10,7 @@ export default function Signup() {
   const [password, setPassword] = useState('');
   const [passwordConfirm, setPasswordConfirm] = useState('');
   const [error, setError] = useState(null);
-  const { toggleLoggedIn, isLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn, isLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -69,14 +69,17 @@ export default function Signup() {
       }
 
       if (data.status === 'success') {
-        toggleLoggedIn();
+        setIsLoggedIn(true);
+        localStorage.setItem('isLoggedIn', true);
         navigate('/booklist');
+
         setError(null);
       } else {
         throw new Error('Error something went wrong. Please try again.');
       }
     } catch (err) {
       setError(err.message);
+      localStorage.setItem('isLoggedIn', false);
     }
   }
 

@@ -67,7 +67,7 @@ export default function BookDetailsPreview(props) {
           <p>Author: {authors[0]}</p>
           <p>ISBN: {isbn}</p>
           <p>Publish Date: {publishedDate}</p>
-          <p>Category: {categories[0]}</p>
+          <p>Category: {categories[0].split('/')[0]}</p>
           <p>Page Count: {pageCount}</p>
         </div>
       </div>

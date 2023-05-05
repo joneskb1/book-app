@@ -4,12 +4,10 @@ import closeX from '../assets/close-x.svg';
 import { useState, useEffect, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 
-// setup forgot password
-
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const { toggleLoggedIn, isLoggedIn } = useContext(AuthContext);
+  const { setIsLoggedIn, isLoggedIn } = useContext(AuthContext);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -44,13 +42,19 @@ export default function Login() {
       const data = await res.json();
 
       if (data.status === 'success') {
-        toggleLoggedIn();
+        setIsLoggedIn(true);
+        localStorage.setItem('isLoggedIn', true);
         navigate('/booklist');
         setError(null);
       } else {
+        setIsLoggedIn(false);
+        localStorage.setItem('isLoggedIn', false);
+        ``;
         setError(data.message);
       }
     } catch (err) {
+      localStorage.setItem('isLoggedIn', false);
+      ``;
       setError(err.message);
     }
   }
@@ -92,7 +96,9 @@ export default function Login() {
             onChange={(e) => setPassword(e.target.value)}
           />
           {error && <p className='error'>{error}</p>}
-          <Link className='forgot-password'>Forgot Password?</Link>
+          <Link className='forgot-password-text' to='/forgot-password-form'>
+            Forgot Password?
+          </Link>
           <button className='btn'>Login</button>
         </form>
       </div>

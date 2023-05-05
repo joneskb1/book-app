@@ -88,7 +88,9 @@ export default function AddBook({ findCurrentItems }) {
         setBooks(data.data.data);
         setError(null);
       } else {
-        setError(data.message);
+        if (data.message) {
+          setError('No results found with search term');
+        }
       }
     } catch (err) {
       setError(err.message);

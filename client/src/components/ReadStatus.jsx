@@ -1,11 +1,13 @@
 import readIcon from '../assets/green-check.svg';
 import unreadIcon from '../assets/unread-x.svg';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 export default function ReadStatus({ initialHasRead, googleBooksId }) {
   const [error, setError] = useState(null);
-  const [imgSrc, setImgSrc] = useState(() =>
-    initialHasRead ? readIcon : unreadIcon
-  );
+  const [imgSrc, setImgSrc] = useState(null);
+
+  useEffect(() => {
+    setImgSrc(initialHasRead == true ? readIcon : unreadIcon);
+  }, [initialHasRead]);
 
   async function handleReadClick(e) {
     e.preventDefault();

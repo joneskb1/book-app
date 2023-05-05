@@ -11,6 +11,14 @@ export default function Account() {
   const [error, setError] = useState(null);
   const [successMsg, setSuccessMsg] = useState(null);
 
+  function flashMsg(msg) {
+    setSuccessMsg(msg);
+    const id = setTimeout(() => {
+      setSuccessMsg(null);
+      clearTimeout(id);
+    }, 2000);
+  }
+
   useEffect(() => {
     async function getUser() {
       try {
@@ -22,21 +30,18 @@ export default function Account() {
           setName(data.data.user.name);
           setEmail(data.data.user.email);
           setError(null);
-          setSuccessMsg('Data Updated!');
         } else {
           setError(data.message);
-          setSuccessMsg(null);
         }
       } catch (err) {
         setError(err.message);
-        setSuccessMsg(null);
       }
     }
 
     getUser();
   }, []);
 
-  async function handleFormSubmit(e) {
+  async function handleUserInfoSubmit(e) {
     e.preventDefault();
     try {
       const res = await fetch('/api/v1/users/', {
@@ -53,7 +58,7 @@ export default function Account() {
       const data = await res.json();
 
       if (data.status === 'success') {
-        setSuccessMsg('Data Updated!');
+        flashMsg('Data Updated!');
         setError(null);
       } else {
         setError(data.message);
@@ -84,6 +89,7 @@ export default function Account() {
 
       if (data.status === 'success') {
         //show success
+        flashMsg('Data Updated!');
         setError(null);
       } else {
         setError(data.message);
@@ -99,8 +105,8 @@ export default function Account() {
         <div className='container'>
           <h2 className='title'>Account Info</h2>
           {error && <p className='error'>{error}</p>}
-          {successMsg && <p>{successMsg}</p>}
-          <form className='form-info' onSubmit={handleFormSubmit}>
+          {successMsg && <p className='success-msg'>{successMsg}</p>}
+          <form className='form-info' onSubmit={handleUserInfoSubmit}>
             <label className='label' htmlFor='name'>
               Name
             </label>

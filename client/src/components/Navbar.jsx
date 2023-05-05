@@ -5,14 +5,14 @@ import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 
 export default function Navbar() {
-  const { isLoggedIn, toggleLoggedIn } = useContext(AuthContext);
+  const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
   const navigation = useNavigate();
 
   const handleLogout = async () => {
     if (isLoggedIn) {
       const res = await fetch('/api/v1/users/logout');
       const data = await res.json();
-      toggleLoggedIn();
+      setIsLoggedIn(false);
       localStorage.clear();
       navigation('/');
     }

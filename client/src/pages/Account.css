@@ -16,7 +16,7 @@
   background-color: var(--secondary);
   border-radius: 5px;
   width: 780px;
-  height: 750px;
+  min-height: 750px;
   color: var(--white);
   display: flex;
   flex-direction: column;
@@ -68,4 +68,11 @@
   font-size: 16px;
   margin-top: 1rem;
   cursor: pointer;
+}
+
+.account .success-msg {
+  color: white;
+  background: #5eb616;
+  border-radius: 5px;
+  padding: 0.5rem;
 }

@@ -71,7 +71,8 @@ export default function BookList({ findCurrentItems }) {
         if (currentPage > Math.ceil(bookList.length / booksPerPage)) {
           return setCurrentPage(1);
         }
-        setCurrentPage(currentPage);
+        // is this redundant???
+        // setCurrentPage(currentPage);
       }
     }
   }, [bookList, currentPage]);

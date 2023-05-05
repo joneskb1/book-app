@@ -9,6 +9,8 @@ import Account from './pages/Account';
 import BookList from './pages/BookList';
 import BookDetails from './pages/BookDetails';
 import AddBook from './pages/AddBook';
+import ResetPassword from './pages/ResetPassword';
+import ForgotPassword from './pages/ForgotPassword';
 import { AuthContext } from './context/AuthContext';
 
 function App() {
@@ -17,7 +19,6 @@ function App() {
   const findCurrentItems = function (currentPage, itemsPerPage, items) {
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-
     return items.slice(indexOfFirstItem, indexOfLastItem);
   };
 
@@ -30,6 +31,13 @@ function App() {
             <Route path='/' element={<Home />} />
             <Route path='/login' element={<Login />} />
             <Route path='/signup' element={<Signup />} />
+            <Route
+              path='/reset-password-form/:token'
+              element={<ResetPassword />}
+            />
+
+            <Route path='/forgot-password-form' element={<ForgotPassword />} />
+
             <Route
               path='/account'
               element={isLoggedIn ? <Account /> : <Navigate replace to={'/'} />}
@@ -60,6 +68,7 @@ function App() {
                 )
               }
             />
+
             <Route path='*' element={<Navigate replace to={'/'} />} />
           </Routes>
         </main>

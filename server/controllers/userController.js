@@ -243,6 +243,11 @@ exports.isLoggedIn = async (req, res, next) => {
       // console.log(err);
       return next(new Error('unable to verify token'));
     }
+  } else {
+    res.status(400).json({
+      status: 'fail',
+      message: 'user is not logged in',
+    });
   }
 };
 
@@ -278,9 +283,8 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   // send email with non hashed reset token
-  const resetUrl = `${req.protocol}://${req.get(
-    'host'
-  )}/api/v1/users/resetPassword/${resetPasswordToken}`;
+  // for development only - change back to req.get("host") for production
+  const resetUrl = `${req.protocol}://${req.hostname}:${process.env.CLIENT_PORT}/reset-password-form/${resetPasswordToken}`;
 
   await sendMail(user.email, resetUrl);
 
