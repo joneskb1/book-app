@@ -2,6 +2,7 @@ const Book = require('../models/bookModel');
 const fetch = require('node-fetch');
 const User = require('../models/userModel');
 const sanitizeHtml = require('sanitize-html');
+const AppError = require('../utils/appError');
 
 const catchAsync = (fn) => (req, res, next) => fn(req, res, next).catch(next);
 
@@ -19,7 +20,7 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
 exports.getBook = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
 
-  if (!book) return next(new Error('book id not found, can not get book'));
+  if (!book) return next(new AppError('The book was not found', 404));
 
   res.status(200).json({
     status: 'success',
@@ -35,7 +36,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
-  if (!book) return next(new Error('book id not found, can not update book'));
+  if (!book) return next(new AppError('The book was not found', 404));
 
   res.status(200).json({
     status: 'success',
@@ -48,7 +49,7 @@ exports.updateBook = catchAsync(async (req, res, next) => {
 exports.deleteBook = catchAsync(async (req, res, next) => {
   const book = await Book.findByIdAndDelete(req.params.id);
 
-  if (!book) return next(new Error('book id not found, can not delete book'));
+  if (!book) return next(new AppError('The book was not found', 404));
 
   res.status(204).json({
     status: 'success',
@@ -66,7 +67,7 @@ exports.findBook = catchAsync(async (req, res, next) => {
   const data = await response.json();
 
   if (!data) {
-    return next(new Error('book not found'));
+    return next(new AppError('The book was not found', 404));
   }
   //grab all the user's google book Ids
   const user = await User.findById(req.user.id);
@@ -195,7 +196,7 @@ exports.createBook = catchAsync(async (req, res, next) => {
 
     //if user doesn't have the book the user will be []
     if (user.length !== 0) {
-      return next(new Error('book is already in your book list'));
+      return next(new AppError('This book is already in your book list', 400));
     }
   }
 

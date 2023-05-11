@@ -13,6 +13,6 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 );
 
 // TODO:
-// error handling
+//  TEST error handling
 // add reading/study timer
 // css polish/refactor/useFetch hook?

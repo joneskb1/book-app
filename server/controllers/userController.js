@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken');
 const { promisify } = require('util');
 const { sendMail } = require('../utils/email');
 const crypto = require('crypto');
+const AppError = require('../utils/appError');
 
 const catchAsync = (fn) => {
   return (req, res, next) => {
@@ -66,13 +67,13 @@ exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return next(new Error('Must provide email and password'));
+    return next(new AppError('Please provide email and password', 400));
   }
 
   const user = await User.findOne({ email }).select('+password');
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new Error('Email or password is incorrect'));
+    return next(new AppError('Email or password is incorrect', 401));
   }
 
   createSendToken(user, 200, req, res);
@@ -90,7 +91,7 @@ exports.logout = (req, res) => {
 exports.getUser = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id);
 
-  if (!user) return next(new Error('user id not found, can not get user'));
+  if (!user) return next(new AppError('User not found', 404));
 
   res.status(200).json({
     status: 'success',
@@ -104,7 +105,7 @@ exports.getUserBooks = catchAsync(async (req, res, next) => {
   const { filterBy, sort } = req.query;
 
   const user = await User.findById(req.user.id);
-  if (!user) return next(new Error('user not found, can not get users books'));
+  if (!user) return next(new AppError('User not found', 404));
 
   let books = user.books;
 
@@ -156,7 +157,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
-  if (!user) return next(new Error('user id not found, can not update user'));
+  if (!user) return next(new AppError('User not found', 404));
 
   res.status(200).json({
     status: 'success',
@@ -169,7 +170,7 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 exports.deleteUser = catchAsync(async (req, res, next) => {
   const user = await User.findByIdAndDelete(req.user.id);
 
-  if (!user) return next(new Error('user id not found, can not delete user'));
+  if (!user) return next(new AppError('User not found', 404));
 
   res.status(204).json({
     status: 'success',
@@ -191,7 +192,7 @@ exports.protect = catchAsync(async (req, res, next) => {
   }
 
   if (!token) {
-    return next(new Error('no token'));
+    return next(new AppError('You are not logged in', 401));
   }
 
   // extract payload from jwt
@@ -199,12 +200,14 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   const user = await User.findById(jwtPayload.id);
   if (!user) {
-    return next(new Error('user not found with that token'));
+    return next(new AppError('User not found', 401));
   }
 
   //check if user changed password after token was issued
   if (user.changedPasswordAfter(jwtPayload.iat)) {
-    return next(new Error('user recently changed password'));
+    return next(
+      new AppError('User recently changed password. Please log in again.', 401)
+    );
   }
 
   // add user to req for other functions to use
@@ -225,12 +228,17 @@ exports.isLoggedIn = async (req, res, next) => {
       const currentUser = await User.findById(decodedPayload.id);
 
       if (!currentUser) {
-        return next(new Error('no user'));
+        return next(new AppError('No user found', 404));
       }
 
       // make sure pw wasn't changed after token was issued.
       if (currentUser.changedPasswordAfter(decodedPayload.iat)) {
-        return next(new Error('password recently changed. log in again.'));
+        return next(
+          new AppError(
+            'User recently changed password. Please log in again.',
+            401
+          )
+        );
       }
 
       // if it makes it here, there is a logged in user
@@ -241,7 +249,9 @@ exports.isLoggedIn = async (req, res, next) => {
       });
     } catch (err) {
       // console.log(err);
-      return next(new Error('unable to verify token'));
+      return next(
+        new AppError('Unable to verify user, please try to login again', 500)
+      );
     }
   } else {
     res.status(400).json({
@@ -255,11 +265,11 @@ exports.updatePassword = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password');
 
   if (!user) {
-    return next(new Error('user not found'));
+    return next(new AppError('User not found', 404));
   }
 
   if (!(await user.correctPassword(req.body.currentPassword, user.password))) {
-    return next(new Error('wrong password'));
+    return next(new AppError('That password is incorrect', 401));
   }
 
   user.password = req.body.newPassword;
@@ -274,7 +284,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
-    return next(new Error('no user found with provided email'));
+    return next(new AppError('No user found with provided email', 404));
   }
 
   const resetPasswordToken = user.createPasswordResetToken();
@@ -309,7 +319,12 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   // set new password if token isn't expired & user exists
   if (!user) {
-    return next(new Error('token invalid or expired'));
+    return next(
+      new AppError(
+        'No user found. Please request to reset password again.',
+        404
+      )
+    );
   }
 
   user.password = req.body.password;
@@ -338,14 +353,14 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id);
 
   if (!user) {
-    return next(new Error('unable to delete book'));
+    return next(new AppError('No user found.', 404));
   }
 
   const bookIndex = user.books.findIndex(
     (book) => book._id.googleBooksId === bookId
   );
   if (bookIndex === -1) {
-    return next(new Error('Book not found'));
+    return next(new AppError('Book not found', 404));
   }
 
   user.books.splice(bookIndex, 1);
@@ -362,14 +377,14 @@ exports.toggleRead = catchAsync(async (req, res, next) => {
   const user = await User.findById(req.user.id);
 
   if (!user) {
-    return next(new Error('unable to edit book'));
+    return next(new AppError('User not found', 404));
   }
 
   const bookIndex = user.books.findIndex(
     (book) => book._id.googleBooksId === bookId
   );
   if (bookIndex === -1) {
-    return next(new Error('Book not found'));
+    return next(new AppError('Book not found', 404));
   }
 
   user.books[bookIndex].hasRead = !user.books[bookIndex].hasRead;
