@@ -13,12 +13,6 @@ export default function Signup() {
   const { setIsLoggedIn, isLoggedIn } = useContext(AuthContext);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate('/booklist');
-    }
-  }, [isLoggedIn]);
-
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       navigate('/');
@@ -29,16 +23,6 @@ export default function Signup() {
     e.preventDefault();
 
     try {
-      if (!name || !email || !password || !passwordConfirm) {
-        throw new Error(
-          'Must enter name, email, password, and password confirm'
-        );
-      }
-
-      if (password.length < 8 || passwordConfirm.length < 8) {
-        throw new Error('Password must be at least 8 characters');
-      }
-
       const url = `/api/v1/users/signup`;
       const res = await fetch(url, {
         method: 'POST',
@@ -55,31 +39,18 @@ export default function Signup() {
 
       const data = await res.json();
 
-      if (
-        data?.message ===
-        'User validation failed: passwordConfirm: Passwords are not the same!'
-      ) {
-        throw new Error('Passwords do not match. Please try again.');
-      }
-
-      if (data?.message?.startsWith('E11000')) {
-        throw new Error(
-          'Error, something went wrong. This user may already exist. Try logging in instead. '
-        );
-      }
-
       if (data.status === 'success') {
+        console.log('TEST');
+
         setIsLoggedIn(true);
         localStorage.setItem('isLoggedIn', true);
         navigate('/booklist');
-
         setError(null);
       } else {
-        throw new Error('Error something went wrong. Please try again.');
+        setError(data.message);
       }
     } catch (err) {
       setError(err.message);
-      localStorage.setItem('isLoggedIn', false);
     }
   }
 

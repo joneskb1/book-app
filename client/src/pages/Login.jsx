@@ -11,12 +11,6 @@ export default function Login() {
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      navigate('/booklist');
-    }
-  }, [isLoggedIn]);
-
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       navigate('/');
@@ -47,14 +41,9 @@ export default function Login() {
         navigate('/booklist');
         setError(null);
       } else {
-        setIsLoggedIn(false);
-        localStorage.setItem('isLoggedIn', false);
-        ``;
         setError(data.message);
       }
     } catch (err) {
-      localStorage.setItem('isLoggedIn', false);
-      ``;
       setError(err.message);
     }
   }

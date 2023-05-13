@@ -25,8 +25,11 @@ function AuthProvider(props) {
         return setIsLoggedIn(false);
       }
     };
-    if (isLoggedIn === true) {
+
+    if (isLoggedIn == true) {
       checkLogin();
+    } else {
+      // setIsLoggedIn(false);
     }
   }, [isLoggedIn]);
 

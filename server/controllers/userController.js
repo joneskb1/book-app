@@ -4,6 +4,7 @@ const { promisify } = require('util');
 const { sendMail } = require('../utils/email');
 const crypto = require('crypto');
 const AppError = require('../utils/appError');
+const { appendFile } = require('fs');
 
 const catchAsync = (fn) => {
   return (req, res, next) => {
@@ -59,6 +60,9 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.createUser = catchAsync(async (req, res, next) => {
+  if (req.body.password.length < 8 || req.body.passwordConfirm.length < 8) {
+    return next(new AppError('Password must be at least 8 characters', 400));
+  }
   const newUser = await User.create(req.body);
   createSendToken(newUser, 201, req, res);
 });

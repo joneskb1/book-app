@@ -30,12 +30,12 @@ export default function ResetPassword() {
         setIsLoggedIn(true);
         localStorage.setItem('isLoggedIn', true);
         navigate('/booklist');
+        setError(null);
       } else {
         setError(data.message);
       }
     } catch (err) {
       setError(err.message);
-    } finally {
     }
   }
   return (

@@ -29,8 +29,18 @@ function App() {
         <main>
           <Routes>
             <Route path='/' element={<Home />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/signup' element={<Signup />} />
+            <Route
+              path='/login'
+              element={
+                !isLoggedIn ? <Login /> : <Navigate replace to={'/booklist'} />
+              }
+            />
+            <Route
+              path='/signup'
+              element={
+                !isLoggedIn ? <Signup /> : <Navigate replace to={'/booklist'} />
+              }
+            />
             <Route
               path='/reset-password-form/:token'
               element={<ResetPassword />}
