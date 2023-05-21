@@ -12,6 +12,8 @@ import AddBook from './pages/AddBook';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
 import { AuthContext } from './context/AuthContext';
+import Protect from './components/Protect';
+import PrivateRoute from './components/PrivateRoute';
 
 function App() {
   const { isLoggedIn } = useContext(AuthContext);
@@ -26,6 +28,7 @@ function App() {
     <div className='App'>
       <BrowserRouter>
         <Navbar />
+
         <main>
           <Routes>
             <Route path='/' element={<Home />} />
@@ -50,32 +53,35 @@ function App() {
 
             <Route
               path='/account'
-              element={isLoggedIn ? <Account /> : <Navigate replace to={'/'} />}
+              element={
+                <PrivateRoute key={1}>
+                  <Account />
+                </PrivateRoute>
+              }
             />
+
             <Route
               path='/booklist'
               element={
-                isLoggedIn ? (
+                <PrivateRoute key={2}>
                   <BookList findCurrentItems={findCurrentItems} />
-                ) : (
-                  <Navigate replace to={'/'} />
-                )
+                </PrivateRoute>
               }
             />
             <Route
               path='/bookdetails'
               element={
-                isLoggedIn ? <BookDetails /> : <Navigate replace to={'/'} />
+                <PrivateRoute key={3}>
+                  <BookDetails />
+                </PrivateRoute>
               }
             />
             <Route
               path='/addbook'
               element={
-                isLoggedIn ? (
+                <PrivateRoute key={4}>
                   <AddBook findCurrentItems={findCurrentItems} />
-                ) : (
-                  <Navigate replace to={'/'} />
-                )
+                </PrivateRoute>
               }
             />
 

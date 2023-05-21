@@ -42,9 +42,13 @@ export default function Login() {
         setError(null);
       } else {
         setError(data.message);
+        setIsLoggedIn(false);
+        localStorage.setItem('isLoggedIn', false);
       }
     } catch (err) {
       setError(err.message);
+      setIsLoggedIn(false);
+      localStorage.setItem('isLoggedIn', false);
     }
   }
 

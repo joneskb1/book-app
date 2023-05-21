@@ -29,44 +29,45 @@ export default function Navbar() {
         </div>
         <div className='links-container'>
           <ul>
-            <li>
-              {!isLoggedIn && (
-                <>
+            {!isLoggedIn && (
+              <>
+                {' '}
+                <li>
                   <NavLink className='links' to={`${'/login'}`}>
                     Login
+                  </NavLink>{' '}
+                </li>
+                <li>
+                  <NavLink className='links' to='/signup'>
+                    Sign up
                   </NavLink>
-                </>
-              )}
-              {isLoggedIn && (
-                <>
+                </li>
+              </>
+            )}
+
+            {isLoggedIn && (
+              <>
+                <li>
                   <NavLink className='links' to='/booklist'>
                     My Book List
                   </NavLink>
+                </li>
+
+                <li>
                   <NavLink className='links' to='/addbook'>
                     Add Book
                   </NavLink>
+                </li>
+                <li>
                   <NavLink className='links' to='/account'>
                     Account
                   </NavLink>
-                  <button
-                    className='btn-util btn-logout'
-                    onClick={handleLogout}
-                  >
-                    Logout
-                  </button>
-                </>
-              )}
-            </li>
-
-            <li>
-              {isLoggedIn ? (
-                ''
-              ) : (
-                <NavLink className='links' to='/signup'>
-                  Sign up
-                </NavLink>
-              )}
-            </li>
+                </li>
+                <button className='btn-util btn-logout' onClick={handleLogout}>
+                  Logout
+                </button>
+              </>
+            )}
           </ul>
         </div>
       </nav>

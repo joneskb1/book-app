@@ -1,37 +1,13 @@
-import React, { createContext, useState, useEffect } from 'react';
+import React, { createContext, useState } from 'react';
 
 const AuthContext = createContext();
 
 function AuthProvider(props) {
   const [isLoggedIn, setIsLoggedIn] = useState(() =>
     localStorage.getItem('isLoggedIn')
-      ? localStorage.getItem('isLoggedIn')
+      ? localStorage.getItem('isLoggedIn') === 'true'
       : false
   );
-
-  useEffect(() => {
-    const checkLogin = async () => {
-      try {
-        const res = await fetch(`/api/v1/users/check-login`);
-        const data = await res.json();
-        if (data.status === 'success') {
-          localStorage.setItem('isLoggedIn', true);
-          setIsLoggedIn(true);
-        } else {
-          localStorage.setItem('isLoggedIn', false);
-          setIsLoggedIn(false);
-        }
-      } catch (err) {
-        return setIsLoggedIn(false);
-      }
-    };
-
-    if (isLoggedIn == true) {
-      checkLogin();
-    } else {
-      // setIsLoggedIn(false);
-    }
-  }, [isLoggedIn]);
 
   const values = {
     isLoggedIn,

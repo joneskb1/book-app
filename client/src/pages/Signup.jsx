@@ -40,17 +40,19 @@ export default function Signup() {
       const data = await res.json();
 
       if (data.status === 'success') {
-        console.log('TEST');
-
         setIsLoggedIn(true);
         localStorage.setItem('isLoggedIn', true);
         navigate('/booklist');
         setError(null);
       } else {
         setError(data.message);
+        setIsLoggedIn(false);
+        localStorage.setItem('isLoggedIn', false);
       }
     } catch (err) {
       setError(err.message);
+      setIsLoggedIn(false);
+      localStorage.setItem('isLoggedIn', false);
     }
   }
 

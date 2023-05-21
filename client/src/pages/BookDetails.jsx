@@ -65,6 +65,7 @@ export default function BookDetails() {
       setError(err.message);
     }
   }
+  console.log(book);
 
   return (
     <>
@@ -90,12 +91,18 @@ export default function BookDetails() {
                   {book.googleBooksRatingsCount} reviews)
                 </p>
                 <p className='book-detail-p'>
-                  Author: {book.authors.join(', ')}
+                  Author:{' '}
+                  {typeof book.authors === 'string'
+                    ? book.authors
+                    : book.authors.join(', ')}
                 </p>
                 <p className='book-detail-p summary'>{book.description}</p>
                 <p className='book-detail-p'>ISBN: {book.isbn}</p>
                 <p className='book-detail-p'>
-                  Category: {book.categories.join(', ')}
+                  Category:{' '}
+                  {typeof book.categories === 'string'
+                    ? book.categories
+                    : book.categories.join(', ')}
                 </p>
                 <p className='book-detail-p'>
                   Number of Pages: {book.pageCount}
@@ -116,9 +123,9 @@ export default function BookDetails() {
                 <img
                   className='book-image'
                   src={
-                    book.imageLinks?.thumbnail
-                      ? book.imageLinks?.thumbnail
-                      : noImage
+                    book.imageLinks?.thumbnail === 'N/A'
+                      ? noImage
+                      : book.imageLinks?.thumbnail
                   }
                   alt='cover of book'
                 />

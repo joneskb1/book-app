@@ -60,6 +60,14 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.createUser = catchAsync(async (req, res, next) => {
+  if (
+    !req.body.name ||
+    !req.body.email ||
+    !req.body.password ||
+    !req.body.passwordConfirm
+  ) {
+    return next(new AppError('Please fill out form', 400));
+  }
   if (req.body.password.length < 8 || req.body.passwordConfirm.length < 8) {
     return next(new AppError('Password must be at least 8 characters', 400));
   }
