@@ -30,10 +30,6 @@ export default function BookDetailsPreview(props) {
   }, [currentPage, book.inUsersBooks]);
 
   const updateBooks = (books, id) => {
-    // const book = books.find((book) => book.googleBooksId === id);
-
-    // setBooks([...books, { ...books[book], inUsersBooks: true }]);
-
     const updatedBooks = books.map((book) => {
       if (book.googleBooksId === id) {
         return { ...book, inUsersBooks: true };
