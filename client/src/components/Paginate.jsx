@@ -1,4 +1,3 @@
-import React, { useEffect } from 'react';
 import './Paginate.css';
 import arrowLeft from '../assets/arrow-left.svg';
 import arrowRight from '../assets/arrow-right.svg';

@@ -13,6 +13,8 @@ export default function AddBook({ findCurrentItems }) {
       ? localStorage.getItem('searchBy')
       : 'intitle'
   );
+  const [loading, setLoading] = useState(null);
+
   const [books, setBooks] = useState();
   const [error, setError] = useState(null);
   const [currentBooks, setCurrentBooks] = useState();
@@ -21,66 +23,78 @@ export default function AddBook({ findCurrentItems }) {
       ? Number.parseInt(localStorage.getItem('currentPage'), 10)
       : 1
   );
-  const [loading, setLoading] = useState();
+
   const [booksPerPage] = useState(5);
 
   useEffect(() => {
-    async function searchWithPrevData() {
-      const lastCurrentPage = Number.parseInt(
-        localStorage.getItem('currentPage')
-      );
-
+    async function setPrevData() {
       if (searchTerm) {
+        const lastCurrentPage = Number.parseInt(
+          localStorage.getItem('currentPage')
+        );
         await fetchFromGoogle();
         setCurrentPage(lastCurrentPage);
       }
     }
 
-    searchWithPrevData();
+    setPrevData();
   }, []);
+
+  // useEffect(() => {
+  //   const googleFetch = async () => {
+  //     await fetchFromGoogle();
+  //   };
+
+  //   googleFetch();
+  // }, []);
 
   useEffect(() => {
     if (books) {
       const currentItems = findCurrentItems(currentPage, booksPerPage, books);
       setCurrentBooks(currentItems);
     }
+    localStorage.setItem('currentPage', currentPage);
   }, [currentPage, books]);
 
-  useEffect(() => {
-    localStorage.setItem('currentPage', currentPage);
-  }, [currentPage]);
+  // useEffect(() => {
+  //   console.log('CURRENT PAGE');
 
-  async function handleAddBookToDB(e) {
-    e.preventDefault();
+  // }, [currentPage]);
 
-    const id = e.target.dataset.id;
-    try {
-      setLoading({ [id]: true });
-      const res = await fetch(`/api/v1/books/${id}`, {
-        method: 'POST',
-      });
+  // async function handleAddBookToDB(e) {
+  //   e.preventDefault();
 
-      const data = await res.json();
+  //   const id = e.target.dataset.id;
+  //   try {
+  //     setLoading({ [id]: true });
+  //     const res = await fetch(`/api/v1/books/${id}`, {
+  //       method: 'POST',
+  //     });
 
-      if (data.status === 'success') {
-        setError(null);
-        await fetchFromGoogle();
-        setCurrentPage(currentPage);
-      } else {
-        setError(data.message);
-      }
-    } catch (err) {
-      setError(err.message);
-    } finally {
-      setLoading({ [id]: false });
-    }
-  }
+  //     const data = await res.json();
+
+  //     if (data.status === 'success') {
+  //       setError(null);
+  //       // really shouldn't do this when adding from addbook page!!
+  //       // await fetchFromGoogle();
+
+  //       console.log(data.data);
+  //       setCurrentPage(currentPage);
+  //     } else {
+  //       setError(data.message);
+  //     }
+  //   } catch (err) {
+  //     setError(err.message);
+  //   } finally {
+  //     setLoading({ [id]: false });
+  //   }
+  // }
 
   async function fetchFromGoogle() {
     localStorage.setItem('searchTerm', searchTerm);
     localStorage.setItem('searchBy', searchBy);
-
     try {
+      setLoading(true);
       const term = searchTerm.replaceAll(' ', '+');
       const res = await fetch(`/api/v1/books/findbook/${searchBy}/${term}`);
       const data = await res.json();
@@ -94,6 +108,8 @@ export default function AddBook({ findCurrentItems }) {
       }
     } catch (err) {
       setError(err.message);
+    } finally {
+      setLoading(false);
     }
   }
 
@@ -184,23 +200,29 @@ export default function AddBook({ findCurrentItems }) {
               <img src={searchIcon} alt='Search' className='search-icon' />
             </button>
           </form>
-          {currentBooks && (
+
+          {loading && <p>Loading...</p>}
+
+          {currentBooks && !loading && (
             <p className='user-instructions'>Click book to see details</p>
           )}
 
           {currentBooks &&
+            !loading &&
             currentBooks.map((book, index) => {
               return (
                 <BookDetailsPreview
                   url='addbook'
                   key={index}
                   book={book}
-                  handleAddBookToDB={handleAddBookToDB}
-                  loading={!!loading && !!loading[book.googleBooksId]}
+                  hasRead={book.hasRead}
+                  currentPage={currentPage}
+                  books={books}
+                  setBooks={setBooks}
                 />
               );
             })}
-          {currentBooks && (
+          {currentBooks && !loading && (
             <Paginate
               itemsPerPage={booksPerPage}
               items={books}

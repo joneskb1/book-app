@@ -1,26 +1,26 @@
 import readIcon from '../assets/green-check.svg';
 import unreadIcon from '../assets/unread-x.svg';
 import { useState, useEffect } from 'react';
-export default function ReadStatus({ initialHasRead, googleBooksId }) {
+export default function ReadStatus({ googleBooksId, id, hasRead }) {
   const [error, setError] = useState(null);
   const [imgSrc, setImgSrc] = useState(null);
 
   useEffect(() => {
-    setImgSrc(initialHasRead == true ? readIcon : unreadIcon);
-  }, [initialHasRead]);
+    setImgSrc(hasRead == true ? readIcon : unreadIcon);
+  }, [hasRead]);
 
   async function handleReadClick(e) {
     e.preventDefault();
 
     try {
       const url = `/api/v1/users/toggle-read/${googleBooksId}`;
-
       const res = await fetch(url, {
         method: 'PATCH',
         headers: {
           'Content-type': 'application/json',
         },
       });
+
       const data = await res.json();
 
       if (data.status === 'success') {

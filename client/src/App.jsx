@@ -7,6 +7,7 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Account from './pages/Account';
 import BookList from './pages/BookList';
+import BookListScreen from './pages/BookListScreen';
 import BookDetails from './pages/BookDetails';
 import AddBook from './pages/AddBook';
 import ResetPassword from './pages/ResetPassword';
@@ -64,7 +65,7 @@ function App() {
               path='/booklist'
               element={
                 <PrivateRoute key={2}>
-                  <BookList findCurrentItems={findCurrentItems} />
+                  <BookListScreen findCurrentItems={findCurrentItems} />
                 </PrivateRoute>
               }
             />
