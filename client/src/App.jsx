@@ -1,4 +1,4 @@
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import './App.css';
 import Home from './pages/Home';
 import Navbar from './components/Navbar';
@@ -9,12 +9,16 @@ import Account from './pages/Account';
 import BookList from './pages/BookList';
 import BookListScreen from './pages/BookListScreen';
 import BookDetails from './pages/BookDetails';
+import BookDetailsUpdate from './pages/BookDetailsUpdate';
 import AddBook from './pages/AddBook';
+import AddBookUpdated from './pages/AddBookUpdated';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
 import { AuthContext } from './context/AuthContext';
 import Protect from './components/Protect';
 import PrivateRoute from './components/PrivateRoute';
+import { BookListContext } from './context/BookListContext';
+import useBooklist from './hooks/useBooklist';
 
 function App() {
   const { isLoggedIn } = useContext(AuthContext);
@@ -70,18 +74,35 @@ function App() {
               }
             />
             <Route
+              path='/book-details-update'
+              element={
+                <PrivateRoute key={3}>
+                  <BookDetailsUpdate />
+                </PrivateRoute>
+              }
+            />
+            {/* <Route
               path='/bookdetails'
               element={
                 <PrivateRoute key={3}>
                   <BookDetails />
                 </PrivateRoute>
               }
-            />
-            <Route
+            /> */}
+            {/* <Route
               path='/addbook'
               element={
                 <PrivateRoute key={4}>
                   <AddBook findCurrentItems={findCurrentItems} />
+                </PrivateRoute>
+              }
+            /> */}
+
+            <Route
+              path='/addbook'
+              element={
+                <PrivateRoute key={4}>
+                  <AddBookUpdated findCurrentItems={findCurrentItems} />
                 </PrivateRoute>
               }
             />

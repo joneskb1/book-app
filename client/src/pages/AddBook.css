@@ -9,8 +9,10 @@
 }
 
 .add-book .container {
+  margin-top: 5%;
+  margin-bottom: 5%;
   position: relative;
-  width: 1172px;
+  width: 980px;
   min-height: 750px;
   background: var(--secondary);
   border-radius: 5px;
@@ -134,4 +136,13 @@
 .add-book .arrow {
   margin: 0 1rem 0;
   cursor: pointer;
+}
+.add-book .loader {
+  margin-top: 5rem;
+}
+
+.add-book .book-search-results-container {
+  min-height: 515px;
+  display: flex;
+  flex-direction: column;
 }

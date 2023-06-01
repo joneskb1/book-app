@@ -9,12 +9,12 @@ export default function FilterSortControls({
   const handleFilterSortClick = (filterSortName, filterSortValue) => {
     if (filterSortName === 'filter') {
       filterBy === filterSortValue
-        ? setFilterBy(null)
+        ? setFilterBy('')
         : setFilterBy(filterSortValue);
     }
 
     if (filterSortName === 'sort') {
-      sortBy === filterSortValue ? setSortBy(null) : setSortBy(filterSortValue);
+      sortBy === filterSortValue ? setSortBy('') : setSortBy(filterSortValue);
     }
 
     localStorage.getItem(filterSortName) === filterSortValue

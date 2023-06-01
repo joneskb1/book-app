@@ -53,7 +53,7 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
 
   res.status(204).json({
     status: 'success',
-    data: null,
+    data: 'deleted successfully',
   });
 });
 
@@ -186,16 +186,13 @@ exports.createBook = catchAsync(async (req, res, next) => {
     newBook = await Book.create(bookDetails);
   }
 
-  // check if user already has the book in their list
   if (book) {
-    user = await User.find({
-      books: {
-        $elemMatch: { _id: book._id },
-      },
+    userHasBoook = await User.find({
+      _id: req.user.id,
+      books: { $elemMatch: { _id: book._id } },
     });
 
-    //if user doesn't have the book the user will be []
-    if (user.length !== 0) {
+    if (userHasBoook.length !== 0) {
       return next(new AppError('This book is already in your book list', 400));
     }
   }
@@ -212,11 +209,14 @@ exports.createBook = catchAsync(async (req, res, next) => {
 
   user = await User.findByIdAndUpdate(req.user.id, update, { new: true });
 
+  const newBookAdded = user.books[user.books.length - 1];
+
   res.status(201).json({
     status: 'success',
     data: {
       data: newBook ? newBook : book,
       user,
+      newBookAdded,
     },
   });
 });

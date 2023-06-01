@@ -1,14 +1,9 @@
 .paginate-wrap {
-  position: absolute;
-  bottom: 5px;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
   width: 350px;
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: center;
 }
+
 .paginate-wrap .li-paginate {
   color: white;
   font-size: 18px;

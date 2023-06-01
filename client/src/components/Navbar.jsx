@@ -3,6 +3,7 @@ import logo from '../assets/logo.svg';
 import { NavLink, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
+import { BookListContext } from '../context/BookListContext';
 
 export default function Navbar() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
@@ -11,7 +12,6 @@ export default function Navbar() {
   const handleLogout = async () => {
     if (isLoggedIn) {
       const res = await fetch('/api/v1/users/logout');
-      const data = await res.json();
       setIsLoggedIn(false);
       localStorage.clear();
       navigation('/');

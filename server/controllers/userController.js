@@ -377,10 +377,7 @@ exports.deleteBook = catchAsync(async (req, res, next) => {
 
   user.books.splice(bookIndex, 1);
   user.save({ validateBeforeSave: false });
-
-  res.status(204).json({
-    status: 'success',
-  });
+  res.status(204).send();
 });
 
 exports.toggleRead = catchAsync(async (req, res, next) => {
