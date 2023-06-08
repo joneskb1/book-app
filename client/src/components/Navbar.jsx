@@ -1,12 +1,20 @@
 import './Navbar.css';
 import logo from '../assets/logo.svg';
+import hamburgerIcon from '../assets/hamburger-icon-menu.svg';
+
 import { NavLink, useNavigate } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useState, useEffect, useRef } from 'react';
 import { AuthContext } from '../context/AuthContext';
-import { BookListContext } from '../context/BookListContext';
+
+import Dialog from './Dialog';
 
 export default function Navbar() {
   const { isLoggedIn, setIsLoggedIn } = useContext(AuthContext);
+
+  const [modalOpen, setModalOpen] = useState(false);
+
+  const modalRef = useRef(null);
+
   const navigation = useNavigate();
 
   const handleLogout = async () => {
@@ -18,6 +26,24 @@ export default function Navbar() {
     }
   };
 
+  const handleToggleModal = () => {
+    setModalOpen((prevState) => !prevState);
+  };
+
+  const handleCloseModalClick = () => {
+    const dialog = modalRef.current;
+    dialog.close();
+    handleToggleModal();
+  };
+
+  useEffect(() => {
+    if (modalOpen) {
+      const dialog = modalRef.current;
+      dialog.showModal();
+    }
+    console.log(modalOpen);
+  }, [modalOpen]);
+
   return (
     <>
       <nav className='navbar'>
@@ -27,49 +53,69 @@ export default function Navbar() {
             <h1 className='title-font logo-title'>Book Nook</h1>
           </NavLink>
         </div>
-        <div className='links-container'>
-          <ul>
-            {!isLoggedIn && (
-              <>
-                {' '}
-                <li>
-                  <NavLink className='links' to={`${'/login'}`}>
-                    Login
-                  </NavLink>{' '}
-                </li>
-                <li>
-                  <NavLink className='links' to='/signup'>
-                    Sign up
-                  </NavLink>
-                </li>
-              </>
-            )}
 
-            {isLoggedIn && (
-              <>
-                <li>
-                  <NavLink className='links' to='/booklist'>
-                    My Book List
-                  </NavLink>
-                </li>
+        {!modalOpen && (
+          <div className='links-container'>
+            <ul className='menu'>
+              {!isLoggedIn && (
+                <>
+                  {' '}
+                  <li>
+                    <NavLink className='links' to={`${'/login'}`}>
+                      Login
+                    </NavLink>{' '}
+                  </li>
+                  <li>
+                    <NavLink className='links' to='/signup'>
+                      Sign up
+                    </NavLink>
+                  </li>
+                </>
+              )}
 
-                <li>
-                  <NavLink className='links' to='/addbook'>
-                    Add Book
-                  </NavLink>
-                </li>
-                <li>
-                  <NavLink className='links' to='/account'>
-                    Account
-                  </NavLink>
-                </li>
-                <button className='btn-util btn-logout' onClick={handleLogout}>
-                  Logout
-                </button>
-              </>
-            )}
-          </ul>
-        </div>
+              {isLoggedIn && (
+                <>
+                  <li>
+                    <NavLink className='links' to='/booklist'>
+                      My Book List
+                    </NavLink>
+                  </li>
+
+                  <li>
+                    <NavLink className='links' to='/addbook'>
+                      Add Book
+                    </NavLink>
+                  </li>
+                  <li>
+                    <NavLink className='links' to='/account'>
+                      Account
+                    </NavLink>
+                  </li>
+                  <button
+                    className='btn-util btn-logout'
+                    onClick={handleLogout}
+                  >
+                    Logout
+                  </button>
+                </>
+              )}
+            </ul>
+          </div>
+        )}
+        <img
+          onClick={handleToggleModal}
+          src={hamburgerIcon}
+          alt='hamburger-menu-icon'
+          className='hamburger-icon'
+        />
+        {modalOpen && (
+          <Dialog
+            modalRef={modalRef}
+            handleCloseModalClick={handleCloseModalClick}
+            handleLogout={handleLogout}
+            isLoggedIn={isLoggedIn}
+          />
+        )}
       </nav>
     </>
   );

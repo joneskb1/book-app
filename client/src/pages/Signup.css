@@ -65,3 +65,41 @@
   margin-top: 2rem;
   cursor: pointer;
 }
+
+@media screen and (max-width: 675px) {
+  .signup .form {
+    max-width: 450px;
+    padding: 1.5rem;
+  }
+
+  .signup .input {
+    width: 375px;
+  }
+
+  .signup .label {
+    padding-left: 1rem;
+  }
+
+  .signup .close-x {
+    height: 20px;
+    width: 20px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .signup .form {
+    max-width: 350px;
+  }
+
+  .signup .label {
+    padding-left: 0;
+  }
+
+  .signup .input {
+    width: 300px;
+  }
+
+  .signup .close-x {
+    left: 90%;
+  }
+}

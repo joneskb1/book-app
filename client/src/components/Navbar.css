@@ -5,6 +5,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .navbar .logo-container {
@@ -19,7 +20,7 @@
 
 .navbar .links,
 .navbar .btn-logout {
-  color: white;
+  color: var(--white);
   text-decoration: none;
   font-size: 24px;
   margin: 0 1rem;
@@ -35,11 +36,32 @@
 
 .navbar .logo-container a {
   text-decoration: none;
-  color: white;
+  color: var(--white);
   display: flex;
   align-items: center;
 }
 
 .navbar .active {
-  border-bottom: 2px solid white;
+  border-bottom: 2px solid var(--white);
+}
+
+.navbar .btn-logout:hover {
+  background-color: initial;
+  color: var(--white);
+}
+
+@media screen and (max-width: 975px) {
+  .navbar ul.menu {
+    display: none;
+  }
+
+  .navbar .hamburger-icon {
+    cursor: pointer;
+  }
+}
+
+@media screen and (min-width: 975px) {
+  .navbar .hamburger-icon {
+    display: none;
+  }
 }

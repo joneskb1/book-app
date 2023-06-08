@@ -20,20 +20,31 @@
   color: var(--black);
 }
 
+.book-details .title-close-btn-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 36px;
+}
+
 .book-details .close-x {
-  position: absolute;
-  top: 5%;
-  left: 93%;
-  height: 25px;
-  width: 25px;
+  height: 20px;
+  width: 20px;
+}
+.book-details .btn-close {
+  height: 20px;
+  width: 20px;
+  margin-left: auto;
 }
 
 .book-details .details-header {
+  position: absolute;
+  margin-left: 50%;
+  transform: translateX(-50%);
   color: var(--white);
   text-align: center;
   font-family: 'Baskerville Old Face';
   font-weight: normal;
-  margin-bottom: 1rem;
   font-size: 32px;
 }
 
@@ -51,37 +62,18 @@
 }
 
 .book-details .book-info {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: auto auto;
   background: var(--white);
   position: relative;
   min-height: 550px;
   margin-top: 1.2rem;
   padding: 2.5rem;
   border-radius: 5px;
-}
-
-.book-details .top-row {
-  grid-column: 1 / 3;
-  grid-row: 1 / 2;
-}
-
-.book-details .lower-left {
-  grid-column: 1 / 2;
-  grid-row: 2 / 3;
-  justify-content: center;
-  align-self: center;
-}
-.book-details .lower-right {
-  grid-column: 2 / 3;
-  grid-row: 2 / 3;
-  align-self: center;
+  text-align: left;
 }
 
 .book-details .book-image {
   display: block;
-  margin: 0 auto;
+  margin-bottom: 1rem;
 }
 
 .book-details .btn {
@@ -96,12 +88,54 @@
   text-decoration: none;
   color: var(--white);
   font-size: 16px;
-  /* margin: 0 auto; */
   cursor: pointer;
   margin-top: 1rem;
+}
+
+.book-details .btn.btn-util:hover {
+  background-color: var(--secondary);
+  color: var(--white);
 }
 
 .read-status-wrap {
   display: flex;
   align-items: center;
+}
+
+@media screen and (max-width: 832px) {
+  .book-details .container {
+    width: 658px;
+  }
+}
+
+@media screen and (max-width: 722px) {
+  .book-details .container {
+    width: 565px;
+  }
+}
+@media screen and (max-width: 623px) {
+  .book-details .container {
+    width: 482px;
+  }
+}
+@media screen and (max-width: 532px) {
+  .book-details .container {
+    width: 420px;
+  }
+}
+
+@media screen and (max-width: 459px) {
+  .book-details .container {
+    width: 365px;
+    padding: 1.5rem;
+  }
+
+  .book-details .details-header {
+    font-size: 30px;
+  }
+}
+@media screen and (max-width: 380px) {
+  .book-details .container {
+    padding: 1rem;
+  }
 }

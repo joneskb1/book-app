@@ -38,7 +38,7 @@
 .login .label {
   color: white;
   margin-right: auto;
-  padding-left: 2.5rem;
+  padding-left: 1rem;
   padding-bottom: 0.5rem;
   padding-top: 1rem;
 }
@@ -46,7 +46,7 @@
 .login .input {
   border-radius: 5px;
   height: 40px;
-  width: 400px;
+  width: 450px;
   border: none;
 }
 
@@ -71,4 +71,38 @@
   font-size: 16px;
   margin-top: 1rem;
   cursor: pointer;
+}
+
+@media screen and (max-width: 675px) {
+  .login .form {
+    max-width: 450px;
+    padding: 1.5rem;
+  }
+
+  .login .input {
+    width: 375px;
+  }
+
+  .login .close-x {
+    height: 20px;
+    width: 20px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .login .form {
+    max-width: 350px;
+  }
+
+  .login .label {
+    padding-left: 0;
+  }
+
+  .login .input {
+    width: 300px;
+  }
+
+  .login .close-x {
+    left: 90%;
+  }
 }

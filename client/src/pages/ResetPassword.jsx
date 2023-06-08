@@ -67,7 +67,7 @@ export default function ResetPassword() {
             onChange={(e) => setPasswordConfirm(e.target.value)}
           />
           {error && <p className='error'>{error}</p>}
-          <button className='btn'>Reset Password</button>
+          <button className='btn btn-util'>Reset Password</button>
         </form>
       </div>
     </>

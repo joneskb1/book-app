@@ -1,6 +1,5 @@
 import './Account.css';
-import { useState, useEffect, useContext } from 'react';
-import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 export default function Account() {
   const [name, setName] = useState('');
@@ -129,7 +128,7 @@ export default function Account() {
               value={email}
               onChange={(e) => setEmail(e.target.value)}
             />
-            <button className='btn'>Update</button>
+            <button className='btn btn-util'>Update</button>
           </form>
           <form className='password-form' onSubmit={handlePasswordReset}>
             <label className='label' htmlFor='currentPassword'>
@@ -165,7 +164,7 @@ export default function Account() {
               value={newPasswordConfirm}
               onChange={(e) => setNewPasswordConfirm(e.target.value)}
             />
-            <button className='btn'>Reset Password</button>
+            <button className='btn btn-util'>Reset Password</button>
           </form>
         </div>
       </div>

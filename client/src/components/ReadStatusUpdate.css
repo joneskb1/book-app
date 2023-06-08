@@ -1,3 +1,7 @@
 .read-status-loading {
   font-size: 10px;
 }
+
+.read-status-icon:hover {
+  cursor: pointer;
+}

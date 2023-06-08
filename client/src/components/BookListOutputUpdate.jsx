@@ -2,12 +2,9 @@ import '../pages/BookList.css';
 import { Link } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
 import Paginate from '../components/Paginate';
-// import BookDetailsPreview from '../components/BookDetailsPreview.jsx';
 import BookDetailsPreviewUpdate from '../components/BookDetailsPreviewUpdate.jsx';
-// import useBooklist from '../hooks/useBooklist';
 import FilterSortControls from './FilterSortControls';
 import { BookListContext } from '../context/BookListContext';
-// import RotateLoader from 'react-spinners/RotateLoader';
 import RingLoader from 'react-spinners/RingLoader';
 
 export default function BookListOutputUpdate({ findCurrentItems }) {
@@ -53,14 +50,6 @@ export default function BookListOutputUpdate({ findCurrentItems }) {
   if (fetchLoader) {
     return (
       <div className='loader'>
-        {/* <RotateLoader
-          color='#c87274'
-          loading={fetchLoader}
-          size={50}
-          aria-label='Loading Spinner'
-          data-testid='loader'
-        /> */}
-
         <RingLoader size='125px' color='#c87274' loading={fetchLoader} />
       </div>
     );
@@ -85,10 +74,9 @@ export default function BookListOutputUpdate({ findCurrentItems }) {
     );
   }
 
-  // supposed to only render when filtering
   if (bookList?.length === 0 && filterBy !== null) {
     return (
-      <div>
+      <div className='filter-sort-controls'>
         <FilterSortControls
           filterBy={filterBy}
           setFilterBy={setFilterBy}
@@ -116,8 +104,9 @@ export default function BookListOutputUpdate({ findCurrentItems }) {
 
       {!fetchLoader && currentBooks.length > 0 && (
         <div className='detail-container'>
-          <p className='details'>Click book for details</p>
-          <p className='read-status'>Read Status</p>
+          <p className='details'>
+            Click book for details. Click checkbox to toggle book's read status.
+          </p>
         </div>
       )}
       <div className='book-list-container'>

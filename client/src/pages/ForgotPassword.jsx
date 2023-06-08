@@ -57,7 +57,7 @@ export default function ResetPassword() {
         />
         {error && <p className='error'>{error}</p>}
 
-        <button className='btn'>Reset Password</button>
+        <button className='btn btn-util'>Reset Password</button>
       </form>
     </div>
   );

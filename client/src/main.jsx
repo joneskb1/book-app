@@ -17,9 +17,5 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
 // TODO:
 // add reading/study timer
-// css polish
 // clean code/refactor
-// useFetch hook?
-
-// BUGS/ISSUES:
-// shifting list on search page: maybe try swr
+// cleanup back end unused code

@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import './BookDetailsPreview.css';
+import './BookDetailsSearchPreview.css';
 import { useState, useContext } from 'react';
 import { BookListContext } from '../context/BookListContext';
 import RingLoader from 'react-spinners/RingLoader';
@@ -57,7 +57,7 @@ export default function BookDetailsSearchPreview(props) {
       {error && <p className='error'>{error}</p>}
       <Link
         to='/book-details-update'
-        className='book-detail-preview link-util'
+        className='book-detail-preview-search link-util'
         state={{
           book: book,
           url: url,
@@ -65,20 +65,24 @@ export default function BookDetailsSearchPreview(props) {
       >
         <div className='book'>
           <div className='title-container'>
-            {/* check string.length and slice to whatever fits, add ... */}
             <p className='title'>
               {title.slice(0, 63)} {title.length >= 61 ? '...' : ''}
             </p>
 
             {loading && (
-              <RingLoader size='20px' color='#c87274' loading={loading} />
+              <RingLoader
+                size='20px'
+                color='#c87274'
+                loading={loading}
+                className='ring-loader'
+              />
             )}
 
             {!loading && !inList && (
               <button
                 onClick={handleAddBookToDB}
                 data-id={googleBooksId}
-                className='search-btn'
+                className='add-book-btn'
                 type='button'
                 disabled={addBookLoading}
               >
@@ -87,16 +91,23 @@ export default function BookDetailsSearchPreview(props) {
             )}
 
             {!loading && inList && (
-              <p className='book-in-list-msg'>This Book Is In Your List</p>
+              <div className='in-list-container'>
+                <p className='book-in-list-msg'>
+                  In book list{' '}
+                  <span className='book-list-check-mark'>&#x2713;</span>
+                </p>
+              </div>
             )}
           </div>
 
           <div className='search-book-details'>
             <p className='author'>Author: {authors[0]}</p>
-            <p>ISBN: {isbn}</p>
+            <p className='hide-on-tablet'>ISBN: {isbn}</p>
             <p>Publish Date: {publishedDate}</p>
-            <p>Category: {categories[0].split('/')[0]}</p>
-            <p>Page Count: {pageCount}</p>
+            <p className='hide-on-mobile'>
+              Category: {categories[0].split('/')[0]}
+            </p>
+            <p className='hide-on-mobile'>Page Count: {pageCount}</p>
           </div>
         </div>
       </Link>

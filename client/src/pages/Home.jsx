@@ -14,12 +14,12 @@ export default function Home() {
             anytime, anywhere.
           </h1>
           {!isLoggedIn && (
-            <Link className='cta-btn' to='/signup'>
+            <Link className='cta-btn btn-util' to='/signup'>
               Sign up
             </Link>
           )}
           {isLoggedIn && (
-            <Link className='cta-btn' to='/booklist'>
+            <Link className='cta-btn btn-util' to='/booklist'>
               See My Books
             </Link>
           )}
@@ -37,12 +37,12 @@ export default function Home() {
               Take your reading to the next level with Book Nook
             </li>
             {!isLoggedIn && (
-              <Link className='cta-btn' to='/signup'>
+              <Link className='cta-btn  btn-util' to='/signup'>
                 Sign up
               </Link>
             )}
             {isLoggedIn && (
-              <Link className='cta-btn' to='/booklist'>
+              <Link className='cta-btn  btn-util' to='/booklist'>
                 See My Books
               </Link>
             )}

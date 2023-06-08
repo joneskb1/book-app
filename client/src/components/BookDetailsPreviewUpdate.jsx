@@ -1,11 +1,10 @@
 import { Link } from 'react-router-dom';
 import './BookDetailsPreview.css';
-import { Audio } from 'react-loader-spinner';
 import { useEffect, useState, useContext } from 'react';
 import { BookListContext } from '../context/BookListContext';
-import ReadStatus from './ReadStatus.jsx';
 import ReadStatusUpdate from './ReadStatusUpdate.jsx';
 import RingLoader from 'react-spinners/RingLoader';
+import trash from '../assets/trash-icon.svg';
 
 export default function BookDetailsPreviewUpdate(props) {
   const { url, book, setCurrentBooks } = props;
@@ -69,33 +68,29 @@ export default function BookDetailsPreviewUpdate(props) {
       >
         <div className='book'>
           <div className='title-container'>
-            {/* check string.length and slice to whatever fits, add ... */}
-            <p className='title'>
-              {title.slice(0, 63)} {title.length >= 61 ? '...' : ''}
-            </p>
-
             <ReadStatusUpdate
               googleBooksId={googleBooksId}
               id={id}
               hasRead={hasRead}
             />
-
-            {!loading && !book._id && book.inUsersBooks && (
-              <p className='book-in-list-msg'>This Book Is In Your List</p>
+            <p className='title'>{title}</p>
+            {loading ? (
+              <RingLoader
+                size='18px'
+                color='#c87274'
+                loading={loading}
+                className='ring-loader'
+              />
+            ) : (
+              <img
+                src={trash}
+                className='btn-book-list-preview-remove'
+                onClick={handleRemoveBookOnClick}
+              ></img>
             )}
           </div>
 
           <div className='book-list-book-details'>
-            {loading ? (
-              <RingLoader size='20px' color='#c87274' loading={loading} />
-            ) : (
-              <button
-                className='btn-book-list-preview-remove'
-                onClick={handleRemoveBookOnClick}
-              >
-                Remove
-              </button>
-            )}
             <p className='author'>
               Author:{' '}
               {authors[0].length <= 20
@@ -104,9 +99,9 @@ export default function BookDetailsPreviewUpdate(props) {
                     authors[0].split(' ')[authors[0].split(' ').length - 1]
                   }`}
             </p>
-            <p>ISBN: {isbn}</p>
+            <p className='hide-on-tablet'>ISBN: {isbn}</p>
             <p>Published: {publishedDate}</p>
-            <p>
+            <p className='hide-on-mobile'>
               Category:{' '}
               {categories[0] === 'N/A'
                 ? categories[0]
@@ -114,7 +109,7 @@ export default function BookDetailsPreviewUpdate(props) {
                 ? categories[0].split('/')[0]
                 : `${categories[0].split('/')[0].slice(0, 20)}...`}
             </p>
-            <p>Page Count: {pageCount}</p>
+            <p className='hide-on-mobile'>Page Count: {pageCount}</p>
           </div>
         </div>
       </Link>

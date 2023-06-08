@@ -2,7 +2,6 @@ import './BookDetails.css';
 
 import closeX from '../assets/close-x.svg';
 import noImage from '../assets/no-image.svg';
-import ReadStatus from '../components/ReadStatus.jsx';
 import ReadStatusUpdate from '../components/ReadStatusUpdate.jsx';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useContext } from 'react';
@@ -94,96 +93,97 @@ export default function BookDetailsUpdate() {
     <>
       <div className='book-details'>
         <div className='container'>
-          <Link to={url === 'booklist' ? '/booklist' : '/addbook'}>
-            <img
-              src={closeX}
-              tabIndex='0'
-              alt='close x'
-              className='close-x'
-              onKeyDown={handleKeyDown}
-            />
-          </Link>
-          <h2 className='details-header'>Book Details</h2>
+          <div className='title-close-btn-container'>
+            <h2 className='details-header'>Book Details</h2>
+            <div className='btn-close'>
+              <Link to={url === 'booklist' ? '/booklist' : '/addbook'}>
+                <img
+                  src={closeX}
+                  tabIndex='0'
+                  alt='close x'
+                  className='close-x'
+                  onKeyDown={handleKeyDown}
+                />
+              </Link>
+            </div>
+          </div>
           {error && <p>{error}</p>}
           {bookData && (
             <div className='book-info'>
-              <div className='top-row'>
-                <h3 className='details-title'>Title: {bookData.title}</h3>
-                <p className='book-detail-p google-rating'>
-                  Google Book's Rating {bookData.avgGoogleBooksRating} (
-                  {bookData.googleBooksRatingsCount} reviews)
-                </p>
-                <p className='book-detail-p authors'>
-                  Author:{' '}
-                  {typeof bookData.authors === 'string'
-                    ? bookData.authors
-                    : bookData.authors.join(', ')}
-                </p>
-                <p className='book-detail-p summary'>{bookData.description}</p>
-                <p className='book-detail-p isbn'>ISBN: {bookData.isbn}</p>
-                <p className='book-detail-p category'>
-                  Category:{' '}
-                  {typeof bookData.categories === 'string'
-                    ? bookData.categories
-                    : bookData.categories.join(', ')}
-                </p>
-              </div>
-              <div className='lower-left'>
-                <p className='book-detail-p'>
-                  Number of Pages: {bookData.pageCount}
-                </p>
-                <p className='book-detail-p'>Publisher: {bookData.publisher}</p>
-                <p className='book-detail-p'>
-                  Date of Publication: {bookData.publishedDate}
-                </p>
+              <h3 className='details-title'>Title: {bookData.title}</h3>
 
-                {!loading && inList && (
-                  <div className='read-status-wrap'>
-                    <p className='book-detail-p read-status-wrap-p'>
-                      Read Status:{' '}
-                    </p>
-                    <ReadStatusUpdate
-                      googleBooksId={bookData.googleBooksId}
-                      hasRead={hasRead}
-                    />
-                  </div>
-                )}
+              <img
+                className='book-image'
+                src={
+                  bookData.imageLinks?.thumbnail === 'N/A'
+                    ? noImage
+                    : bookData.imageLinks?.thumbnail
+                }
+                alt='cover of book'
+              />
 
-                {loading || fetchLoader ? (
-                  <RingLoader
-                    size='20px'
-                    color='#c87274'
-                    loading={loading || fetchLoader}
+              <p className='book-detail-p google-rating'>
+                Google Book's Rating {bookData.avgGoogleBooksRating} (
+                {bookData.googleBooksRatingsCount} reviews)
+              </p>
+              <p className='book-detail-p authors'>
+                Author:{' '}
+                {typeof bookData.authors === 'string'
+                  ? bookData.authors
+                  : bookData.authors.join(', ')}
+              </p>
+              <p className='book-detail-p summary'>{bookData.description}</p>
+              <p className='book-detail-p isbn'>ISBN: {bookData.isbn}</p>
+              <p className='book-detail-p category'>
+                Category:{' '}
+                {typeof bookData.categories === 'string'
+                  ? bookData.categories
+                  : bookData.categories.join(', ')}
+              </p>
+
+              <p className='book-detail-p'>
+                Number of Pages: {bookData.pageCount}
+              </p>
+              <p className='book-detail-p'>Publisher: {bookData.publisher}</p>
+              <p className='book-detail-p'>
+                Date of Publication: {bookData.publishedDate}
+              </p>
+
+              {!loading && inList && (
+                <div className='read-status-wrap'>
+                  <p className='book-detail-p read-status-wrap-p'>
+                    Read Status:{' '}
+                  </p>
+                  <ReadStatusUpdate
+                    googleBooksId={bookData.googleBooksId}
+                    hasRead={hasRead}
                   />
-                ) : inList ? (
-                  <button
-                    className='btn'
-                    data-id={bookData.googleBooksId}
-                    onClick={handleRemoveClick}
-                  >
-                    Remove Book
-                  </button>
-                ) : (
-                  <button
-                    className='btn'
-                    data-id={bookData.googleBooksId}
-                    onClick={handleAddClick}
-                  >
-                    Add Book
-                  </button>
-                )}
-              </div>
-              <div className='lower-right'>
-                <img
-                  className='book-image'
-                  src={
-                    bookData.imageLinks?.thumbnail === 'N/A'
-                      ? noImage
-                      : bookData.imageLinks?.thumbnail
-                  }
-                  alt='cover of book'
+                </div>
+              )}
+
+              {loading || fetchLoader ? (
+                <RingLoader
+                  size='20px'
+                  color='#c87274'
+                  loading={loading || fetchLoader}
                 />
-              </div>
+              ) : inList ? (
+                <button
+                  className='btn  btn-util'
+                  data-id={bookData.googleBooksId}
+                  onClick={handleRemoveClick}
+                >
+                  Remove Book
+                </button>
+              ) : (
+                <button
+                  className='btn  btn-util'
+                  data-id={bookData.googleBooksId}
+                  onClick={handleAddClick}
+                >
+                  Add Book
+                </button>
+              )}
             </div>
           )}
         </div>

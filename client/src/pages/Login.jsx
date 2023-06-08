@@ -1,7 +1,7 @@
 import './Login.css';
 import { Link, useNavigate } from 'react-router-dom';
 import closeX from '../assets/close-x.svg';
-import { useState, useEffect, useContext } from 'react';
+import { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 
 export default function Login() {
@@ -92,7 +92,7 @@ export default function Login() {
           <Link className='forgot-password-text' to='/forgot-password-form'>
             Forgot Password?
           </Link>
-          <button className='btn'>Login</button>
+          <button className='btn btn-util'>Login</button>
         </form>
       </div>
     </>

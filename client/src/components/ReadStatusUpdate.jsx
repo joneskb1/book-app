@@ -1,23 +1,19 @@
 import readIcon from '../assets/green-check.svg';
-import unreadIcon from '../assets/unread-x.svg';
+import unreadIcon from '../assets/gray-check.svg';
 import './ReadStatusUpdate.css';
 import { useState, useContext } from 'react';
 import { BookListContext } from '../context/BookListContext';
 import RingLoader from 'react-spinners/RingLoader';
 
-export default function ReadStatusUpdate({ googleBooksId, id, hasRead }) {
+export default function ReadStatusUpdate({ googleBooksId, hasRead }) {
   const [error, setError] = useState(null);
   const { bookList, setBookList } = useContext(BookListContext);
   const [loading, setLoading] = useState(null);
 
   const hasReadStatus = hasRead;
 
-  // make hook to reuse in detail page
   const updateListReadStatus = () => {
     const updatedList = bookList.map((book) => {
-      //this doesn't work on the details page
-      // const identifier = id ? id : googleBooksId;
-      // const bookId = book._id?._id ? book._id?._id : book.googleBooksId;
       if (book._id.googleBooksId === googleBooksId) {
         return { ...book, hasRead: !book.hasRead };
       }
@@ -59,10 +55,11 @@ export default function ReadStatusUpdate({ googleBooksId, id, hasRead }) {
     <>
       {' '}
       {error && <p className='error'>{error}</p>}
-      {loading && <RingLoader size='20px' color='#c87274' loading={loading} />}
+      {loading && <RingLoader size='18px' color='#c87274' loading={loading} />}
       {!error && !loading && (
         <img
           onClick={handleReadClick}
+          className='read-status-icon'
           src={hasReadStatus === true ? readIcon : unreadIcon}
           alt={`${hasReadStatus === true ? 'read' : 'unread'}`}
         />

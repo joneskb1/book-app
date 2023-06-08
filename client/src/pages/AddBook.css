@@ -107,19 +107,19 @@
   background-color: var(--primary);
   text-decoration: none;
   cursor: pointer;
-  /* margin-left: 1rem; */
   align-self: flex-end;
 }
 
 .add-book .user-instructions {
-  align-self: flex-start;
-  margin-left: 14%;
+  width: 800px;
+  margin: 0.5rem auto 0 auto;
   opacity: 0.8;
   font-weight: lighter;
   color: var(--white);
   letter-spacing: 1px;
   font-size: 14px;
   letter-spacing: 1.2px;
+  align-self: flex-start;
 }
 
 .add-book .arrow-wrap {
@@ -145,4 +145,83 @@
   min-height: 515px;
   display: flex;
   flex-direction: column;
+  margin-top: -0.5rem;
+}
+
+@media screen and (max-width: 1100px) {
+  .add-book .container {
+    width: 750px;
+  }
+
+  .add-book .user-instructions {
+    width: 675px;
+  }
+
+  .add-book .search-form {
+    width: 675px;
+  }
+
+  .add-book .input {
+    width: 620px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .add-book .container {
+    width: 600px;
+  }
+
+  .add-book .user-instructions {
+    width: 525px;
+  }
+
+  .add-book .search-form {
+    width: 525px;
+  }
+
+  .add-book .input {
+    width: 470px;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .add-book .container {
+    width: 500px;
+  }
+
+  .add-book .user-instructions {
+    width: 425px;
+  }
+
+  .add-book .search-form {
+    width: 425px;
+  }
+
+  .add-book .input {
+    width: 370px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .add-book .container {
+    width: 375px;
+  }
+
+  .add-book .user-instructions {
+    width: 325px;
+  }
+
+  .add-book .search-form {
+    width: 325px;
+  }
+
+  .add-book .input {
+    width: 270px;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .add-book .container {
+    width: 360px;
+  }
 }

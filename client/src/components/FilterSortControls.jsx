@@ -1,5 +1,3 @@
-import { useState } from 'react';
-
 export default function FilterSortControls({
   filterBy,
   setFilterBy,
@@ -24,7 +22,7 @@ export default function FilterSortControls({
   return (
     <>
       <div className='filter-sort-container'>
-        <p className='filter-label'>Filter:</p>
+        <p className='filter-label'>Filter</p>
         <button
           className={`read-btn ${filterBy === 'read' ? 'active' : ''}`}
           onClick={() => handleFilterSortClick('filter', 'read')}
@@ -37,7 +35,7 @@ export default function FilterSortControls({
         >
           Unread
         </button>
-        <p className='sort-label'>Sort:</p>
+        <p className='sort-label'>Sort</p>
         <button
           className={`title-btn ${sortBy === 'title' ? 'active' : ''}`}
           onClick={() => handleFilterSortClick('sort', 'title')}

@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import './Signup.css';
 import closeX from '../assets/close-x.svg';
@@ -116,7 +116,7 @@ export default function Signup() {
             onChange={(e) => setPasswordConfirm(e.target.value)}
           />
           {error && <p className='error'>{error}</p>}
-          <button className='btn'>Sign up</button>
+          <button className='btn  btn-util'>Sign up</button>
         </form>
       </div>
     </>
