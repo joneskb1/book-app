@@ -12,6 +12,13 @@ const Dialog = ({
     handleLogout();
     handleCloseModalClick();
   };
+
+  const handleCloseModalLogoutTab = (e) => {
+    if (e.key !== 'Enter') return;
+    handleLogout();
+    handleCloseModalClick();
+  };
+
   return (
     <dialog
       ref={modalRef}
@@ -78,6 +85,8 @@ const Dialog = ({
               <li
                 className='btn-util dialog-logout'
                 onClick={handleCloseModalLogoutClick}
+                onKeyDown={handleCloseModalLogoutTab}
+                tabIndex='0'
               >
                 Logout
               </li>

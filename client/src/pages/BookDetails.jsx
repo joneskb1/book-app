@@ -1,22 +1,19 @@
 import './BookDetails.css';
-
 import closeX from '../assets/close-x.svg';
 import noImage from '../assets/no-image.svg';
-import ReadStatusUpdate from '../components/ReadStatusUpdate.jsx';
+import ReadStatus from '../components/ReadStatus.jsx';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import { BookListContext } from '../context/BookListContext';
 import RingLoader from 'react-spinners/RingLoader';
 
-export default function BookDetailsUpdate() {
+export default function BookDetails() {
   const navigate = useNavigate();
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
   const location = useLocation();
   const { bookList, setBookList, fetchLoader } = useContext(BookListContext);
   let { book, url } = location.state;
-
-  console.log(url);
 
   const bookData = book._id ? book._id : book;
 
@@ -154,7 +151,7 @@ export default function BookDetailsUpdate() {
                   <p className='book-detail-p read-status-wrap-p'>
                     Read Status:{' '}
                   </p>
-                  <ReadStatusUpdate
+                  <ReadStatus
                     googleBooksId={bookData.googleBooksId}
                     hasRead={hasRead}
                   />

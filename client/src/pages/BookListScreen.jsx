@@ -1,5 +1,5 @@
-import './BookList.css';
-import BookListOutputUpdate from '../components/BookListOutputUpdate';
+import '../components/BookList.css';
+import BookList from '../components/BookList';
 
 export default function BookListScreen({ findCurrentItems }) {
   return (
@@ -7,7 +7,7 @@ export default function BookListScreen({ findCurrentItems }) {
       <div className='container'>
         <h2 className='title'>Book List</h2>
 
-        <BookListOutputUpdate findCurrentItems={findCurrentItems} />
+        <BookList findCurrentItems={findCurrentItems} />
       </div>
     </div>
   );

@@ -1,10 +1,10 @@
 import { Link } from 'react-router-dom';
-import './BookDetailsSearchPreview.css';
+import './AddBookPreview.css';
 import { useState, useContext } from 'react';
 import { BookListContext } from '../context/BookListContext';
 import RingLoader from 'react-spinners/RingLoader';
 
-export default function BookDetailsSearchPreview(props) {
+export default function AddBookPreview(props) {
   const { url, book, addBookLoading, setAddBookLoading } = props;
 
   const {
@@ -56,7 +56,7 @@ export default function BookDetailsSearchPreview(props) {
     <>
       {error && <p className='error'>{error}</p>}
       <Link
-        to='/book-details-update'
+        to='/book-details'
         className='book-detail-preview-search link-util'
         state={{
           book: book,

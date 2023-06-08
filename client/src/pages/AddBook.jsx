@@ -1,12 +1,11 @@
 import './AddBook.css';
 import { useState, useEffect } from 'react';
 import searchIcon from '../assets/search.svg';
-import BookDetailsSearchPreview from '../components/BookDetailsSearchPreview';
+import AddBookPreview from '../components/AddBookPreview';
 import Paginate from '../components/Paginate';
-import RotateLoader from 'react-spinners/RotateLoader';
 import RingLoader from 'react-spinners/RingLoader';
 
-export default function AddBookUpdated({ findCurrentItems }) {
+export default function AddBook({ findCurrentItems }) {
   const [searchTerm, setSearchTerm] = useState(() =>
     localStorage.getItem('searchTerm') ? localStorage.getItem('searchTerm') : ''
   );
@@ -165,14 +164,6 @@ export default function AddBookUpdated({ findCurrentItems }) {
 
           {loading && (
             <div className='loader'>
-              {/* <RotateLoader
-                color='#c87274'
-                loading={loading}
-                size={50}
-                aria-label='Loading Spinner'
-                data-testid='loader'
-              /> */}
-
               <RingLoader size='125px' color='#c87274' loading={loading} />
             </div>
           )}
@@ -185,7 +176,7 @@ export default function AddBookUpdated({ findCurrentItems }) {
               !loading &&
               currentBooks.map((book, index) => {
                 return (
-                  <BookDetailsSearchPreview
+                  <AddBookPreview
                     key={index}
                     book={book}
                     books={books}

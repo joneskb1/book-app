@@ -7,8 +7,8 @@ import Login from './pages/Login';
 import Signup from './pages/Signup';
 import Account from './pages/Account';
 import BookListScreen from './pages/BookListScreen';
-import BookDetailsUpdate from './pages/BookDetailsUpdate';
-import AddBookUpdated from './pages/AddBookUpdated';
+import BookDetails from './pages/BookDetails';
+import AddBook from './pages/AddBook';
 import ResetPassword from './pages/ResetPassword';
 import ForgotPassword from './pages/ForgotPassword';
 import { AuthContext } from './context/AuthContext';
@@ -68,10 +68,10 @@ function App() {
               }
             />
             <Route
-              path='/book-details-update'
+              path='/book-details'
               element={
                 <PrivateRoute key={3}>
-                  <BookDetailsUpdate />
+                  <BookDetails />
                 </PrivateRoute>
               }
             />
@@ -80,7 +80,7 @@ function App() {
               path='/addbook'
               element={
                 <PrivateRoute key={4}>
-                  <AddBookUpdated findCurrentItems={findCurrentItems} />
+                  <AddBook findCurrentItems={findCurrentItems} />
                 </PrivateRoute>
               }
             />

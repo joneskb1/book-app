@@ -1,12 +1,12 @@
 import { Link } from 'react-router-dom';
-import './BookDetailsPreview.css';
+import './BookListPreview.css';
 import { useEffect, useState, useContext } from 'react';
 import { BookListContext } from '../context/BookListContext';
-import ReadStatusUpdate from './ReadStatusUpdate.jsx';
+import ReadStatus from './ReadStatus.jsx';
 import RingLoader from 'react-spinners/RingLoader';
 import trash from '../assets/trash-icon.svg';
 
-export default function BookDetailsPreviewUpdate(props) {
+export default function BookListPreview(props) {
   const { url, book, setCurrentBooks } = props;
 
   const {
@@ -25,6 +25,11 @@ export default function BookDetailsPreviewUpdate(props) {
   const { bookList, setBookList } = useContext(BookListContext);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+
+  function handleRemoveBookTab(e) {
+    if (e.key !== 'Enter') return;
+    handleRemoveBookOnClick(e);
+  }
 
   const handleRemoveBookOnClick = async (e) => {
     e.preventDefault();
@@ -59,7 +64,7 @@ export default function BookDetailsPreviewUpdate(props) {
     <>
       {error && <p className='error'>{error}</p>}
       <Link
-        to='/book-details-update'
+        to='/book-details'
         className='book-detail-preview link-util'
         state={{
           book: book,
@@ -68,7 +73,7 @@ export default function BookDetailsPreviewUpdate(props) {
       >
         <div className='book'>
           <div className='title-container'>
-            <ReadStatusUpdate
+            <ReadStatus
               googleBooksId={googleBooksId}
               id={id}
               hasRead={hasRead}
@@ -86,6 +91,8 @@ export default function BookDetailsPreviewUpdate(props) {
                 src={trash}
                 className='btn-book-list-preview-remove'
                 onClick={handleRemoveBookOnClick}
+                onKeyDown={handleRemoveBookTab}
+                tabIndex='0'
               ></img>
             )}
           </div>

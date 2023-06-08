@@ -17,5 +17,4 @@ ReactDOM.createRoot(document.getElementById('root')).render(
 
 // TODO:
 // add reading/study timer
-// clean code/refactor
 // cleanup back end unused code

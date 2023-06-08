@@ -1,11 +1,11 @@
 import readIcon from '../assets/green-check.svg';
 import unreadIcon from '../assets/gray-check.svg';
-import './ReadStatusUpdate.css';
+import './ReadStatus.css';
 import { useState, useContext } from 'react';
 import { BookListContext } from '../context/BookListContext';
 import RingLoader from 'react-spinners/RingLoader';
 
-export default function ReadStatusUpdate({ googleBooksId, hasRead }) {
+export default function ReadStatus({ googleBooksId, hasRead }) {
   const [error, setError] = useState(null);
   const { bookList, setBookList } = useContext(BookListContext);
   const [loading, setLoading] = useState(null);
@@ -22,7 +22,12 @@ export default function ReadStatusUpdate({ googleBooksId, hasRead }) {
     setBookList(updatedList);
   };
 
-  async function handleReadClick(e) {
+  function handleReadTab(e) {
+    if (e.key !== 'Enter') return;
+    handleReadToggle(e);
+  }
+
+  async function handleReadToggle(e) {
     e.preventDefault();
 
     try {
@@ -58,10 +63,12 @@ export default function ReadStatusUpdate({ googleBooksId, hasRead }) {
       {loading && <RingLoader size='18px' color='#c87274' loading={loading} />}
       {!error && !loading && (
         <img
-          onClick={handleReadClick}
+          onClick={handleReadToggle}
+          onKeyDown={handleReadTab}
           className='read-status-icon'
           src={hasReadStatus === true ? readIcon : unreadIcon}
           alt={`${hasReadStatus === true ? 'read' : 'unread'}`}
+          tabIndex='0'
         />
       )}
     </>

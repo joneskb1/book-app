@@ -1,13 +1,13 @@
-import '../pages/BookList.css';
+import './BookList.css';
 import { Link } from 'react-router-dom';
 import { useEffect, useState, useContext } from 'react';
-import Paginate from '../components/Paginate';
-import BookDetailsPreviewUpdate from '../components/BookDetailsPreviewUpdate.jsx';
+import Paginate from './Paginate';
+import BookListPreview from './BookListPreview.jsx';
 import FilterSortControls from './FilterSortControls';
 import { BookListContext } from '../context/BookListContext';
 import RingLoader from 'react-spinners/RingLoader';
 
-export default function BookListOutputUpdate({ findCurrentItems }) {
+export default function BookList({ findCurrentItems }) {
   const [currentPage, setCurrentPage] = useState(() => {
     return localStorage.getItem('bookListCurrentPage')
       ? Number.parseInt(localStorage.getItem('bookListCurrentPage'))
@@ -113,7 +113,7 @@ export default function BookListOutputUpdate({ findCurrentItems }) {
         {currentBooks &&
           currentBooks.map((book, index) => {
             return (
-              <BookDetailsPreviewUpdate
+              <BookListPreview
                 book={book}
                 key={index}
                 setCurrentBooks={setCurrentBooks}

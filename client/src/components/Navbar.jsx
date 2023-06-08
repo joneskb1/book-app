@@ -30,6 +30,11 @@ export default function Navbar() {
     setModalOpen((prevState) => !prevState);
   };
 
+  const handleToggleModalTab = (e) => {
+    if (e.key !== 'Enter') return;
+    setModalOpen((prevState) => !prevState);
+  };
+
   const handleCloseModalClick = () => {
     const dialog = modalRef.current;
     dialog.close();
@@ -41,7 +46,6 @@ export default function Navbar() {
       const dialog = modalRef.current;
       dialog.showModal();
     }
-    console.log(modalOpen);
   }, [modalOpen]);
 
   return (
@@ -94,6 +98,7 @@ export default function Navbar() {
                   <button
                     className='btn-util btn-logout'
                     onClick={handleLogout}
+                    tabIndex='0'
                   >
                     Logout
                   </button>
@@ -104,9 +109,11 @@ export default function Navbar() {
         )}
         <img
           onClick={handleToggleModal}
+          onKeyDown={handleToggleModalTab}
           src={hamburgerIcon}
           alt='hamburger-menu-icon'
           className='hamburger-icon'
+          tabIndex='0'
         />
         {modalOpen && (
           <Dialog
