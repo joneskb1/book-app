@@ -5,8 +5,9 @@
   "main": "app.js",
   "scripts": {
     "start": "nodemon server/app.js",
-    "start:prod": "SET NODE_ENV=production&&nodemon ./server/app.js",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "start:prod": "SET NODE_ENV=production&&node ./server/app.js",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "npm install && npm install --prefix client && npm run build --prefix client"
   },
   "author": "Kayla Jones",
   "license": "ISC",

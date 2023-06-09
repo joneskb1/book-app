@@ -4,7 +4,6 @@ const { promisify } = require('util');
 const { sendMail } = require('../utils/email');
 const crypto = require('crypto');
 const AppError = require('../utils/appError');
-const { appendFile } = require('fs');
 
 const catchAsync = (fn) => {
   return (req, res, next) => {
