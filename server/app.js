@@ -5,6 +5,7 @@ const bookRouter = require('./routes/bookRoutes');
 const errorController = require('./controllers/errorController');
 const userRouter = require('./routes/userRoutes');
 const cookieParser = require('cookie-parser');
+const path = require('path');
 
 const cors = require('cors');
 
