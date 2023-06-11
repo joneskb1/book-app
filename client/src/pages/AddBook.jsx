@@ -65,6 +65,7 @@ export default function AddBook({ findCurrentItems }) {
       } else {
         if (data.message) {
           setError('No results found with search term');
+          setBooks([]);
         }
       }
     } catch (err) {
@@ -167,7 +168,7 @@ export default function AddBook({ findCurrentItems }) {
               <RingLoader size='125px' color='#c87274' loading={loading} />
             </div>
           )}
-          {currentBooks && !loading && (
+          {currentBooks?.length > 0 && !loading && (
             <p className='user-instructions'>Click book to see details</p>
           )}
 
@@ -187,7 +188,7 @@ export default function AddBook({ findCurrentItems }) {
                 );
               })}
           </div>
-          {currentBooks && !loading && (
+          {currentBooks?.length > 0 && !loading && (
             <Paginate
               itemsPerPage={booksPerPage}
               items={books}

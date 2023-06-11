@@ -101,7 +101,14 @@ export default function AddBookPreview(props) {
           </div>
 
           <div className='search-book-details'>
-            <p className='author'>Author: {authors[0]}</p>
+            <p className='author'>
+              Author:
+              {authors[0].length <= 20
+                ? ` ${authors[0]}`
+                : ` ${authors[0].split(' ')[0].split('')[0]}. ${
+                    authors[0].split(' ')[authors[0].split(' ').length - 1]
+                  }`}
+            </p>
             <p className='hide-on-tablet'>ISBN: {isbn}</p>
             <p>Publish Date: {publishedDate}</p>
             <p className='hide-on-mobile'>

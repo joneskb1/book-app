@@ -71,11 +71,16 @@ exports.findBook = catchAsync(async (req, res, next) => {
   }
   //grab all the user's google book Ids
   const user = await User.findById(req.user.id);
-  const usersGoogleBookIds = user.books.map((book) => book._id.googleBooksId);
-  const usersBookList = user.books.map((book) => [
-    book._id.googleBooksId,
-    book.hasRead,
-  ]);
+
+  const userBookData = {};
+
+  user.books.map((book) => {
+    id = book._id.googleBooksId;
+
+    if (!userBookData[id]) {
+      userBookData[id] = book.hasRead;
+    }
+  });
 
   const books = data.items.map((el) => {
     const info = el.volumeInfo;
@@ -83,19 +88,9 @@ exports.findBook = catchAsync(async (req, res, next) => {
     let hasRead = 'N/A';
     let inUsersBooks = false;
 
-    // usersBookList.map((userBook) => {
-    //   if (userBook[0] === el.id) {
-    //     inUsersBooks = true;
-    //     hasRead = userBook[1];
-    //   }
-    // });
-
-    for (let i = 0; i < usersBookList.length; i++) {
-      if (usersBookList[i][0] === el.id) {
-        inUsersBooks = true;
-        hasRead = usersBookList[i][1];
-        break;
-      }
+    if (userBookData.hasOwnProperty(el.id)) {
+      inUsersBooks = true;
+      hasRead = userBookData[el.id];
     }
 
     const sanitizedDescription = info.description
@@ -125,7 +120,6 @@ exports.findBook = catchAsync(async (req, res, next) => {
         smallThumbnail: info.imageLinks?.smallThumbnail ?? 'N/A',
         thumbnail: info.imageLinks?.thumbnail ?? 'N/A',
       },
-      // inUsersBooks: usersGoogleBookIds.includes(el.id),
       inUsersBooks,
       hasRead,
     };

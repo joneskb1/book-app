@@ -205,6 +205,8 @@
 @media screen and (max-width: 550px) {
   .add-book .container {
     width: 375px;
+    padding-left: 0;
+    padding-right: 0;
   }
 
   .add-book .user-instructions {
@@ -217,6 +219,10 @@
 
   .add-book .input {
     width: 270px;
+  }
+
+  .add-book .legend {
+    margin-right: 0.5rem;
   }
 }
 

@@ -6,6 +6,11 @@ const errorController = require('./controllers/errorController');
 const userRouter = require('./routes/userRoutes');
 const cookieParser = require('cookie-parser');
 const path = require('path');
+const helmet = require('helmet');
+const mongoSanitize = require('express-mongo-sanitize');
+const xss = require('xss-clean');
+const hpp = require('hpp');
+const compression = require('compression');
 
 const cors = require('cors');
 
@@ -13,16 +18,13 @@ dotenv.config({ path: './config.env' });
 
 const app = express();
 
-// const corsOptions = {
-//   origin: frontEndDomain,
-//   credential: true
-// }
-// have to set samesite to none and secure to true on HTTPS for cookies
-// csurf??????
-
 app.use(cors());
 
-// app.enable('trust proxy');
+app.use(helmet());
+app.use(mongoSanitize());
+app.use(xss());
+app.use(compression());
+app.use(hpp());
 
 app.use(
   express.json({
