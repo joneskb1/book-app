@@ -214,7 +214,9 @@
   }
 
   .add-book .search-form {
-    width: 325px;
+    /* width: 325px; */
+    width: 350px;
+    justify-content: center;
   }
 
   .add-book .input {
