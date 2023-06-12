@@ -20,7 +20,16 @@ const app = express();
 
 app.use(cors());
 
-app.use(helmet());
+// app.use(helmet());
+
+app.use(
+  helmet.contentSecurityPolicy({
+    useDefaults: true,
+    directives: {
+      'img-src': ["'self'", 'http: data:'],
+    },
+  })
+);
 app.use(mongoSanitize());
 app.use(xss());
 app.use(compression());
