@@ -45,6 +45,16 @@
   font-weight: 500;
 }
 
+.booklist .filter-sort-container button {
+  border: none;
+  border-radius: 30px;
+  width: 100px;
+  height: 32px;
+  margin: 0.5rem;
+  cursor: pointer;
+  color: var(--black);
+}
+
 .booklist .filter-sort-container button:hover {
   border: 2px solid var(--primary);
   background-color: var(--secondary);
@@ -55,15 +65,6 @@
   border: none;
   background-color: var(--primary);
   color: var(--white);
-}
-
-.booklist .filter-sort-container button {
-  border: none;
-  border-radius: 30px;
-  width: 100px;
-  height: 32px;
-  margin: 0.5rem;
-  cursor: pointer;
 }
 
 .booklist .book-link {
