@@ -26,7 +26,7 @@ app.use(
   helmet.contentSecurityPolicy({
     useDefaults: true,
     directives: {
-      'img-src': ["'self'", 'http: data:'],
+      'img-src': ["'self'", 'https://books.google.com/', 'data:'],
     },
   })
 );
