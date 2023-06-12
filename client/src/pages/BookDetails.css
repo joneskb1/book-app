@@ -90,6 +90,7 @@
   font-size: 16px;
   cursor: pointer;
   margin-top: 1rem;
+  margin-bottom: 1rem;
 }
 
 .book-details .btn.btn-util:hover {
@@ -100,6 +101,16 @@
 .read-status-wrap {
   display: flex;
   align-items: center;
+}
+
+.book-details .go-back-link,
+.book-details .go-back-link:visited {
+  color: var(--black);
+  cursor: pointer;
+}
+
+.book-details .go-back-link:hover {
+  text-decoration: underline;
 }
 
 @media screen and (max-width: 832px) {

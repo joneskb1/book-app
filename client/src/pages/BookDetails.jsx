@@ -181,6 +181,12 @@ export default function BookDetails() {
                   Add Book
                 </button>
               )}
+              <Link
+                to={url === 'booklist' ? '/booklist' : '/addbook'}
+                className='link-util go-back-link'
+              >
+                Go back
+              </Link>
             </div>
           )}
         </div>
