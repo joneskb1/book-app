@@ -1,5 +1,5 @@
 .signup {
-  background: url("../assets/login-2011w.jpg") no-repeat;
+  background: url('../assets/login-2011w.jpg') no-repeat;
   background-size: cover;
   min-height: calc(100vh - 97px);
   display: flex;
@@ -7,11 +7,18 @@
   justify-content: center;
 }
 
+.signup .title {
+  font-size: 32px;
+  font-weight: normal;
+  font-family: 'Baskerville Old Face';
+  color: var(--white);
+  letter-spacing: 2px;
+}
+
 .signup .form {
   background-color: var(--secondary);
   border-radius: 5px;
   width: 575px;
-  height: 550px;
   display: flex;
   flex-direction: column;
   padding: 3rem;
@@ -38,7 +45,7 @@
 
 .signup .input {
   border-radius: 5px;
-  height: 50px;
+  height: 40px;
   width: 400px;
   border: none;
 }
@@ -46,7 +53,7 @@
 .signup .btn {
   border: none;
   width: 146px;
-  height: 46px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -57,4 +64,42 @@
   font-size: 16px;
   margin-top: 2rem;
   cursor: pointer;
+}
+
+@media screen and (max-width: 675px) {
+  .signup .form {
+    max-width: 450px;
+    padding: 1.5rem;
+  }
+
+  .signup .input {
+    width: 375px;
+  }
+
+  .signup .label {
+    padding-left: 1rem;
+  }
+
+  .signup .close-x {
+    height: 20px;
+    width: 20px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .signup .form {
+    max-width: 350px;
+  }
+
+  .signup .label {
+    padding-left: 0;
+  }
+
+  .signup .input {
+    width: 300px;
+  }
+
+  .signup .close-x {
+    left: 90%;
+  }
 }

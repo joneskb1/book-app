@@ -1,6 +1,8 @@
 :root {
   --primary: #c87274;
   --secondary: #4f5867;
+  --secondary-transparent: hsla(218, 13%, 36%, 0.9);
+  /* --secondary-transparent: hsla(218, 13%, 36%, 0.87); LIGHTER VERSION */
   --check-mark-read: #5eb616;
   --check-mark-unread: #999999;
   --white: #fff9f3;
@@ -17,4 +19,42 @@
 
 body {
   position: relative;
+}
+
+.btn-util {
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  background: none;
+}
+
+button.btn-util:hover,
+a.cta-btn.btn-util:hover {
+  background-color: var(--white);
+  color: var(--secondary);
+}
+
+.link-util {
+  text-decoration: none;
+}
+
+.li-util {
+  list-style-type: none;
+}
+
+input[type='text'],
+input[type='email'],
+input[type='password'] {
+  padding: 1rem;
+  font-size: 16px;
+}
+
+.error {
+  color: var(--white);
+  border-radius: 5px;
+  background: #6b0f1a;
+  padding: 0.7rem;
+  font-size: 15px;
+  margin-top: 0.5rem;
+  max-width: 400px;
 }

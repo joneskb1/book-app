@@ -1,7 +1,8 @@
-const Book = require("../models/bookModel");
-const fetch = require("node-fetch");
-const User = require("../models/userModel");
-const sanitizeHtml = require("sanitize-html");
+const Book = require('../models/bookModel');
+const fetch = require('node-fetch');
+const User = require('../models/userModel');
+const sanitizeHtml = require('sanitize-html');
+const AppError = require('../utils/appError');
 
 const catchAsync = (fn) => (req, res, next) => fn(req, res, next).catch(next);
 
@@ -9,7 +10,7 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
   const books = await Book.find(req.query).sort({ title: 1 });
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       data: books,
     },
@@ -19,10 +20,10 @@ exports.getAllBooks = catchAsync(async (req, res, next) => {
 exports.getBook = catchAsync(async (req, res, next) => {
   const book = await Book.findById(req.params.id);
 
-  if (!book) return next(new Error("book id not found, can not get book"));
+  if (!book) return next(new AppError('The book was not found', 404));
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       data: book,
     },
@@ -35,10 +36,10 @@ exports.updateBook = catchAsync(async (req, res, next) => {
     runValidators: true,
   });
 
-  if (!book) return next(new Error("book id not found, can not update book"));
+  if (!book) return next(new AppError('The book was not found', 404));
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       data: book,
     },
@@ -48,49 +49,84 @@ exports.updateBook = catchAsync(async (req, res, next) => {
 exports.deleteBook = catchAsync(async (req, res, next) => {
   const book = await Book.findByIdAndDelete(req.params.id);
 
-  if (!book) return next(new Error("book id not found, can not delete book"));
+  if (!book) return next(new AppError('The book was not found', 404));
 
   res.status(204).json({
-    status: "success",
-    data: null,
+    status: 'success',
+    data: 'deleted successfully',
   });
 });
 
 exports.findBook = catchAsync(async (req, res, next) => {
-  let { searchBy, search } = req.params;
+  let { searchBy, term } = req.params;
 
-  if (searchBy === "title") {
-    searchBy = "intitle";
-  } else if (searchBy === "author") {
-    searchBy = "inauthor";
-  } else if (searchBy === "isbn") {
-    searchBy = "isbn";
-  }
+  const url = `https://www.googleapis.com/books/v1/volumes?q=${searchBy}:${term}&langRestrict=en&startIndex=0&maxResults=40&key=AIzaSyAxAcySjBTXODsfv8ID_lR9ZvS8r7G0wPs`;
 
-  const response = await fetch(
-    `https://www.googleapis.com/books/v1/volumes?q=${searchBy}:${search}&langRestrict=en&startIndex=0&maxResults=30&key=AIzaSyAxAcySjBTXODsfv8ID_lR9ZvS8r7G0wPs`
-  );
+  const response = await fetch(url);
 
   const data = await response.json();
+
+  if (!data) {
+    return next(new AppError('The book was not found', 404));
+  }
+  //grab all the user's google book Ids
+  const user = await User.findById(req.user.id);
+
+  const userBookData = {};
+
+  user.books.map((book) => {
+    id = book._id.googleBooksId;
+
+    if (!userBookData[id]) {
+      userBookData[id] = book.hasRead;
+    }
+  });
 
   const books = data.items.map((el) => {
     const info = el.volumeInfo;
 
+    let hasRead = 'N/A';
+    let inUsersBooks = false;
+
+    if (userBookData.hasOwnProperty(el.id)) {
+      inUsersBooks = true;
+      hasRead = userBookData[el.id];
+    }
+
+    const sanitizedDescription = info.description
+      ? sanitizeHtml(info.description, {
+          allowedAttributes: {},
+          allowedTags: [],
+        })
+      : 'N/A';
     return {
-      title: info.title ?? "N/A",
-      author: info.authors ? info.authors[0] : "N/A",
+      title: info.title ?? 'N/A',
+
+      authors: info.authors ? info.authors : 'N/A',
+
       isbn: info.industryIdentifiers
         ? info.industryIdentifiers[0].identifier
-        : "N/A",
-      publishedDate: info.publishedDate ?? "N/A",
-      category: info.categories ? info.categories[0] : "N/A",
-      pageCount: info.pageCount ?? "N/A",
-      googleBookId: el.id ?? "N/A",
+        : 'N/A',
+      publishedDate: info.publishedDate ?? 'N/A',
+      categories: info.categories ? info.categories : 'N/A',
+
+      pageCount: info.pageCount ?? 'N/A',
+      googleBooksId: el.id ?? 'N/A',
+      avgGoogleBooksRating: info.averageRating ?? 0,
+      googleBooksRatingsCount: info.ratingsCount ?? 0,
+      description: sanitizedDescription,
+      publisher: info.publisher ?? 'N/A',
+      imageLinks: {
+        smallThumbnail: info.imageLinks?.smallThumbnail ?? 'N/A',
+        thumbnail: info.imageLinks?.thumbnail ?? 'N/A',
+      },
+      inUsersBooks,
+      hasRead,
     };
   });
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       data: books,
     },
@@ -119,43 +155,39 @@ exports.createBook = catchAsync(async (req, res, next) => {
           allowedAttributes: {},
           allowedTags: [],
         })
-      : "N/A";
+      : 'N/A';
 
     const bookDetails = {
-      title: info.title ?? "N/A",
+      title: info.title ?? 'N/A',
       isbn: info.industryIdentifiers
         ? info.industryIdentifiers[0].identifier
         : 0,
       pageCount: info.pageCount ?? 0,
       avgGoogleBooksRating: info.averageRating ?? 0,
       googleBooksRatingsCount: info.ratingsCount ?? 0,
-      publishedDate: info.publishedDate ?? "N/A",
-      authors: info.authors ?? "N/A",
-      categories: info.categories ?? "N/A",
+      publishedDate: info.publishedDate ?? 'N/A',
+      authors: info.authors ?? 'N/A',
+      categories: info.categories ?? 'N/A',
       description: sanitizedDescription,
-      publisher: info.publisher ?? "N/A",
+      publisher: info.publisher ?? 'N/A',
       imageLinks: {
-        smallThumbnail: info.imageLinks.smallThumbnail ?? "N/A",
-        thumbnail: info.imageLinks.thumbnail ?? "N/A",
+        smallThumbnail: info.imageLinks?.smallThumbnail ?? 'N/A',
+        thumbnail: info.imageLinks?.thumbnail ?? 'N/A',
       },
-      googleBooksId: data.id ?? "N/A",
+      googleBooksId: data.id ?? 'N/A',
     };
 
     newBook = await Book.create(bookDetails);
   }
 
-  // check if user already has the book in their list
   if (book) {
-    user = await User.find({
-      books: {
-        $elemMatch: { _id: book._id },
-      },
+    userHasBoook = await User.find({
+      _id: req.user.id,
+      books: { $elemMatch: { _id: book._id } },
     });
-    //if user doesn't have the book the user will be []
-    if (user.length !== 0) {
-      return res.status(409).json({
-        message: "conflict: you already have this book in your book list!",
-      });
+
+    if (userHasBoook.length !== 0) {
+      return next(new AppError('This book is already in your book list', 400));
     }
   }
 
@@ -171,11 +203,14 @@ exports.createBook = catchAsync(async (req, res, next) => {
 
   user = await User.findByIdAndUpdate(req.user.id, update, { new: true });
 
+  const newBookAdded = user.books[user.books.length - 1];
+
   res.status(201).json({
-    status: "success",
+    status: 'success',
     data: {
       data: newBook ? newBook : book,
       user,
+      newBookAdded,
     },
   });
 });

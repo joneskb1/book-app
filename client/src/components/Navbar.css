@@ -5,6 +5,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+  width: 100%;
 }
 
 .navbar .logo-container {
@@ -17,15 +18,16 @@
   list-style-type: none;
 }
 
-.navbar .links {
-  color: white;
+.navbar .links,
+.navbar .btn-logout {
+  color: var(--white);
   text-decoration: none;
   font-size: 24px;
-  padding: 0 1rem;
+  margin: 0 1rem;
 }
 
 .navbar .logo-title {
-  font-family: "Baskerville Old Face";
+  font-family: 'Baskerville Old Face';
   letter-spacing: 1.5px;
   font-size: 36px;
   font-weight: 300;
@@ -34,7 +36,32 @@
 
 .navbar .logo-container a {
   text-decoration: none;
-  color: white;
+  color: var(--white);
   display: flex;
   align-items: center;
+}
+
+.navbar .active {
+  border-bottom: 2px solid var(--white);
+}
+
+.navbar .btn-logout:hover {
+  background-color: initial;
+  color: var(--white);
+}
+
+@media screen and (max-width: 975px) {
+  .navbar ul.menu {
+    display: none;
+  }
+
+  .navbar .hamburger-icon {
+    cursor: pointer;
+  }
+}
+
+@media screen and (min-width: 975px) {
+  .navbar .hamburger-icon {
+    display: none;
+  }
 }

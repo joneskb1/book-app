@@ -1,5 +1,5 @@
 .login {
-  background: url("../assets/login-2011w.jpg") no-repeat;
+  background: url('../assets/login-2011w.jpg') no-repeat;
   background-size: cover;
   min-height: calc(100vh - 97px);
   display: flex;
@@ -7,11 +7,18 @@
   justify-content: center;
 }
 
+.login .title {
+  font-size: 32px;
+  font-weight: normal;
+  font-family: 'Baskerville Old Face';
+  color: var(--white);
+  letter-spacing: 2px;
+}
+
 .login .form {
   background-color: var(--secondary);
   border-radius: 5px;
   width: 575px;
-  height: 350px;
   display: flex;
   flex-direction: column;
   padding: 3rem;
@@ -31,19 +38,19 @@
 .login .label {
   color: white;
   margin-right: auto;
-  padding-left: 2.5rem;
+  padding-left: 1rem;
   padding-bottom: 0.5rem;
   padding-top: 1rem;
 }
 
 .login .input {
   border-radius: 5px;
-  height: 50px;
-  width: 400px;
+  height: 40px;
+  width: 450px;
   border: none;
 }
 
-.login .forgot-password {
+.login .forgot-password-text {
   text-decoration: none;
   color: var(--white);
   font-size: 12px;
@@ -53,7 +60,7 @@
 .login .btn {
   border: none;
   width: 146px;
-  height: 46px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -64,4 +71,38 @@
   font-size: 16px;
   margin-top: 1rem;
   cursor: pointer;
+}
+
+@media screen and (max-width: 675px) {
+  .login .form {
+    max-width: 450px;
+    padding: 1.5rem;
+  }
+
+  .login .input {
+    width: 375px;
+  }
+
+  .login .close-x {
+    height: 20px;
+    width: 20px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .login .form {
+    max-width: 350px;
+  }
+
+  .login .label {
+    padding-left: 0;
+  }
+
+  .login .input {
+    width: 300px;
+  }
+
+  .login .close-x {
+    left: 90%;
+  }
 }

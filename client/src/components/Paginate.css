@@ -1,0 +1,27 @@
+.paginate-wrap {
+  width: 350px;
+  display: flex;
+  justify-content: center;
+}
+
+.paginate-wrap .li-paginate {
+  color: white;
+  font-size: 18px;
+  margin: 0 5px;
+}
+
+.paginate-wrap .li-paginate.active {
+  border-bottom: 1px solid var(--white);
+  background: none;
+}
+
+.paginate-wrap .arrow {
+  margin: 0 1rem 0;
+  cursor: pointer;
+}
+
+.paginate-wrap .arrow-left:hover,
+.paginate-wrap .arrow-right:hover,
+.paginate-wrap .btn-paginate:hover {
+  background-color: initial;
+}

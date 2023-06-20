@@ -1,0 +1,133 @@
+.book-detail-preview-search .book {
+  margin: 1.2rem auto;
+  border-radius: 5px;
+  width: 800px;
+  height: 65px;
+  background-color: var(--white);
+  color: var(--black);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: start;
+  padding: 0 1rem;
+  position: relative;
+}
+
+.book-detail-preview-search .title-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.book-detail-preview-search .title {
+  font-size: 16px;
+  font-weight: bold;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 70%;
+}
+
+.book-detail-preview-search .add-book-btn {
+  border: none;
+  width: 100px;
+  height: 25px;
+  border-radius: 5px;
+  background-color: var(--secondary);
+  color: var(--white);
+  cursor: pointer;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  font-size: 14px;
+}
+
+.book-detail-preview-search .search-book-details {
+  display: flex;
+  font-size: 12px;
+  width: 100%;
+  font-weight: 500;
+  align-items: center;
+  margin-top: 0.4rem;
+}
+
+.book-detail-preview-search .search-book-details p {
+  margin-left: 1rem;
+}
+
+.book-detail-preview-search .search-book-details p:first-of-type {
+  margin: 0;
+}
+
+.book-detail-preview-search .book-in-list-msg {
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.book-detail-preview-search .book .book-list-check-mark {
+  color: #5eb616;
+  font-size: 1rem;
+}
+
+.book-detail-preview-search .title-container .ring-loader {
+  margin-left: auto;
+}
+
+.book-detail-preview-search .search-book-details {
+  display: flex;
+  font-size: 12px;
+  width: 100%;
+  font-weight: 500;
+}
+
+@media screen and (max-width: 1100px) {
+  .book-detail-preview-search .book {
+    width: 675px;
+    height: 80px;
+  }
+
+  .book-detail-preview-search .hide-on-tablet {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .book-detail-preview-search .book {
+    width: 525px;
+  }
+
+  .book-detail-preview-search .hide-on-mobile {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .book-detail-preview-search .book {
+    width: 425px;
+  }
+
+  .book-detail-preview-search .book .title-container .title {
+    font-size: 0.85rem;
+    text-align: left;
+  }
+}
+@media screen and (max-width: 550px) {
+  .book-detail-preview-search .book {
+    width: 325px;
+  }
+
+  .book-detail-preview-search .book .title-container .title {
+    max-width: 70%;
+    font-size: 12px;
+  }
+
+  .book-detail-preview-search .book-in-list-msg {
+    font-size: 12px;
+  }
+
+  .book-detail-preview-search .add-book-btn {
+    width: 80px;
+    height: 23px;
+    font-size: 12px;
+  }
+}

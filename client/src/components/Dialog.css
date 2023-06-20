@@ -1,0 +1,71 @@
+.dialog {
+  position: absolute;
+  left: 50%;
+  top: 30%;
+  transform: translateX(-50%);
+  height: 300px;
+  width: 300px;
+  border: none;
+  border-radius: 5px;
+  color: black;
+}
+
+.dialog .dialog-content {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: 300px;
+  width: 300px;
+  background: var(--primary);
+  color: white;
+  padding-top: 1.5rem;
+  line-height: 1.7;
+}
+
+.dialog .dialog-ul {
+  text-align: center;
+  margin: 0 auto;
+  width: 80%;
+  list-style-type: none;
+  text-decoration: none;
+}
+
+.dialog .dialog-logout,
+.dialog .dialog-link {
+  color: var(--white);
+  text-decoration: none;
+  font-size: 1.7rem;
+}
+
+.dialog .dialog-link:visited {
+  color: var(--white);
+}
+
+.dialog .close-modal-btn {
+  display: block;
+  margin: 1rem auto;
+  background: var(--secondary);
+  height: 40px;
+  width: 120px;
+  font-size: 1rem;
+  color: var(--white);
+}
+
+.dialog .close-modal-btn:hover {
+  background: var(--white);
+  color: var(--secondary);
+}
+
+.dialog.logged-out,
+.dialog-content.logged-out {
+  height: 185px;
+}
+
+.dialog-content.logged-out {
+  padding: 0.8rem;
+}
+
+dialog::backdrop {
+  background: rgba(15, 15, 15, 0.815);
+}

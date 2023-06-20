@@ -1,22 +1,42 @@
-const nodemailer = require("nodemailer");
+const nodemailer = require('nodemailer');
+const fs = require('fs');
+const path = require('path');
+
+// const imageBuffer = fs.readFileSync(`${__dirname}/../public/logo.png`);
+// const dataUrl = `data:image/png;base64,${imageBuffer.toString('base64')}`;
+// const filePath = `${__dirname}/../public/logo.png`;
+
+const html = fs.readFileSync(
+  path.join(__dirname, '../public', 'email.html'),
+  'utf8'
+);
 
 exports.sendMail = async (email, url) => {
   const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
+    host: process.env.SEND_BLUE_HOST,
+    port: process.env.SEND_BLUE_PORT,
     auth: {
-      user: process.env.EMAIL_USERNAME,
-      pass: process.env.EMAIL_PASSWORD,
+      user: process.env.SEND_BLUE_EMAIL_USERNAME,
+      pass: process.env.SEND_BLUE_EMAIL_PASSWORD,
     },
+    from: process.env.SEND_BLUE_EMAIL_USERNAME,
   });
 
-  const html = `<p>please reset your password with this link <a href=${url}>reset password</a></p>`;
+  let newHtml = html.replace('_URL_', url);
+  // newHtml = newHtml.replace('_IMG_', dataUrl);
 
   const mailOptions = {
-    from: "test@test.com",
+    from: process.env.SEND_BLUE_EMAIL_USERNAME,
     to: email,
-    subject: "forgot password",
-    html,
+    subject: 'Reset Book Nook Password',
+    html: newHtml,
+    // attachments: [
+    //   {
+    //     filename: 'logo.png',
+    //     path: filePath,
+    //     cid: 'logo', //same cid value as in the html img src
+    //   },
+    // ],
   };
 
   await transporter.sendMail(mailOptions);

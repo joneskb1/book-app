@@ -1,8 +1,9 @@
-const User = require("../models/userModel");
-const jwt = require("jsonwebtoken");
-const { promisify } = require("util");
-const { sendMail } = require("../utils/email");
-const crypto = require("crypto");
+const User = require('../models/userModel');
+const jwt = require('jsonwebtoken');
+const { promisify } = require('util');
+const { sendMail } = require('../utils/email');
+const crypto = require('crypto');
+const AppError = require('../utils/appError');
 
 const catchAsync = (fn) => {
   return (req, res, next) => {
@@ -33,12 +34,12 @@ const createSendToken = (user, statusCode, req, res) => {
     cookieOptions.secure = true;
   }
 
-  res.cookie("jwt", token, cookieOptions);
+  res.cookie('jwt', token, cookieOptions);
 
   user.password = undefined;
 
   res.status(statusCode).json({
-    status: "success",
+    status: 'success',
     token,
     data: {
       user,
@@ -50,7 +51,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
   const users = await User.find();
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       data: users,
     },
@@ -58,6 +59,17 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.createUser = catchAsync(async (req, res, next) => {
+  if (
+    !req.body.name ||
+    !req.body.email ||
+    !req.body.password ||
+    !req.body.passwordConfirm
+  ) {
+    return next(new AppError('Please fill out form', 400));
+  }
+  if (req.body.password.length < 8 || req.body.passwordConfirm.length < 8) {
+    return next(new AppError('Password must be at least 8 characters', 400));
+  }
   const newUser = await User.create(req.body);
   createSendToken(newUser, 201, req, res);
 });
@@ -66,41 +78,55 @@ exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body;
 
   if (!email || !password) {
-    return next(new Error("Must provide email and password"));
+    return next(new AppError('Please provide email and password', 400));
   }
 
-  const user = await User.findOne({ email }).select("+password");
+  const user = await User.findOne({ email }).select('+password');
 
   if (!user || !(await user.correctPassword(password, user.password))) {
-    return next(new Error("Email or password is incorrect"));
+    return next(new AppError('Email or password is incorrect', 401));
   }
 
   createSendToken(user, 200, req, res);
 });
 
 exports.logout = (req, res) => {
-  res.cookie("jwt", "loggedout", {
+  res.cookie('jwt', 'loggedout', {
     expires: new Date(Date.now() + 10 * 1000),
     httpOnly: true,
   });
 
-  res.status(200).json({ status: "success" });
+  res.status(200).json({ status: 'success' });
 };
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const { filter, hasRead, sort } = req.query;
+  const user = await User.findById(req.user.id);
 
-  const user = await User.findById(req.params.id).select(filter);
+  if (!user) return next(new AppError('User not found', 404));
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      user,
+    },
+  });
+});
+
+exports.getUserBooks = catchAsync(async (req, res, next) => {
+  const { filterBy, sort } = req.query;
+
+  const user = await User.findById(req.user.id);
+  if (!user) return next(new AppError('User not found', 404));
 
   let books = user.books;
 
-  if (hasRead === "true") {
+  if (filterBy === 'read') {
     books = books.filter((el) => el.hasRead === true);
-  } else if (hasRead === "false") {
+  } else if (filterBy === 'unread') {
     books = books.filter((el) => el.hasRead === false);
   }
 
-  if (sort === "title") {
+  if (sort === 'title') {
     books = books.sort((a, b) => {
       if (a._id.title < b._id.title) {
         return -1;
@@ -110,12 +136,12 @@ exports.getUser = catchAsync(async (req, res, next) => {
       }
       return 0;
     });
-  } else if (sort === "author") {
+  } else if (sort === 'author') {
     books = books.sort((a, b) => {
-      const authorNameA = a._id.authors[0].split(" ");
+      const authorNameA = a._id.authors[0].split(' ');
       const lastA = authorNameA[authorNameA.length - 1];
 
-      const authorNameB = b._id.authors[0].split(" ");
+      const authorNameB = b._id.authors[0].split(' ');
       const lastB = authorNameB[authorNameB.length - 1];
 
       if (lastA < lastB) {
@@ -128,27 +154,24 @@ exports.getUser = catchAsync(async (req, res, next) => {
     });
   }
 
-  if (!user) return next(new Error("user id not found, can not get user"));
-
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       books,
-      user,
     },
   });
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+  const user = await User.findByIdAndUpdate(req.user.id, req.body, {
     new: true,
     runValidators: true,
   });
 
-  if (!user) return next(new Error("user id not found, can not update user"));
+  if (!user) return next(new AppError('User not found', 404));
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
       data: user,
     },
@@ -156,12 +179,12 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndDelete(req.params.id);
+  const user = await User.findByIdAndDelete(req.user.id);
 
-  if (!user) return next(new Error("user id not found, can not delete user"));
+  if (!user) return next(new AppError('User not found', 404));
 
   res.status(204).json({
-    status: "success",
+    status: 'success',
     data: null,
   });
 });
@@ -172,15 +195,15 @@ exports.protect = catchAsync(async (req, res, next) => {
   // if token is not in cookie
   if (
     req.headers.authorization &&
-    req.headers.authorization.startsWith("Bearer")
+    req.headers.authorization.startsWith('Bearer')
   ) {
-    token = req.headers.authorization.split(" ")[1];
+    token = req.headers.authorization.split(' ')[1];
   } else if (req.cookies.jwt) {
     token = req.cookies.jwt;
   }
 
   if (!token) {
-    return next(new Error("no token"));
+    return next(new AppError('You are not logged in', 401));
   }
 
   // extract payload from jwt
@@ -188,12 +211,14 @@ exports.protect = catchAsync(async (req, res, next) => {
 
   const user = await User.findById(jwtPayload.id);
   if (!user) {
-    return next(new Error("user not found with that token"));
+    return next(new AppError('User not found', 401));
   }
 
   //check if user changed password after token was issued
   if (user.changedPasswordAfter(jwtPayload.iat)) {
-    return next(new Error("user recently changed password"));
+    return next(
+      new AppError('User recently changed password. Please log in again.', 401)
+    );
   }
 
   // add user to req for other functions to use
@@ -201,19 +226,65 @@ exports.protect = catchAsync(async (req, res, next) => {
   next();
 });
 
+exports.isLoggedIn = async (req, res, next) => {
+  if (req.cookies.jwt) {
+    try {
+      // verify the token.
+      const decodedPayload = await promisify(jwt.verify)(
+        req.cookies.jwt,
+        process.env.JWT_SECRET
+      );
+
+      // check if the user still exists
+      const currentUser = await User.findById(decodedPayload.id);
+
+      if (!currentUser) {
+        return next(new AppError('No user found', 404));
+      }
+
+      // make sure pw wasn't changed after token was issued.
+      if (currentUser.changedPasswordAfter(decodedPayload.iat)) {
+        return next(
+          new AppError(
+            'User recently changed password. Please log in again.',
+            401
+          )
+        );
+      }
+
+      // if it makes it here, there is a logged in user
+      res.status(200).json({
+        status: 'success',
+        message: 'user is logged in',
+        currentUser,
+      });
+    } catch (err) {
+      // console.log(err);
+      return next(
+        new AppError('Unable to verify user, please try to login again', 500)
+      );
+    }
+  } else {
+    res.status(400).json({
+      status: 'fail',
+      message: 'user is not logged in',
+    });
+  }
+};
+
 exports.updatePassword = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.user.id).select("+password");
+  const user = await User.findById(req.user.id).select('+password');
 
   if (!user) {
-    return next(new Error("user not found"));
+    return next(new AppError('User not found', 404));
   }
 
   if (!(await user.correctPassword(req.body.currentPassword, user.password))) {
-    return next(new Error("wrong password"));
+    return next(new AppError('That password is incorrect', 401));
   }
 
-  user.password = req.body.password;
-  user.passwordConfirm = req.body.passwordConfirm;
+  user.password = req.body.newPassword;
+  user.passwordConfirm = req.body.newPasswordConfirm;
 
   await user.save();
 
@@ -224,7 +295,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
 
   if (!user) {
-    return next(new Error("no user found with provided email"));
+    return next(new AppError('No user found with provided email', 404));
   }
 
   const resetPasswordToken = user.createPasswordResetToken();
@@ -233,23 +304,22 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   await user.save({ validateBeforeSave: false });
 
   // send email with non hashed reset token
-  const resetUrl = `${req.protocol}://${req.get(
-    "host"
-  )}/api/v1/users/resetPassword/${resetPasswordToken}`;
+  // for development only - change back to req.get("host") for production
+  const resetUrl = `${req.protocol}://${req.hostname}:${process.env.CLIENT_PORT}/reset-password-form/${resetPasswordToken}`;
 
   await sendMail(user.email, resetUrl);
 
   res.status(200).json({
-    status: "success",
-    message: "token sent to email",
+    status: 'success',
+    message: 'token sent to email',
   });
 });
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
   const hashedToken = crypto
-    .createHash("sha256")
+    .createHash('sha256')
     .update(req.params.token)
-    .digest("hex");
+    .digest('hex');
 
   const user = await User.findOne({
     passwordResetToken: hashedToken,
@@ -260,7 +330,12 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 
   // set new password if token isn't expired & user exists
   if (!user) {
-    return next(new Error("token invalid or expired"));
+    return next(
+      new AppError(
+        'No user found. Please request to reset password again.',
+        404
+      )
+    );
   }
 
   user.password = req.body.password;
@@ -278,62 +353,67 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 exports.deleteBook = catchAsync(async (req, res, next) => {
   const bookId = req.params.id;
 
-  const user = await User.findByIdAndUpdate(
-    req.user.id,
-    {
-      $pull: { books: { _id: bookId } },
-    },
-    { new: true }
-  );
+  // const user = await User.findByIdAndUpdate(
+  //   req.user.id,
+  //   {
+  //     $pull: { books: { _id: bookId } },
+  //   },
+  //   { new: true }
+  // );
 
-  res.status(204).json({
-    status: "success",
-    data: null,
-  });
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    return next(new AppError('No user found.', 404));
+  }
+
+  const bookIndex = user.books.findIndex(
+    (book) => book._id.googleBooksId === bookId
+  );
+  if (bookIndex === -1) {
+    return next(new AppError('Book not found', 404));
+  }
+
+  user.books.splice(bookIndex, 1);
+  user.save({ validateBeforeSave: false });
+  res.status(204).send();
 });
 
-exports.markRead = catchAsync(async (req, res, next) => {
+exports.toggleRead = catchAsync(async (req, res, next) => {
   const bookId = req.params.id;
 
-  const user = await User.findOneAndUpdate(
-    { _id: req.user.id, "books._id": bookId },
-    {
-      $set: {
-        "books.$.hasRead": true,
-      },
-    },
-    {
-      new: true,
-    }
+  const user = await User.findById(req.user.id);
+
+  if (!user) {
+    return next(new AppError('User not found', 404));
+  }
+
+  const bookIndex = user.books.findIndex(
+    (book) => book._id.googleBooksId === bookId
   );
+  if (bookIndex === -1) {
+    return next(new AppError('Book not found', 404));
+  }
+
+  user.books[bookIndex].hasRead = !user.books[bookIndex].hasRead;
+  user.save({ validateBeforeSave: false });
+
+  // const user = await User.findOneAndUpdate(
+  //   { _id: req.user.id, 'books._id': bookId },
+  //   {
+  //     $set: {
+  //       'books.$.hasRead': false,
+  //     },
+  //   },
+  //   {
+  //     new: true,
+  //   }
+  // );
 
   res.status(200).json({
-    status: "success",
+    status: 'success',
     data: {
-      data: user,
-    },
-  });
-});
-
-exports.markUnread = catchAsync(async (req, res, next) => {
-  const bookId = req.params.id;
-
-  const user = await User.findOneAndUpdate(
-    { _id: req.user.id, "books._id": bookId },
-    {
-      $set: {
-        "books.$.hasRead": false,
-      },
-    },
-    {
-      new: true,
-    }
-  );
-
-  res.status(200).json({
-    status: "success",
-    data: {
-      data: user,
+      data: user.books[bookIndex].hasRead,
     },
   });
 });

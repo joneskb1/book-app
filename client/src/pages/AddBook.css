@@ -1,0 +1,235 @@
+.add-book {
+  background-image: url('../assets/account-2012w.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: calc(100vh - 97px);
+}
+
+.add-book .container {
+  margin-top: 5%;
+  margin-bottom: 5%;
+  position: relative;
+  width: 980px;
+  min-height: 750px;
+  background: var(--secondary);
+  border-radius: 5px;
+  padding: 2rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.add-book .header {
+  font-size: 32px;
+  font-weight: normal;
+  font-family: 'Baskerville Old Face';
+  text-align: center;
+  color: var(--white);
+}
+
+.add-book .search-form {
+  display: flex;
+  width: 800px;
+  justify-content: space-between;
+  align-items: center;
+  margin: 1rem 0 0.7rem;
+}
+
+.add-book .visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  border: 0;
+  clip: rect(0 0 0 0);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.add-book .input {
+  border-radius: 5px;
+  height: 45px;
+  width: 745px;
+  padding: 1rem;
+  border: none;
+  font-size: 18px;
+  background-color: var(--white);
+  align-self: flex-end;
+}
+
+.add-book .input::placeholder {
+  padding-left: 1rem;
+}
+
+.add-book .fieldset {
+  border: none;
+  color: var(--white);
+}
+
+.add-book .radio-legend-wrap {
+  display: flex;
+}
+
+.add-book .legend {
+  margin-bottom: 0.5rem;
+  margin-right: 1rem;
+}
+
+.add-book .radio-input {
+  cursor: pointer;
+  margin: 0 0.5rem 0.5rem;
+}
+
+.add-book .radio-label {
+  cursor: pointer;
+}
+
+.add-book .radio-input:first-of-type {
+  margin-left: 0;
+}
+
+.add-book input[type='radio'] {
+  accent-color: var(--primary);
+}
+
+.add-book .btn {
+  border: none;
+  width: 45px;
+  height: 45px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  background-color: var(--primary);
+  text-decoration: none;
+  cursor: pointer;
+  align-self: flex-end;
+}
+
+.add-book .user-instructions {
+  width: 800px;
+  margin: 0.5rem auto 0 auto;
+  opacity: 0.8;
+  font-weight: lighter;
+  color: var(--white);
+  letter-spacing: 1px;
+  font-size: 14px;
+  letter-spacing: 1.2px;
+  align-self: flex-start;
+}
+
+.add-book .arrow-wrap {
+  position: absolute;
+  bottom: 5px;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  width: 350px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+.add-book .arrow {
+  margin: 0 1rem 0;
+  cursor: pointer;
+}
+.add-book .loader {
+  margin-top: 5rem;
+}
+
+.add-book .book-search-results-container {
+  min-height: 515px;
+  display: flex;
+  flex-direction: column;
+  margin-top: -0.5rem;
+}
+
+@media screen and (max-width: 1100px) {
+  .add-book .container {
+    width: 750px;
+  }
+
+  .add-book .user-instructions {
+    width: 675px;
+  }
+
+  .add-book .search-form {
+    width: 675px;
+  }
+
+  .add-book .input {
+    width: 620px;
+  }
+}
+
+@media screen and (max-width: 800px) {
+  .add-book .container {
+    width: 600px;
+  }
+
+  .add-book .user-instructions {
+    width: 525px;
+  }
+
+  .add-book .search-form {
+    width: 525px;
+  }
+
+  .add-book .input {
+    width: 470px;
+  }
+}
+
+@media screen and (max-width: 650px) {
+  .add-book .container {
+    width: 500px;
+  }
+
+  .add-book .user-instructions {
+    width: 425px;
+  }
+
+  .add-book .search-form {
+    width: 425px;
+  }
+
+  .add-book .input {
+    width: 370px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  .add-book .container {
+    width: 375px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .add-book .user-instructions {
+    width: 325px;
+  }
+
+  .add-book .search-form {
+    /* width: 325px; */
+    width: 350px;
+    justify-content: center;
+  }
+
+  .add-book .input {
+    width: 270px;
+  }
+
+  .add-book .legend {
+    margin-right: 0.5rem;
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .add-book .container {
+    width: 360px;
+  }
+}

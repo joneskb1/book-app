@@ -1,0 +1,152 @@
+.book-details {
+  background-image: url('../assets/account-2012w.jpg');
+  background-size: cover;
+  background-repeat: no-repeat;
+  min-height: calc(100vh - 97px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.book-details .container {
+  position: relative;
+  margin-top: 5%;
+  margin-bottom: 5%;
+  padding: 2rem;
+  background-color: var(--secondary);
+  border-radius: 5px;
+  width: 780px;
+  min-height: 650px;
+  color: var(--black);
+}
+
+.book-details .title-close-btn-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  height: 36px;
+}
+
+.book-details .close-x {
+  height: 20px;
+  width: 20px;
+}
+.book-details .btn-close {
+  height: 20px;
+  width: 20px;
+  margin-left: auto;
+}
+
+.book-details .details-header {
+  position: absolute;
+  margin-left: 50%;
+  transform: translateX(-50%);
+  color: var(--white);
+  text-align: center;
+  font-family: 'Baskerville Old Face';
+  font-weight: normal;
+  font-size: 32px;
+}
+
+.book-details .details-title {
+  margin-bottom: 1rem;
+}
+
+.book-details .book-detail-p {
+  margin-bottom: 1rem;
+}
+
+.book-details .read-status-wrap-p {
+  margin-bottom: 0;
+  margin-right: 1rem;
+}
+
+.book-details .book-info {
+  background: var(--white);
+  position: relative;
+  min-height: 550px;
+  margin-top: 1.2rem;
+  padding: 2.5rem;
+  border-radius: 5px;
+  text-align: left;
+}
+
+.book-details .book-image {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.book-details .btn {
+  border: none;
+  width: 125px;
+  height: 38px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  border-radius: 5px;
+  background-color: var(--primary);
+  text-decoration: none;
+  color: var(--white);
+  font-size: 16px;
+  cursor: pointer;
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.book-details .btn.btn-util:hover {
+  background-color: var(--secondary);
+  color: var(--white);
+}
+
+.read-status-wrap {
+  display: flex;
+  align-items: center;
+}
+
+.book-details .go-back-link,
+.book-details .go-back-link:visited {
+  color: var(--black);
+  cursor: pointer;
+}
+
+.book-details .go-back-link:hover {
+  text-decoration: underline;
+}
+
+@media screen and (max-width: 832px) {
+  .book-details .container {
+    width: 658px;
+  }
+}
+
+@media screen and (max-width: 722px) {
+  .book-details .container {
+    width: 565px;
+  }
+}
+@media screen and (max-width: 623px) {
+  .book-details .container {
+    width: 482px;
+  }
+}
+@media screen and (max-width: 532px) {
+  .book-details .container {
+    width: 420px;
+  }
+}
+
+@media screen and (max-width: 459px) {
+  .book-details .container {
+    width: 365px;
+    padding: 1.5rem;
+  }
+
+  .book-details .details-header {
+    font-size: 30px;
+  }
+}
+@media screen and (max-width: 380px) {
+  .book-details .container {
+    padding: 1rem;
+  }
+}

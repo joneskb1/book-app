@@ -6,7 +6,7 @@ const bookSchema = new mongoose.Schema({
     required: [true, 'a book must have a title'],
   },
   isbn: {
-    type: Number,
+    type: String,
   },
   pageCount: {
     type: Number,

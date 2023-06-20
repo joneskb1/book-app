@@ -1,5 +1,5 @@
 .account {
-  background-image: url("../assets/account-2012w.jpg");
+  background-image: url('../assets/account-2012w.jpg');
   background-size: cover;
   background-repeat: no-repeat;
   min-height: calc(100vh - 97px);
@@ -10,13 +10,13 @@
 
 .account .container {
   position: relative;
-  margin-top: 10%;
-  margin-bottom: 10%;
+  margin-top: 5%;
+  margin-bottom: 5%;
   padding: 2rem;
   background-color: var(--secondary);
   border-radius: 5px;
   width: 780px;
-  height: 750px;
+  min-height: 750px;
   color: var(--white);
   display: flex;
   flex-direction: column;
@@ -26,8 +26,9 @@
 
 .account .title {
   text-align: center;
-  font-family: "Baskerville Old Face";
+  font-family: 'Baskerville Old Face';
   font-weight: normal;
+  font-size: 32px;
 }
 
 .account form {
@@ -38,13 +39,6 @@
 .account .form-info {
   margin-bottom: 2rem;
 }
-.account .close-x {
-  position: absolute;
-  top: 5%;
-  left: 93%;
-  height: 25px;
-  width: 25px;
-}
 
 .account .label {
   color: white;
@@ -54,7 +48,7 @@
 
 .account .input {
   border-radius: 5px;
-  height: 50px;
+  height: 40px;
   width: 600px;
   border: none;
   font-size: 18px;
@@ -62,8 +56,8 @@
 
 .account .btn {
   border: none;
-  width: 146px;
-  height: 46px;
+  width: 135px;
+  height: 40px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -74,4 +68,46 @@
   font-size: 16px;
   margin-top: 1rem;
   cursor: pointer;
+}
+
+.account .success-msg {
+  color: white;
+  background: var(--primary);
+  border-radius: 5px;
+  padding: 0.5rem;
+}
+
+@media screen and (max-width: 830px) {
+  .account .container {
+    width: 590px;
+  }
+
+  .account .input {
+    width: 474px;
+  }
+
+  .account .btn {
+    width: 125px;
+    height: 35px;
+  }
+}
+
+@media screen and (max-width: 645px) {
+  .account .container {
+    width: 449px;
+  }
+
+  .account .input {
+    width: 377px;
+  }
+}
+
+@media screen and (max-width: 492px) {
+  .account .container {
+    width: 347px;
+  }
+
+  .account .input {
+    width: 300px;
+  }
 }
