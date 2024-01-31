@@ -1,12 +1,13 @@
 # book-app
 
-Reading list application using Mongo DB, Express, Node, and Vite.
-Features authentication, MVC pattern, Context, and Nodemailer. 
+This application, built with MongoDB, Express, Node, and Vite, is designed for managing your reading list. It features authentication, follows the MVC pattern, utilizes Context, and incorporates Nodemailer.
 
-Add books to your reading list using google books's api. 
-See book details and mark books read/unread.
-Filter and sort your book list. 
-Update user account information.
+Key Features:
+
+Add Books: Easily populate your reading list using Google Books API.
+Track Progress: Mark books as read or unread and view detailed book information.
+Organize: Filter and sort your book list according to your preferences.
+User Account: Conveniently update your account information.
 
 [live link ](https://book-nook-wv31.onrender.com/
 )https://book-nook-wv31.onrender.com/
