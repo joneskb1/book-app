@@ -10,6 +10,7 @@ Update user account information.
 
 [live link ](https://book-nook-wv31.onrender.com/
 )https://book-nook-wv31.onrender.com/
-![book-nook](https://github.com/joneskb1/book-app/assets/74384950/f2226aee-90cf-454b-9da1-8ba899db502f)
-![book-nook-2](https://github.com/joneskb1/book-app/assets/74384950/432658ad-8478-41f7-a8d4-17caeb44f6e0)
-![book-nook-3](https://github.com/joneskb1/book-app/assets/74384950/e19d5291-c0e6-460e-9465-bf5e21bb9dc3)
+
+![book-nook](https://github.com/joneskb1/book-app/assets/74384950/944ec83a-2de5-4424-97d5-102e1983ac7c)
+![book-nook-2](https://github.com/joneskb1/book-app/assets/74384950/88af3e16-b454-4646-8371-f289a6fc5c37)
+![book-nook-3](https://github.com/joneskb1/book-app/assets/74384950/442ec54d-871a-4fb6-b2ab-cc958d746430)
