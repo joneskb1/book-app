@@ -305,7 +305,10 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 
   // send email with non hashed reset token
   // for development only - change back to req.get("host") for production
-  const resetUrl = `${req.protocol}://${req.hostname}:${process.env.CLIENT_PORT}/reset-password-form/${resetPasswordToken}`;
+  // const resetUrl = `${req.protocol}://${req.hostname}:${process.env.CLIENT_PORT}/reset-password-form/${resetPasswordToken}`;
+  const resetUrl = `${req.protocol}://${req.get(
+    'host'
+  )}/reset-password-form/${resetPasswordToken}`;
 
   await sendMail(user.email, resetUrl);
 
