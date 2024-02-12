@@ -184,6 +184,7 @@ export default function AddBook({ findCurrentItems }) {
                     setBooks={setBooks}
                     addBookLoading={addBookLoading}
                     setAddBookLoading={setAddBookLoading}
+                    url='addbook'
                   />
                 );
               })}
